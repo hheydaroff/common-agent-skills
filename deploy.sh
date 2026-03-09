@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # deploy.sh — sync skills/ to all tool-specific locations
 #
-# Run this after adding or editing any skill:
-#   bash ~/development/common-agent-skills/deploy.sh
+# Usage:
+#   bash deploy.sh           additive — adds/updates skills, never deletes
+#   CLEAN=1 bash deploy.sh   full replace for Claude (use only when repo is complete)
 #
 # Deploy targets:
-#   ~/.agents/skills/     Pi reads this natively (Agent Skills standard)
-#   ~/.claude/skills/     Claude Code
-#   ~/.codex/skills/      Codex (additive only — preserves .system/)
+#   ~/.agents/skills/     Pi reads this natively — always clean-synced (it IS the canonical copy)
+#   ~/.claude/skills/     Claude Code — additive by default, CLEAN=1 for full replace
+#   ~/.codex/skills/      Codex — always additive, .system/ never touched
 #
-# This script is the only thing that writes to those directories.
 # Never edit skills directly in the deploy targets.
 
 set -euo pipefail
@@ -31,6 +31,8 @@ echo ""
 
 # ── ~/.agents/skills/ ─────────────────────────────────────────────────────────
 # Full sync. Pi reads this directory natively (no further config needed).
+# Always uses --delete here since this IS the canonical location and should
+# mirror the repo exactly.
 TARGET_AGENTS="$HOME/.agents/skills"
 mkdir -p "$TARGET_AGENTS"
 rsync -a --delete \
@@ -43,13 +45,22 @@ rsync -a --delete \
 ok "~/.agents/skills/"
 
 # ── ~/.claude/skills/ ─────────────────────────────────────────────────────────
-# Full sync. Claude Code has no system subdirectories to protect.
+# Additive by default. Pass --clean to do a full replace (removes skills no
+# longer in the repo). Only use --clean once the repo is your complete source
+# of truth — it will delete anything in ~/.claude/skills/ not in skills/.
 TARGET_CLAUDE="$HOME/.claude/skills"
 mkdir -p "$TARGET_CLAUDE"
-rsync -a --delete \
-  --exclude='.git/' \
-  "$SKILLS_DIR/" "$TARGET_CLAUDE/"
-ok "~/.claude/skills/"
+if [ "${CLEAN:-0}" = "1" ]; then
+  rsync -a --delete \
+    --exclude='.git/' \
+    "$SKILLS_DIR/" "$TARGET_CLAUDE/"
+  ok "~/.claude/skills/  (clean sync)"
+else
+  rsync -a \
+    --exclude='.git/' \
+    "$SKILLS_DIR/" "$TARGET_CLAUDE/"
+  ok "~/.claude/skills/  (additive)"
+fi
 
 # ── ~/.codex/skills/ ──────────────────────────────────────────────────────────
 # Additive only — never delete, never touch .system/ (Codex internals).
