@@ -2,10 +2,10 @@
 name: frontend-dev
 description: |
   Full-stack frontend development combining premium UI design, cinematic animations,
-  AI-generated media assets, persuasive copywriting, and visual art. Builds complete,
+  persuasive copywriting, and visual art. Builds complete,
   visually striking web pages with real media, advanced motion, and compelling copy.
   Use when: building landing pages, marketing sites, product pages, dashboards,
-  generating media assets (image/video/audio/music), writing conversion copy,
+  writing conversion copy,
   creating generative art, or implementing cinematic scroll animations.
 license: MIT
 metadata:
@@ -23,7 +23,7 @@ metadata:
 
 # Frontend Studio
 
-Build complete, production-ready frontend pages by orchestrating 5 specialized capabilities: design engineering, motion systems, AI-generated assets, persuasive copy, and generative art.
+Build complete, production-ready frontend pages by orchestrating 4 specialized capabilities: design engineering, motion systems, persuasive copy, and generative art.
 
 ## Invocation
 
@@ -38,21 +38,8 @@ The user provides their request as natural language (e.g. "build a landing page 
 ```
 frontend-dev/
 ├── SKILL.md                      # Core skill (this file)
-├── scripts/                      # Asset generation scripts
-│   ├── minimax_tts.py            # Text-to-speech
-│   ├── minimax_music.py          # Music generation
-│   ├── minimax_video.py          # Video generation (async)
-│   └── minimax_image.py          # Image generation
 ├── references/                   # Detailed guides (read as needed)
-│   ├── minimax-cli-reference.md  # CLI flags quick reference
-│   ├── asset-prompt-guide.md     # Asset prompt engineering rules
-│   ├── minimax-tts-guide.md      # TTS usage & voices
-│   ├── minimax-music-guide.md    # Music prompts & lyrics format
-│   ├── minimax-video-guide.md    # Camera commands & models
-│   ├── minimax-image-guide.md    # Ratios & batch generation
-│   ├── minimax-voice-catalog.md  # All voice IDs
 │   ├── motion-recipes.md         # Animation code snippets
-│   ├── env-setup.md              # Environment setup
 │   └── troubleshooting.md        # Common issues
 ├── templates/                    # Visual art templates
 │   ├── viewer.html               # p5.js interactive art base
@@ -172,18 +159,19 @@ project/
 1. Select animation tools per section (see Tool Selection Matrix)
 2. Plan motion sequences following performance guardrails
 
-### Phase 3: Asset Generation
-Generate all image/video/audio assets using `scripts/`. NEVER use placeholder URLs (unsplash, picsum, placeholder.com, via.placeholder, placehold.co, etc.) or external URLs.
+### Phase 3: Assets (Manual)
+Assets are provided manually by the user. Do NOT generate assets automatically.
 
-1. Parse asset requirements (type, style, spec, usage)
-2. Craft optimized prompts, show to user, confirm before generating
-3. Execute via scripts, save to project — do NOT proceed to Phase 5 until all assets are saved locally
+1. Identify all required assets (images, videos, audio) and list them for the user
+2. Use descriptive placeholder comments in code (e.g. `{/* TODO: user to provide hero image */}`) until assets are supplied
+3. When the user provides asset files, place them in the project's assets directory following the naming convention
+4. NEVER use placeholder URLs (unsplash, picsum, placeholder.com, via.placeholder, placehold.co, etc.) or external URLs
 
 ### Phase 4: Copywriting & Content
 Follow copywriting frameworks (AIDA, PAS, FAB) to craft all text content. Do NOT use "Lorem ipsum" — write real copy.
 
 ### Phase 5: Build UI
-Scaffold the project and build each section following Design and Motion rules. Integrate generated assets and copy. All `<img>`, `<video>`, `<source>`, and CSS `background-image` MUST reference local assets from Phase 3.
+Scaffold the project and build each section following Design and Motion rules. Integrate copy and any user-provided assets. Use placeholder comments for missing assets — never block progress waiting for them.
 
 ### Phase 6: Quality Gates
 Run final checklist (see Quality Gates section).
@@ -368,50 +356,30 @@ npm install three @react-three/fiber @react-three/drei  # 3D (lazy-load)
 
 ---
 
-# 3. Asset Generation
+# 3. Assets (Manual)
 
-## 3.1 Scripts
+Assets are provided manually by the user — there is no automated generation.
 
-| Type | Script | Pattern |
-|------|--------|---------|
-| TTS | `scripts/minimax_tts.py` | Sync |
-| Music | `scripts/minimax_music.py` | Sync |
-| Video | `scripts/minimax_video.py` | Async (create → poll → download) |
-| Image | `scripts/minimax_image.py` | Sync |
+## 3.1 Workflow
+1. **Identify:** List all required assets (hero images, icons, background videos, audio, etc.) with recommended specs
+2. **Communicate:** Present the asset list to the user with suggested dimensions/formats
+3. **Placeholder:** Use descriptive TODO comments in code until assets are provided
+4. **Integrate:** When user supplies files, save to `<project>/public/assets/{images,videos,audio}/` as `{type}-{descriptor}.{ext}`
+5. **Post-process:** If needed, suggest optimizations (WebP for images, compressed video, normalized audio)
 
-Env: `MINIMAX_API_KEY` (required).
+## 3.2 Recommended Specs
 
-## 3.2 Workflow
-1. **Parse:** type, quantity, style, spec, usage
-2. **Craft prompt:** Be specific (composition, lighting, style). **NEVER** include text in image prompts.
-3. **Execute:** Show prompt to user, **MUST confirm before generating**, then run script
-4. **Save:** `<project>/public/assets/{images,videos,audio}/` as `{type}-{descriptor}-{timestamp}.{ext}` — **MUST save locally**
-5. **Post-process:** Images → WebP, Videos → ffmpeg compress, Audio → normalize
-6. **Deliver:** File path + code snippet + CSS suggestion
+| Use Case | Recommended Format |
+|----------|-------------------|
+| Hero image | 16:9, WebP, ≤200KB |
+| Thumbnail | 1:1, WebP |
+| Icon | 1:1, SVG or WebP |
+| Avatar | 1:1, WebP, circular crop ready |
+| Social/OG | 1200×630, WebP or PNG |
+| Background video | MP4, 6-10s, loopable |
+| Background music | MP3, 30s, loopable |
 
-## 3.3 Preset Shortcuts
-
-| Shortcut | Spec |
-|----------|------|
-| `hero` | 16:9, cinematic, text-safe |
-| `thumb` | 1:1, centered subject |
-| `icon` | 1:1, flat, clean background |
-| `avatar` | 1:1, portrait, circular crop ready |
-| `banner` | 21:9, OG/social |
-| `bg-video` | 768P, 6s, `[Static shot]` |
-| `video-hd` | 1080P, 6s |
-| `bgm` | 30s, no vocals, loopable |
-| `tts` | MiniMax HD, MP3 |
-
-## 3.4 Reference
-
-- `references/minimax-cli-reference.md` — CLI flags
-- `references/asset-prompt-guide.md` — Prompt rules
-- `references/minimax-voice-catalog.md` — Voice IDs
-- `references/minimax-tts-guide.md` — TTS usage
-- `references/minimax-music-guide.md` — Music generation (prompts, lyrics, structure tags)
-- `references/minimax-video-guide.md` — Camera commands
-- `references/minimax-image-guide.md` — Ratios, batch
+**NEVER** use placeholder URLs (unsplash, picsum, placeholder.com, via.placeholder, placehold.co, lorem.space, dummyimage).
 
 ---
 
@@ -558,9 +526,8 @@ Refine, don't add. Make it crisp. Polish into masterpiece.
 
 **General:**
 - [ ] Dependencies verified in `package.json`
-- [ ] **No placeholder URLs** — grep the output for `unsplash`, `picsum`, `placeholder`, `placehold`, `via.placeholder`, `lorem.space`, `dummyimage`. If ANY found, STOP and replace with generated assets before delivering.
-- [ ] **All media assets exist as local files** in the project's assets directory
-- [ ] Asset prompts confirmed with user before generation
+- [ ] **No placeholder URLs** — grep the output for `unsplash`, `picsum`, `placeholder`, `placehold`, `via.placeholder`, `lorem.space`, `dummyimage`. If ANY found, STOP and remove them.
+- [ ] **All referenced assets** either exist as local files or have clear TODO comments for the user to supply them
 
 ---
 
