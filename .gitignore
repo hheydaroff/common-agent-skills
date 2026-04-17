@@ -1,4 +1,6 @@
 .DS_Store
+.sync-conflict-*
+node_modules/
 
 # deploy targets — never edit skills here, always edit in skills/
 # (these are populated by deploy.sh)

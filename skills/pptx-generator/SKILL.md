@@ -3,7 +3,7 @@ name: pptx-generator
 description: "Generate, edit, and read PowerPoint presentations. Create from scratch with PptxGenJS (cover, TOC, content, section divider, summary slides), edit existing PPTX via XML workflows, or extract text with markitdown. Triggers: PPT, PPTX, PowerPoint, presentation, slide, deck, slides."
 license: MIT
 metadata:
-  version: "1.0"
+  version: "2.0"
   category: productivity
   sources:
     - https://gitbrent.github.io/PptxGenJS/
@@ -14,13 +14,14 @@ metadata:
 
 ## Overview
 
-This skill handles all PowerPoint tasks: reading/analyzing existing presentations, editing template-based decks via XML manipulation, and creating presentations from scratch using PptxGenJS. It includes a complete design system (color palettes, fonts, style recipes) and detailed guidance for every slide type.
+This skill handles all PowerPoint tasks: reading/analyzing existing presentations, editing template-based decks via XML manipulation, and creating presentations from scratch using PptxGenJS. It includes a complete design system (color palettes, fonts, style recipes), structured planning workflow, speaker notes, and detailed guidance for every slide type.
 
 ## Quick Reference
 
 | Task | Approach |
 |------|----------|
 | Read/analyze content | `python -m markitdown presentation.pptx` |
+| Extract corporate style from template | See [Corporate Style Extraction](references/corporate-style.md) |
 | Edit or create from template | See [Editing Presentations](references/editing.md) |
 | Create from scratch | See [Creating from Scratch](#creating-from-scratch-workflow) below |
 
@@ -39,8 +40,14 @@ This skill handles all PowerPoint tasks: reading/analyzing existing presentation
 
 | File | Contents |
 |------|----------|
+| [strategist.md](references/strategist.md) | **Planning phase** — Eight Confirmations, design spec, industry colors, content strategy styles |
 | [slide-types.md](references/slide-types.md) | 5 slide page types (Cover, TOC, Section Divider, Content, Summary) + additional layout patterns |
-| [design-system.md](references/design-system.md) | Color palettes, font reference, style recipes (Sharp/Soft/Rounded/Pill), typography & spacing |
+| [design-system.md](references/design-system.md) | Color palettes, industry lookup, typography presets, font reference, style recipes |
+| [visual-effects.md](references/visual-effects.md) | Shadows, gradient overlays, decorative elements, frosted cards |
+| [image-layouts.md](references/image-layouts.md) | Aspect ratio → layout mapping, image sizing modes, gallery grids, placeholders |
+| [speaker-notes.md](references/speaker-notes.md) | Speaker notes generation framework, stage markers, style-specific examples |
+| [source-intake.md](references/source-intake.md) | Source document conversion (PDF/DOCX/URL → Markdown), content analysis |
+| [corporate-style.md](references/corporate-style.md) | Extract corporate style guide from template PPTX — colors, fonts, layouts, logo |
 | [editing.md](references/editing.md) | Template-based editing workflow, XML manipulation, formatting rules, common pitfalls |
 | [pitfalls.md](references/pitfalls.md) | QA process, common mistakes, critical PptxGenJS pitfalls |
 | [pptxgenjs.md](references/pptxgenjs.md) | Complete PptxGenJS API reference |
@@ -50,7 +57,7 @@ This skill handles all PowerPoint tasks: reading/analyzing existing presentation
 ## Reading Content
 
 ```bash
-# Text extraction
+# Text extraction (supports PDF, DOCX, PPTX, XLSX, HTML, URLs)
 python -m markitdown presentation.pptx
 ```
 
@@ -60,21 +67,55 @@ python -m markitdown presentation.pptx
 
 **Use when no template or reference presentation is available.**
 
-### Step 1: Research & Requirements
+**Pipeline**: `Source Intake → Strategist (plan) → Slide Generation → Speaker Notes → QA`
 
-Search to understand user requirements — topic, audience, purpose, tone, content depth.
+### Step 1: Source Content Intake
 
-### Step 2: Select Color Palette & Fonts
+When the user provides source documents (PDF, DOCX, URL, etc.), convert them to Markdown first. See [Source Intake](references/source-intake.md) for details.
 
-Use the [Color Palette Reference](references/design-system.md#color-palette-reference) to select a palette matching the topic and audience. Use the [Font Reference](references/design-system.md#font-reference) to choose a font pairing.
+```bash
+python -m markitdown source.pdf > source_content.md
+```
 
-### Step 3: Select Design Style
+If the user provides content directly in conversation, skip conversion and proceed to Step 2.
 
-Use the [Style Recipes](references/design-system.md#style-recipes) to choose a visual style (Sharp, Soft, Rounded, or Pill) matching the presentation tone.
+### Step 1b: Corporate Style Extraction (Optional)
+
+If the user provides a corporate template PPTX or brand guidelines, extract a reusable style guide **before** the Strategist phase. See [Corporate Style Extraction](references/corporate-style.md).
+
+This produces `corporate-style.md` which overrides the default design system — the Strategist phase will use brand colors, fonts, and layout standards instead of choosing from generic palettes.
+
+### Step 2: Strategist Phase — Planning & Design Spec
+
+**Read [references/strategist.md](references/strategist.md) before proceeding.**
+
+If `corporate-style.md` exists, use it as the design foundation — skip color/font/style selection in the Eight Confirmations and use the brand values instead.
+
+This is a **BLOCKING** step — present recommendations and wait for user confirmation.
+
+Complete the **Eight Confirmations**:
+1. Canvas format (16:9, 4:3, etc.)
+2. Page count range
+3. Target audience & key information
+4. Content strategy style (General / Consulting / Executive)
+5. Color scheme (use [Industry Color Reference](references/strategist.md#industry-color-reference))
+6. Icon usage approach
+7. Typography plan (preset + size baseline)
+8. Image usage approach
+
+**Output**: `slides/design_spec.md` — the single source of truth for all subsequent generation.
+
+### Step 3: Select Visual Style
+
+Use the [Style Recipes](references/design-system.md#style-recipes) to choose a visual style (Sharp, Soft, Rounded, or Pill) matching the confirmed tone. This determines corner radius, spacing, and component sizing.
 
 ### Step 4: Plan Slide Outline
 
 Classify **every slide** as exactly one of the [5 page types](references/slide-types.md). Plan the content and layout for each slide. Ensure visual variety — do NOT repeat the same layout across slides.
+
+For slides with images, consult the [Image Layout Framework](references/image-layouts.md) to match image aspect ratios to appropriate layouts.
+
+For slides needing visual polish, consult the [Visual Effects Library](references/visual-effects.md) for shadow, overlay, and decorative techniques.
 
 ### Step 5: Generate Slide JS Files
 
@@ -85,10 +126,12 @@ Create one JS file per slide in `slides/` directory. Each file must export a syn
 2. Images go in: `slides/imgs/`
 3. Final PPTX goes in: `slides/output/`
 4. Dimensions: 10" x 5.625" (LAYOUT_16x9)
-5. Fonts: Chinese = Microsoft YaHei, English = Arial (or approved alternative)
+5. Fonts: Chinese = Microsoft YaHei, English = Arial (or approved alternative from design spec)
 6. Colors: 6-char hex without # (e.g. `"FF0000"`)
 7. Must use the theme object contract (see [Theme Object Contract](#theme-object-contract))
 8. Must follow the [PptxGenJS API reference](references/pptxgenjs.md)
+9. Must follow the [Visual Effects Library](references/visual-effects.md) for shadows and overlays
+10. Use factory functions for shadow objects — never reuse option objects across calls
 
 ### Step 6: Compile into Final PPTX
 
@@ -119,7 +162,25 @@ pres.writeFile({ fileName: './output/presentation.pptx' });
 
 Run with: `cd slides && node compile.js`
 
-### Step 7: QA (Required)
+### Step 7: Generate Speaker Notes
+
+**Read [references/speaker-notes.md](references/speaker-notes.md) before proceeding.**
+
+After all slides are compiled:
+
+1. Generate `slides/notes/total.md` — master document with notes for all slides
+2. Split into per-slide files: `slides/notes/slide-01.md`, etc.
+3. Optionally embed notes into slides using `slide.addNotes("...")`
+
+Notes should include:
+- Transition text (every slide after cover)
+- Script text (2–5 sentences)
+- Key points: ① ② ③
+- Duration estimate
+
+Adapt the notes style to match the confirmed Content Strategy Style (General / Consulting / Executive).
+
+### Step 8: QA (Required)
 
 See [QA Process](references/pitfalls.md#qa-process).
 
@@ -127,10 +188,16 @@ See [QA Process](references/pitfalls.md#qa-process).
 
 ```
 slides/
+├── design_spec.md       # Design specification (from Strategist phase)
 ├── slide-01.js          # Slide modules
 ├── slide-02.js
 ├── ...
+├── compile.js           # Compilation script
 ├── imgs/                # Images used in slides
+├── notes/               # Speaker notes
+│   ├── total.md         # Master document
+│   ├── slide-01.md      # Per-slide notes
+│   └── ...
 └── output/              # Final artifacts
     └── presentation.pptx
 ```
@@ -161,6 +228,9 @@ function createSlide(pres, theme) {
     fontSize: 48, fontFace: "Arial",
     color: theme.primary, bold: true, align: "center"
   });
+
+  // Speaker notes (optional — can also be added from notes/ files)
+  slide.addNotes("Welcome everyone. Today we'll explore...");
 
   return slide;
 }
@@ -244,6 +314,6 @@ slide.addText("03", {
 
 ## Dependencies
 
-- `pip install "markitdown[pptx]"` — text extraction
+- `pip install "markitdown[all]"` — text extraction (PDF, DOCX, PPTX, XLSX, HTML)
 - `npm install -g pptxgenjs` — creating from scratch
 - `npm install -g react-icons react react-dom sharp` — icons (optional)

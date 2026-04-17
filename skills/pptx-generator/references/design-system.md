@@ -25,6 +25,29 @@
 
 ---
 
+### Industry → Palette Quick Lookup
+
+Use this to quickly find the right palette for a given industry or topic:
+
+| Industry / Topic | Recommended Palettes | Key Color |
+|-----------------|---------------------|----------|
+| Finance / Banking | #2, #9, #18 | Navy/gold — stable, premium |
+| Technology / SaaS | #7, #15, #18 | Blue/orange — innovative |
+| Healthcare / Pharma | #1, #11 | Teal/green — reassuring |
+| Education | #10, #17 | Warm/clear — logical |
+| Government / Public | #2, #4 | Deep blue/red — authoritative |
+| Legal / Consulting | #14, #2 | Purple/navy — sophisticated |
+| Real Estate | #3, #11 | Green/earth — grounded |
+| Food & Beverage | #13, #8 | Warm/rich — appetizing |
+| Fashion / Luxury | #12, #14 | Muted/elegant — refined |
+| Energy / Environment | #11, #3 | Forest/earth — sustainable |
+| Sports / Fitness | #7, #17 | Bold/bright — dynamic |
+| Creative / Design | #5, #16 | Pastel/coral — playful |
+| Automotive | #9, #7 | Dark/luminous — powerful |
+| Hospitality / Travel | #16, #1 | Teal/coral — inviting |
+
+---
+
 ### Agent Design System — Full Color Scale
 
 Based on the Platinum White-Gold Theme design tokens. Provides complete color scales for fine-grained design work.
@@ -170,6 +193,27 @@ slide.addShape(pres.shapes.RECTANGLE, { fill: { color: "1a1a2e" } });
 ---
 
 ## Font Reference
+
+### Typography Presets (Scenario-Based)
+
+Select a preset based on presentation context, then customize as needed:
+
+| Preset | Header Font | Body Font | Best For |
+|--------|------------|-----------|----------|
+| **P1** Modern Business | Arial | Calibri | Tech, startup, SaaS, general business |
+| **P2** Classic Corporate | Georgia | Calibri | Finance, consulting, legal, annual reports |
+| **P3** Bold & Impactful | Arial Black | Arial | Marketing, product launches, keynotes |
+| **P4** Elegant & Editorial | Cambria | Calibri | Culture, arts, editorial, academic |
+| **P5** Clean & Versatile | Trebuchet MS | Calibri | Education, training, workshops |
+
+### Size Baseline by Content Density
+
+| Content Density | Body (pt) | Title (pt) | Subtitle (pt) | Caption (pt) | Stat Callout (pt) |
+|----------------|-----------|------------|---------------|-------------|------------------|
+| **Relaxed** (3–5 items/slide) | 16 | 36–44 | 20–24 | 10–12 | 60–96 |
+| **Dense** (6+ items/slide) | 14 | 28–36 | 18–22 | 10–11 | 48–72 |
+
+**Selection principle**: Font size is based on **content density**, not design style. A Sharp-style slide with relaxed content still uses 16pt body.
 
 ### Recommended Fonts
 
