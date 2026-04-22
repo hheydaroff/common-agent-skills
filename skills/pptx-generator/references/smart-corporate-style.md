@@ -1,11 +1,5 @@
 # smart Corporate Style Guide
 
-> Auto-extracted from: `smart PPT Template 2.0..pptx`
-> Font source: `~/Documents/fonts/for_smart_collection_complete/`
-> Date: 2026-04-17
-
----
-
 ## Brand Colors
 
 ### Theme Color Scheme ("smart color theme")

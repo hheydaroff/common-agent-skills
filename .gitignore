@@ -2,6 +2,10 @@
 .sync-conflict-*
 node_modules/
 
+# Pi sessions - contain full conversation history, code, and potentially sensitive data
+.pi/sessions/
+.pi/agent/sessions/
+
 # deploy targets — never edit skills here, always edit in skills/
 # (these are populated by deploy.sh)
 skills/jira-updates/

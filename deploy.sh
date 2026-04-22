@@ -41,6 +41,7 @@ rsync -a --delete \
   --exclude='setup.sh' \
   --exclude='README.md' \
   --exclude='.gitignore' \
+  --exclude='node_modules/' \
   "$SKILLS_DIR/" "$TARGET_AGENTS/"
 ok "~/.agents/skills/"
 
