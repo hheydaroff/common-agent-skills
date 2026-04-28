@@ -82,6 +82,7 @@ Tell user:
       "id": "TASK-001",
       "phase": 1,
       "category": "Backend",
+      "type": "AFK",
       "title": "Task title",
       "description": "Details",
       "satisfies": ["AC1"],
@@ -98,6 +99,20 @@ Tell user:
 ## Verification Patterns
 
 Script infers from category:
+
+| Category | Command Pattern |
+|----------|------------------|
+
+## Task Types
+
+| Type | Meaning | Ralph Loop Behavior |
+|------|---------|---------------------|
+| AFK | Can be implemented and merged without human interaction | Execute autonomously |
+| HITL | Requires human input (architectural decision, design review, approval) | Pause and prompt user |
+
+The `type` field is extracted from the `**Type:**` line in each SPEC.md task block. Defaults to `AFK` if not specified.
+
+## Verification Patterns
 
 | Category | Command Pattern |
 |----------|-----------------|

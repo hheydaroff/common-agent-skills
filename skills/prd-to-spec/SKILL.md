@@ -5,9 +5,9 @@ description: Convert PRD.md into structured SPEC.md with atomic development task
 
 # PRD to SPEC Conversion
 
-Convert comprehensive PRD into structured SPEC.md with atomic, testable development tasks.
+Convert comprehensive PRD into structured SPEC.md with atomic, testable development tasks using vertical-slice decomposition.
 
-## Process (6 Steps)
+## Process (7 Steps)
 
 ### 1. Read PRD
 
@@ -21,7 +21,16 @@ Read `PRD.md` (or user-specified file). Extract:
 
 If PRD is missing critical info, ask user ONE clarifying question at a time.
 
-### 2. Write User Story
+### 2. Explore Codebase (if applicable)
+
+If inside an existing repo, explore it to understand:
+- Current architecture and layers (schema, API, services, UI)
+- Existing patterns and conventions
+- Test infrastructure and prior art
+
+This grounds the decomposition in reality rather than abstract planning.
+
+### 3. Write User Story
 
 Convert primary requirement into user-centric story:
 
@@ -36,7 +45,7 @@ Answer these:
 - WHAT are they trying to do? (specific action)
 - WHY do they want this? (business value)
 
-### 3. Define Acceptance Criteria
+### 4. Define Acceptance Criteria
 
 Write testable conditions using Given-When-Then format:
 
@@ -51,7 +60,7 @@ Write testable conditions using Given-When-Then format:
 - [ ] No vague words ("should", "maybe", "nice to have")
 - [ ] All edge cases covered (errors, timeouts, boundaries)
 
-### 4. Identify Technical Components
+### 5. Identify Technical Components
 
 List affected systems:
 
@@ -69,46 +78,47 @@ Infrastructure:
 - [HTTPS, CORS, caching, external services]
 ```
 
-### 5. Decompose into Workflows
+### 6. Decompose into Vertical Slices
 
-Choose ONE decomposition method:
+Break the work into **tracer-bullet vertical slices**. Each slice is a thin end-to-end path that cuts through ALL integration layers (schema → API → UI → tests), NOT a horizontal slice of one layer.
 
-**Method A: Workflow Steps** (Sequential actions)
-```
-1. User navigates to page
-2. User enters data
-3. User submits form
-4. System validates
-5. System processes
-6. System responds
-```
+**Vertical slice rules:**
+- Each slice delivers a narrow but COMPLETE path through every layer
+- A completed slice is demoable or verifiable on its own
+- Prefer many thin slices over few thick ones
+- Each slice should map to one or more acceptance criteria
 
-**Method B: CRUD** (Data operations)
-```
-Create: User creates new [entity]
-Read: System retrieves [entity]
-Update: User modifies [entity]
-Delete: User removes [entity]
-```
+**Classify each slice:**
+- **AFK** — Can be implemented and merged without human interaction (prefer this)
+- **HITL** — Requires human input: architectural decision, design review, external approval
 
-**Method C: Business Rules** (Scenarios)
-```
-Happy Path: Valid input → Success
-Error Path: Invalid input → Error message
-Security Path: Rate limit exceeded → Lockout
-Edge Path: Timeout → Graceful degradation
-```
+**Supplementary decomposition methods** (use within slices if helpful):
 
-**Method D: Platform** (Different contexts)
-```
-Desktop: Full form with all fields
-Mobile: Responsive simplified form
-API: Programmatic access
-```
+- **Workflow Steps**: Sequential user actions (navigate → enter data → submit → validate → respond)
+- **CRUD**: Data operations (Create, Read, Update, Delete)
+- **Business Rules**: Scenarios (happy path, error path, security path, edge path)
+- **Platform**: Different contexts (desktop, mobile, API)
 
-### 6. Create Atomic Tasks
+### 7. Quiz the User
 
-Each task must satisfy **INVEST**:
+**Before finalizing**, present the proposed breakdown as a numbered list. For each slice show:
+
+- **Title**: Short descriptive name
+- **Type**: HITL / AFK
+- **Blocked by**: Which other slices must complete first
+- **User stories covered**: Which acceptance criteria this addresses
+
+Ask the user:
+- "Does the granularity feel right? (too coarse / too fine)"
+- "Are the dependency relationships correct?"
+- "Should any slices be merged or split further?"
+- "Are the correct slices marked as HITL and AFK?"
+
+**Iterate until the user approves the breakdown.** Only then proceed to write SPEC.md.
+
+### 8. Create Atomic Tasks
+
+From the approved slices, create tasks that satisfy **INVEST**:
 - **I**ndependent - completable without waiting for others
 - **N**egotiable - can discuss and adjust scope
 - **V**aluable - delivers business value
@@ -116,14 +126,14 @@ Each task must satisfy **INVEST**:
 - **S**mall - 4-8 hours (1-2 days max)
 - **T**estable - clear pass/fail criteria
 
-See [references/task-template.md](references/task-template.md) for detailed template and examples.
-
 **Task format:**
 
 ```
 ### TASK N: [Action Verb] [Component]
 
-**Description:** [What to build - specific]
+**Description:** [What to build — end-to-end behavior, not layer-by-layer]
+
+**Type:** AFK | HITL
 
 **Satisfies:** AC1, AC2
 
@@ -166,14 +176,15 @@ So that [value]
 **Database:** [list]
 **Infrastructure:** [list]
 
-## Decomposition ([Method Used])
+## Vertical Slices
 
-[Breakdown using chosen method]
+Summary of the approved slice breakdown with dependency relationships.
 
 ## Atomic Tasks
 
 ### TASK 1: [Action Verb] [Component]
-**Description:** [specific]
+**Description:** [specific end-to-end behavior]
+**Type:** AFK
 **Satisfies:** AC1
 **Test Cases:**
 - ✓ Happy: [scenario]
@@ -189,16 +200,16 @@ So that [value]
 
 ```
 PHASE 1 (Parallel):
-├─ TASK 1: [name]
-├─ TASK 2: [name]
-└─ TASK 3: [name]
+├─ TASK 1: [name] (AFK)
+├─ TASK 2: [name] (AFK)
+└─ TASK 3: [name] (HITL)
 
 PHASE 2 (Depends on Phase 1):
-├─ TASK 4: [name] (needs 1, 2)
-└─ TASK 5: [name] (needs 1)
+├─ TASK 4: [name] (AFK, needs 1, 2)
+└─ TASK 5: [name] (AFK, needs 1)
 
 PHASE 3 (Sequential):
-└─ TASK 6: [name] (needs 4, 5)
+└─ TASK 6: [name] (AFK, needs 4, 5)
 ```
 
 ## Out of Scope
@@ -210,6 +221,34 @@ PHASE 3 (Sequential):
 When ALL acceptance criteria pass: `<promise>COMPLETE</promise>`
 ```
 
+## Optional: GitHub Issue Output
+
+If the user requests GitHub issues in addition to (or instead of) SPEC.md:
+
+Create issues in dependency order (blockers first) so you can reference real issue numbers:
+
+```bash
+gh issue create --title "TASK N: [Title]" --body "## What to build
+[End-to-end behavior description]
+
+## Type
+AFK | HITL
+
+## Acceptance criteria
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+## Blocked by
+- #<issue-number> (or 'None - can start immediately')
+
+## Test cases
+- ✓ Happy: [scenario]
+- ✓ Error: [scenario]
+- ✓ Edge: [scenario]"
+```
+
+Do NOT close or modify any parent issue.
+
 ## Post-Creation
 
 Tell user:
@@ -218,15 +257,21 @@ Tell user:
 ## Tips
 
 **DO:**
+- Decompose as vertical slices first, then refine within slices
+- Classify every task as AFK or HITL
+- Quiz the user on the breakdown BEFORE writing SPEC.md
 - Write ACs with specific, measurable outcomes ("returns 401 status")
 - Keep tasks 4-8 hours max
 - List all dependencies upfront
 - Include happy path AND error cases
 - Group related tasks in same phase
+- Describe end-to-end behavior, not layer-by-layer implementation
 
 **DON'T:**
+- Create horizontal tasks ("build all API endpoints", "style all pages")
 - Mix frontend + backend in one task
 - Create tasks > 8 hours (break down further)
 - Write vague ACs ("user should see something")
 - Forget security, accessibility, error handling
 - Create 100% sequential dependencies (parallelize where possible)
+- Skip the user quiz step — always validate before finalizing
