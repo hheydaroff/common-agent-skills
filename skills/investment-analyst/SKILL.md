@@ -1,6 +1,6 @@
 ---
 name: investment-analyst
-description: "Comprehensive investment analysis covering stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Uses yfinance (no API key), Exa/Tavily for news & research, and r.jina.ai for SEC filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review'."
+description: "Comprehensive investment analysis covering stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Includes early opportunity scanning to find Phase 2 themes before the market reprices them. Uses yfinance (no API key), Alpaca (API key), Exa/Tavily for news & research, and r.jina.ai for SEC filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'what's early', 'be early'."
 ---
 
 # Investment Analyst
@@ -181,6 +181,122 @@ Views: bullish, bearish, neutral, volatile, income
 2. Calculate portfolio beta, sector exposure, concentration risk
 3. Identify: overlapping factor exposures, correlation clusters, rebalancing needs
 4. Suggest: hedges, diversification adds, trim candidates
+
+### 6. Early Opportunity Scanner (`/invest scan <THEME>` or `/invest early`)
+
+Find investment opportunities in Phase 2 (committed but not yet repriced) before the market prices them in.
+
+**The Phase Framework:**
+```
+Phase 1: Research/patents/pilots         → TOO EARLY (no catalyst, no timeline)
+Phase 2: Permits/contracts/VC rounds      → SWEET SPOT (real commitment, not yet priced)
+Phase 3: Analyst upgrades/ETF inclusion   → TOO LATE (already repriced, momentum only)
+```
+
+**Process:**
+
+1. **Identify structural demand drivers** (not hype)
+   - Exa search: `"<THEME> construction permit contract signed procurement 2026"` (category: news, time: month)
+   - Exa search: `"<THEME> series B series C funding raised 2026"` (category: news, time: month)
+   - Tavily search: `"<THEME> regulatory approval legislation passed"` (time_range: month)
+
+2. **Find the bottleneck suppliers** (picks-and-shovels)
+   - Exa search: `"<THEME> supply chain bottleneck supplier shortage"`
+   - Ask: "Who are the companies that EVERY player in this theme must buy from?"
+
+3. **Check if still under-followed**
+   - `market_data.py recommendations <TICKER>` — look for < 10 analysts covering
+   - If 3-5 analysts → very early. If 15+ → market already knows.
+
+4. **Verify valuation hasn't already moved**
+   - `market_data.py price <TICKER>` — check 52-week change
+   - `market_data.py technicals <TICKER> 1y` — if up >100% already, likely Phase 3
+   - Compare forward P/E to sector peers
+
+5. **Confirm commitment signals (not just talk)**
+   - Permits filed or issued (NRC, FERC, DOE, EPA)
+   - Customer contracts signed (not MOUs or "exploring")
+   - Capex announced in earnings calls
+   - Insider buying (Form 4 filings)
+   - Hiring surges in specific technical roles
+
+**Output format:**
+```markdown
+# Early Opportunity Scan: <THEME>
+
+## Phase Assessment: [1 / 2-Early / 2-Late / 3]
+
+## Structural Demand Driver
+- What's causing this? (regulation, tech shift, demographics)
+- Is it reversible? (if yes → skip)
+
+## Commitment Signals Found
+- [list concrete evidence: permits, contracts, funding, capex]
+
+## Bottleneck Map
+- Who supplies the constrained input?
+- Who can't be routed around?
+
+## Candidate Stocks
+| Ticker | What They Do | Analyst Count | 52w Return | Fwd P/E | Phase |
+
+## Timing & Catalysts
+- What specific event moves this from Phase 2 → Phase 3?
+- Expected timeline
+
+## Risk: What Kills This Thesis?
+- Single biggest risk
+- How to monitor it
+```
+
+### 7. Watchlist Check (`/invest watchlist`)
+
+For a user-provided watchlist or theme, run a systematic check:
+
+1. **For each ticker on the watchlist:**
+   - `market_data.py price <TICKER>` — current valuation snapshot
+   - `market_data.py technicals <TICKER> 6mo` — trend and momentum
+   - `market_data.py recommendations <TICKER>` — analyst sentiment changes
+
+2. **Cross-reference with triggers:**
+   - Has anything changed since last check? (price breakout, volume surge, analyst upgrade)
+   - Any new catalysts? (Exa search for recent news on each ticker)
+   - Any red flags triggered? (earnings miss, dilution, regulatory setback)
+
+3. **Score each position:**
+   - Technical: Improving / Stable / Deteriorating
+   - Fundamental: Accelerating / Steady / Decelerating  
+   - Catalyst proximity: Near-term / Medium-term / Distant
+   - Action: Add / Hold / Trim / Exit
+
+**Output format:**
+```markdown
+# Watchlist Check — <DATE>
+
+| Ticker | Price | Δ Since Last | Technical | Fundamental | Next Catalyst | Action |
+|--------|-------|-------------|-----------|-------------|---------------|--------|
+
+## Alerts
+- [Any triggered thresholds, unusual volume, news events]
+
+## Theme Health
+- Is the overall thesis still intact?
+- Any macro/regime changes that affect the basket?
+```
+
+### 8. "Be Early" Principles
+
+When scanning for opportunities, follow these rules:
+
+1. **Track commitment signals, not headlines** — permits > press releases, contracts > MOUs, capex > guidance
+2. **Find the bottleneck** — in any theme, ONE input is constrained. The company that owns it wins.
+3. **Under-followed = edge** — if <10 analysts cover a $2-20B company, the market may be mispricing it
+4. **Convergence > single signal** — regulation + capital + customers all pointing same direction = high conviction
+5. **Size for uncertainty** — early bets get 2-5% allocation each, never YOLO
+6. **Define the exit before entry** — what specific event proves the thesis wrong?
+7. **The best time to buy is when it's boring** — if nobody's talking about it but commitments are real, that's the setup
+
+---
 
 ## Analysis Principles
 
