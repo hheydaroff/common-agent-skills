@@ -42,6 +42,30 @@ uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py 
 
 Shorthand: `alias macrodata='uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py'`
 
+#### `scripts/alpaca_data.py` — Real-time Market Data via Alpaca (requires API key)
+
+Setup: Store keys in `~/.pi/.secrets/alpaca_api_key` and `~/.pi/.secrets/alpaca_api_secret`
+
+```bash
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py quote AAPL                    # Real-time NBBO quote
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py bars AAPL 1Day 3mo           # Historical bars (1Min,5Min,15Min,1Hour,1Day)
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py snapshot AAPL                # Latest bar + quote + trade
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py multisnapshot AAPL,MSFT,NVDA # Multiple snapshots
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py trades AAPL 20              # Recent trades
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py options_chain AAPL          # Options chain with Greeks
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py news AAPL 10               # Recent news articles
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py screener active             # Most active / gainers / losers
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py crypto_quote BTC/USD        # Crypto snapshot
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py crypto_bars ETH/USD 1Day 1mo # Crypto bars
+uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account                     # Account info
+```
+
+Shorthand: `alias alpaca='uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py'`
+
+**When to use Alpaca vs yfinance:**
+- Alpaca: real-time quotes, intraday bars, options with Greeks, news, screener, crypto
+- yfinance: fundamentals, financials, analyst estimates, dividends, institutional holders
+
 #### Web Research (use existing Exa/Tavily skills)
 - **Exa**: Neural search for research papers, financial reports, sentiment
 - **Tavily**: Current news, earnings coverage, analyst opinions
@@ -52,12 +76,14 @@ Shorthand: `alias macrodata='uv run --with yfinance --with pandas --with numpy p
 ### 1. Stock Deep Dive (`/invest deep <TICKER>`)
 
 Run this sequence:
-1. `market_data.py price <TICKER>` — current snapshot
-2. `market_data.py financials <TICKER>` — 3 statements
-3. `market_data.py technicals <TICKER> 1y` — trend & momentum
-4. `market_data.py recommendations <TICKER>` — Street consensus
-5. Exa search: `"<COMPANY> earnings outlook analyst"` (category: financial report)
-6. Tavily search: `"<TICKER> risks catalysts 2025"` (time_range: month)
+1. `alpaca_data.py snapshot <TICKER>` — real-time price + daily bar
+2. `market_data.py price <TICKER>` — valuation metrics & fundamentals
+3. `market_data.py financials <TICKER>` — 3 statements
+4. `market_data.py technicals <TICKER> 1y` — trend & momentum
+5. `market_data.py recommendations <TICKER>` — Street consensus
+6. `alpaca_data.py news <TICKER>` — latest headlines
+7. Exa search: `"<COMPANY> earnings outlook analyst"` (category: financial report)
+8. Tavily search: `"<TICKER> risks catalysts 2025"` (time_range: month)
 
 **Output format:**
 
@@ -115,9 +141,11 @@ Date: <today>
 
 Views: bullish, bearish, neutral, volatile, income
 
-1. `market_data.py price <TICKER>` — current price + IV
-2. `market_data.py options <TICKER>` — full chain
-3. `market_data.py technicals <TICKER> 3mo` — near-term trend
+1. `alpaca_data.py snapshot <TICKER>` — real-time price
+2. `alpaca_data.py options_chain <TICKER>` — full chain with Greeks (preferred)
+3. `market_data.py options <TICKER>` — fallback if Alpaca options unavailable
+4. `market_data.py technicals <TICKER> 3mo` — near-term trend
+5. `alpaca_data.py bars <TICKER> 1Day 6mo` — daily bars for historical vol calc
 
 **Analyze and recommend:**
 - Strategy selection (vertical spread, iron condor, PMCC, straddle, covered call, etc.)
@@ -131,8 +159,10 @@ Views: bullish, bearish, neutral, volatile, income
 ### 3. Sector & Macro Analysis (`/invest macro` or `/invest sector <SECTOR>`)
 
 1. `macro_data.py summary` — macro dashboard
-2. `market_data.py compare` — sector ETFs (XLK,XLF,XLE,XLV,XLI,XLP,XLU,XLY,XLC,XLRE,XLB)
-3. Tavily search: `"sector rotation market cycle 2025"` (time_range: week)
+2. `alpaca_data.py screener active` — most active stocks today
+3. `alpaca_data.py multisnapshot XLK,XLF,XLE,XLV,XLI,XLP,XLU,XLY,XLC,XLRE,XLB` — sector ETF prices
+4. `market_data.py compare` — sector ETFs valuation
+5. Tavily search: `"sector rotation market cycle 2025"` (time_range: week)
 
 **Output:** Market cycle phase, sector rankings, rotation signals, risk regime.
 
