@@ -74,7 +74,10 @@ tmux select-pane -t %<N> -T "🤖 Ralph"
 
 Build the command (same for both multiplexers):
 
-**IMPORTANT:** `pi -p` requires `@file` references as separate arguments before the prompt text. They cannot be embedded inside a quoted string.
+**IMPORTANT:**
+- `pi -p` requires `@file` references as separate arguments before the prompt text
+- Do NOT capture output with `result=$(...)` — let pi stream directly to the terminal so the user can see what's happening
+- Check `progress.txt` for the completion marker after each iteration instead
 
 ```bash
 RALPH_CMD="cd $(pwd) && RALPH_MAX=20 RALPH_SOURCE=$SOURCE bash -c '
@@ -83,11 +86,14 @@ PROGRESS=progress.txt
 [[ ! -f \$PROGRESS ]] && touch \$PROGRESS
 echo \"🤖 Ralph Loop | Max: \$RALPH_MAX | Source: \$RALPH_SOURCE\"
 for ((i=1; i<=\$RALPH_MAX; i++)); do
+  echo \"\"
+  echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"
   echo \"🔄 [\$i/\$RALPH_MAX] Running...\"
-  result=\$(pi -p @\$RALPH_SOURCE @\$PROGRESS \"Find the next incomplete task and implement it. Verify it works. Commit your changes. Update progress.txt. ONLY ONE TASK. If all done, output RALPH_COMPLETE.\")
-  echo \"\$result\"
-  if [[ \"\$result\" == *\"RALPH_COMPLETE\"* ]]; then
-    echo \"✅ Complete after \$i iterations\"
+  echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"
+  pi -p @\$RALPH_SOURCE @\$PROGRESS \"Find the next incomplete task and implement it. Verify it works. Commit your changes. Update progress.txt marking the task DONE. ONLY ONE TASK. If all tasks are done, write RALPH_COMPLETE to progress.txt.\"
+  if grep -q \"RALPH_COMPLETE\" \$PROGRESS 2>/dev/null; then
+    echo \"\"
+    echo \"✅ All tasks complete after \$i iterations\"
     exit 0
   fi
   sleep 3
@@ -97,9 +103,10 @@ echo \"🛑 Max iterations reached\"
 ```
 
 **Key details:**
+- `pi -p` output streams live to the terminal — user sees tool calls, edits, test runs in real time
 - `@SPEC.md` and `@progress.txt` are separate arguments to `pi -p`, NOT inside the prompt string
-- The completion marker is `RALPH_COMPLETE` (simple string, no XML tags that shells mangle)
-- The prompt is a single flat string — no newlines (avoids shell quoting issues in send commands)
+- Completion is detected by grepping `progress.txt` for `RALPH_COMPLETE` (pi writes it when all tasks done)
+- No output capture (`$()`) — that's what hides the live output
 
 ### Send to cmux
 
