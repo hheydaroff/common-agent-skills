@@ -74,6 +74,8 @@ tmux select-pane -t %<N> -T "🤖 Ralph"
 
 Build the command (same for both multiplexers):
 
+**IMPORTANT:** `pi -p` requires `@file` references as separate arguments before the prompt text. They cannot be embedded inside a quoted string.
+
 ```bash
 RALPH_CMD="cd $(pwd) && RALPH_MAX=20 RALPH_SOURCE=$SOURCE bash -c '
 PROGRESS=progress.txt
@@ -82,15 +84,9 @@ PROGRESS=progress.txt
 echo \"🤖 Ralph Loop | Max: \$RALPH_MAX | Source: \$RALPH_SOURCE\"
 for ((i=1; i<=\$RALPH_MAX; i++)); do
   echo \"🔄 [\$i/\$RALPH_MAX] Running...\"
-  result=\$(pi -p \"@\$RALPH_SOURCE @\$PROGRESS
-1. Find the next incomplete task and implement it.
-2. Verify it works.
-3. Commit your changes.
-4. Update progress.txt.
-ONLY ONE TASK.
-If all done, output <promise>COMPLETE</promise>.\")
+  result=\$(pi -p @\$RALPH_SOURCE @\$PROGRESS \"Find the next incomplete task and implement it. Verify it works. Commit your changes. Update progress.txt. ONLY ONE TASK. If all done, output RALPH_COMPLETE.\")
   echo \"\$result\"
-  if [[ \"\$result\" == *\"<promise>COMPLETE</promise>\"* ]]; then
+  if [[ \"\$result\" == *\"RALPH_COMPLETE\"* ]]; then
     echo \"✅ Complete after \$i iterations\"
     exit 0
   fi
@@ -99,6 +95,11 @@ done
 echo \"🛑 Max iterations reached\"
 '"
 ```
+
+**Key details:**
+- `@SPEC.md` and `@progress.txt` are separate arguments to `pi -p`, NOT inside the prompt string
+- The completion marker is `RALPH_COMPLETE` (simple string, no XML tags that shells mangle)
+- The prompt is a single flat string — no newlines (avoids shell quoting issues in send commands)
 
 ### Send to cmux
 
