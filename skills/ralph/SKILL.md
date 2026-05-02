@@ -76,6 +76,7 @@ Write `ralph-tui.sh` to the project directory, then execute it in the ralph pane
 ```bash
 #!/bin/bash
 # ralph-tui.sh - Ralph loop with full pi TUI + auto-exit
+# Each iteration runs ONE task in a fresh pi session with full TUI visibility.
 # Usage: ./ralph-tui.sh [max_iterations] [source_file]
 
 set -e
@@ -103,7 +104,7 @@ echo "🤖 Ralph Loop | Max: $MAX | Source: $SOURCE | MUX: $MUX"
 echo ""
 
 send_exit() {
-  sleep 3
+  sleep 2
   if [ "$MUX" = "cmux" ]; then
     cmux send --surface "$SURFACE" "/exit"
     cmux send-key --surface "$SURFACE" enter
@@ -123,7 +124,7 @@ for ((i=1; i<=MAX; i++)); do
   # Background watcher: when progress.txt changes, send /exit to pi
   (
     while true; do
-      sleep 5
+      sleep 3
       CURR=$(cat "$PROGRESS" 2>/dev/null)
       if [ "$CURR" != "$PREV" ]; then
         send_exit
@@ -133,12 +134,12 @@ for ((i=1; i<=MAX; i++)); do
   ) &
   WATCHER=$!
 
-  # Run pi interactively (full TUI) — watcher will /exit it when done
-  pi @"$SOURCE" @"$PROGRESS" "Implement the next incomplete task. Verify it works. Commit your changes. Update progress.txt marking the task DONE. If ALL tasks are complete, add RALPH_COMPLETE as the last line of progress.txt."
+  # Run pi interactively (full TUI) with STRICT single-task prompt
+  pi @"$SOURCE" @"$PROGRESS" "You are in a loop. Implement EXACTLY ONE task — the next incomplete task only. Do NOT continue to other tasks. Steps: 1) Identify the next incomplete task from progress.txt 2) Implement it 3) Verify it works 4) Commit 5) Update progress.txt marking ONLY that task as DONE. If this was the LAST task (all are now DONE), also add RALPH_COMPLETE as the final line. STOP after updating progress.txt. Do NOT proceed to any other task."
 
-  # Clean up watcher
-  kill $WATCHER 2>/dev/null
-  wait $WATCHER 2>/dev/null
+  # Clean up watcher (|| true prevents set -e from killing the loop)
+  kill $WATCHER 2>/dev/null || true
+  wait $WATCHER 2>/dev/null || true
 
   # Check if all done
   if grep -q "RALPH_COMPLETE" "$PROGRESS" 2>/dev/null; then
@@ -147,6 +148,14 @@ for ((i=1; i<=MAX; i++)); do
     echo "✅ All tasks complete after $i iterations!"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     exit 0
+  fi
+
+  sleep 2
+done
+
+echo "🛑 Max iterations ($MAX) reached"
+exit 1
+```
   fi
 
   sleep 2
