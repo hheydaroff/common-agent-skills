@@ -149,7 +149,7 @@ From the approved slices, create tasks that satisfy **INVEST**:
 
 ## Output: SPEC.md
 
-Write to `scripts/ralph/SPEC.md` (create directories if needed):
+Write to `SPEC.md` in the project root (or next to the PRD file if it lives elsewhere):
 
 ```markdown
 # Feature Spec: [Feature Name]
@@ -252,7 +252,7 @@ Do NOT close or modify any parent issue.
 ## Post-Creation
 
 Tell user:
-> "SPEC.md created at `scripts/ralph/SPEC.md`. Review the tasks and acceptance criteria. When approved, convert the SPEC into whatever machine-readable task format your execution pipeline uses (e.g., a `tasks.json` for a task-runner loop)."
+> "SPEC.md created. Review the tasks and acceptance criteria. When approved, convert the SPEC into whatever machine-readable task format your execution pipeline uses (e.g., a `tasks.json` for a task-runner loop)."
 
 ## Tips
 
