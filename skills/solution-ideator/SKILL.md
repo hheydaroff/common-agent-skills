@@ -16,7 +16,7 @@ Expand a problem into solution approaches, prune branches that violate hard cons
 | Evaluating an already-chosen solution against alternatives | ✓ yes (solution-evaluation mode) |
 | Problem is well-framed and approach is obvious | ✗ skip → `prd-creator` or just build |
 | Module-level API design question | ✗ `design-an-interface` |
-| User has a plan and wants it pressure-tested | ✗ `grill-me` / `grill-with-docs` |
+| User has a plan and wants it pressure-tested | ✗ `grill-me` |
 | Debugging / "why is this slow?" | ✗ `diagnose` |
 
 Before starting, check decline conditions. If a redirect matches, surface it:
@@ -237,7 +237,7 @@ End the session with a routing recommendation:
 |---|---|---|
 | Approach chosen, need product spec | `prd-creator` | formalise feature shape |
 | Approach chosen, it's an API-shape problem | `design-an-interface` | design the module interface |
-| User wants to pressure-test the recommendation | `grill-me` / `grill-with-docs` | stress-test before committing |
+| User wants to pressure-test the recommendation | `grill-me` | stress-test before committing |
 | Approach chosen, implementation is straightforward | none | just build |
 | Exit case ("already had your answer") | none | nothing to do |
 

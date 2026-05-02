@@ -77,40 +77,11 @@ As decisions crystallize during the session, update documentation immediately �
 
 ### Update CONTEXT.md
 
-When a term is resolved, add or update it in `CONTEXT.md` right there. Create the file lazily if it doesn't exist. Format:
+When a term is resolved, add or update it in `CONTEXT.md` right there. Create the file lazily if it doesn't exist. Handles single-context and multi-context (`CONTEXT-MAP.md`) repos.
 
-```markdown
-# [Context Name]
+See [references/context-format.md](references/context-format.md) for the full format, rules, and multi-context structure.
 
-[One or two sentence description of what this context is.]
-
-## Language
-
-**[Term]**:
-[Concise definition — one sentence max. What it IS, not what it does.]
-_Avoid_: [aliases that should not be used]
-
-## Relationships
-
-- An **Order** produces one or more **Invoices**
-
-## Example Dialogue
-
-> **Dev:** "When a **Customer** places an **Order**..."
-
-## Flagged Ambiguities
-
-- "[term]" was used to mean both X and Y — resolved: [resolution]
-```
-
-Rules for CONTEXT.md:
-- Be opinionated — pick one canonical term, list others as aliases to avoid
-- Keep definitions tight — one sentence max
-- Only include terms meaningful to domain experts (not generic programming concepts)
-- Show relationships with bold term names and cardinality
-- Include an example dialogue showing terms used precisely
-
-### Offer ADRs Sparingly
+### Offer ADRs sparingly
 
 Only offer to create an ADR when **all three** are true:
 
@@ -118,40 +89,9 @@ Only offer to create an ADR when **all three** are true:
 2. **Surprising without context** — a future reader will wonder "why did they do it this way?"
 3. **The result of a real trade-off** — there were genuine alternatives and you picked one for specific reasons
 
-If any of the three is missing, skip the ADR. ADRs live in `docs/adr/` with sequential numbering (`0001-slug.md`). Create the directory lazily.
+If any of the three is missing, skip the ADR.
 
-ADR format — keep it minimal:
-```markdown
-# [Short title of the decision]
-
-[1-3 sentences: what's the context, what did we decide, and why.]
-```
-
-What qualifies for an ADR:
-- Architectural shape decisions
-- Integration patterns between contexts
-- Technology choices that carry lock-in
-- Boundary and scope decisions
-- Deliberate deviations from the obvious path
-- Constraints not visible in the code
-- Rejected alternatives when the rejection is non-obvious
-
-## Multi-Context Repos
-
-If `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts:
-
-```markdown
-# Context Map
-
-## Contexts
-- [Ordering](./src/ordering/CONTEXT.md) — receives and tracks customer orders
-- [Billing](./src/billing/CONTEXT.md) — generates invoices and processes payments
-
-## Relationships
-- **Ordering → Billing**: Ordering emits `OrderPlaced` events; Billing consumes them
-```
-
-Infer which context the current topic relates to. If unclear, ask.
+See [references/adr-format.md](references/adr-format.md) for the template, numbering rules, and a full list of what qualifies.
 
 ## Output
 
