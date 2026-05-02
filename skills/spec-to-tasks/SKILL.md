@@ -9,7 +9,7 @@ Convert human-readable SPEC.md into machine-executable tasks.json.
 
 ## Prerequisites
 
-SPEC.md must exist at `scripts/ralph/SPEC.md` with:
+SPEC.md must exist in the project root (or user-specified location) with:
 - `# Feature Spec: [Name]` title
 - `## Acceptance Criteria` table (Given/When/Then)
 - `## Atomic Tasks` with `### TASK N:` blocks
@@ -21,7 +21,7 @@ If missing, tell user: "SPEC.md not found. Generate one first — from a PRD via
 
 ### 1. Validate SPEC
 
-Read `scripts/ralph/SPEC.md`. Verify required sections exist:
+Read `SPEC.md` (or user-specified file). Verify required sections exist:
 
 ```python
 required = ["# Feature Spec:", "## Atomic Tasks", "### TASK"]
@@ -55,7 +55,7 @@ Script outputs summary:
 ### 4. Next Step
 
 Tell user:
-> "Created `tasks.json` with N tasks. Run `./scripts/ralph/ralph.sh 20` to start Ralph Loop."
+> "Created `tasks.json` with N tasks. Ready for autonomous execution (e.g., ralph loop)."
 
 ## tasks.json Schema
 
