@@ -1,6 +1,6 @@
 ---
 name: spec-to-tasks
-description: Convert approved SPEC.md into tasks.json for Ralph Loop execution. Use after user approves SPEC.md from /prd-to-spec, says "convert spec to tasks", "generate tasks.json", "prepare for Ralph Loop", or wants machine-executable task format.
+description: Convert approved SPEC.md into tasks.json for Ralph Loop execution. Use after user has an approved SPEC.md, says "convert spec to tasks", "generate tasks.json", "prepare for Ralph Loop", or wants machine-executable task format.
 ---
 
 # SPEC to Tasks Conversion
@@ -15,7 +15,7 @@ SPEC.md must exist at `scripts/ralph/SPEC.md` with:
 - `## Atomic Tasks` with `### TASK N:` blocks
 - `## Dependency Chain` showing phases
 
-If missing, tell user: "Run `/prd-to-spec` first to generate SPEC.md."
+If missing, tell user: "SPEC.md not found. Generate one first — from a PRD via whatever PRD-to-spec workflow you use, or author it manually."
 
 ## Workflow
 

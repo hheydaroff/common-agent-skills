@@ -5,23 +5,23 @@ description: Expand a shapeless problem (or an already-chosen solution) into a p
 
 # Solution Ideator
 
-Expand a problem into solution approaches, prune branches that violate hard constraints, score survivors, and recommend one path. Output feeds `prd-creator`, `design-an-interface`, or `grill-me` downstream.
+Expand a problem into solution approaches, prune branches that violate hard constraints, score survivors, and recommend one path. Output is designed to feed a downstream product-spec, interface-design, or grilling workflow — whichever applies.
 
 ## When to use this skill
 
-| Situation | Use this skill |
+| Situation | Fit |
 |---|---|
 | Shapeless problem, no approach chosen yet | ✓ yes |
 | "Should we build X or buy Y?" | ✓ yes |
 | Evaluating an already-chosen solution against alternatives | ✓ yes (solution-evaluation mode) |
-| Problem is well-framed and approach is obvious | ✗ skip → `prd-creator` or just build |
-| Module-level API design question | ✗ `design-an-interface` |
-| User has a plan and wants it pressure-tested | ✗ `grill-me` |
-| Debugging / "why is this slow?" | ✗ `diagnose` |
+| Problem is well-framed and approach is obvious | ✗ skip to writing a product spec, or just build |
+| Module-level API design question | ✗ do an interface-design exploration instead (generate alternative API shapes, compare) |
+| User has a plan and wants it pressure-tested | ✗ run a structured grilling session on the plan |
+| Debugging / "why is this slow?" | ✗ use a disciplined diagnosis loop (reproduce → minimise → hypothesise → fix) |
 
 Before starting, check decline conditions. If a redirect matches, surface it:
 
-> "This looks like [type], not solution-ideation. Recommend `[skill]`. Proceed anyway?"
+> "This looks like [type], not solution-ideation. A different workflow is a better fit (e.g., [brief activity description]). Proceed anyway?"
 
 Decline rules are **warnings, not blocks**. User can override. But state them — routing help is part of the skill's job.
 
@@ -229,30 +229,32 @@ Location: repo root if inside a git repo, else `~/solution-trees/`. Slug derived
 
 Full artifact structure in [references/artifact-template.md](references/artifact-template.md).
 
-### 9. Recommend next skill (never auto-invoke)
+### 9. Recommend next step (never auto-invoke)
 
-End the session with a routing recommendation:
+End the session with a suggested next activity:
 
-| Session outcome | Next skill | Why |
-|---|---|---|
-| Approach chosen, need product spec | `prd-creator` | formalise feature shape |
-| Approach chosen, it's an API-shape problem | `design-an-interface` | design the module interface |
-| User wants to pressure-test the recommendation | `grill-me` | stress-test before committing |
-| Approach chosen, implementation is straightforward | none | just build |
-| Exit case ("already had your answer") | none | nothing to do |
+| Session outcome | Suggested next activity |
+|---|---|
+| Approach chosen, need product spec | Formalise the approach into a PRD / product spec |
+| Approach chosen, it's an API-shape problem | Design the module's interface (ideally by generating alternatives and comparing) |
+| User wants to pressure-test the recommendation | Run a structured grilling session on the recommendation |
+| Approach chosen, implementation is straightforward | Just build |
+| Exit case ("already had your answer") | Nothing to do |
+
+If the user has a skill or established workflow for the suggested activity, they should use it. If not, describe the activity in plain terms so they can run it manually.
 
 Handoff message format:
 
-> "Approach settled: **[recommendation]**. Recommend `[next-skill]` next. These are decided — don't re-ask: [list]. See `SOLUTION-TREE-[slug]-[date].md`."
+> "Approach settled: **[recommendation]**. Suggested next step: [activity]. These are decided — don't re-ask: [list]. See `SOLUTION-TREE-[slug]-[date].md`."
 
-The "don't re-ask" list is the real handoff payload. Without it, the next skill burns a round-trip rediscovering what this session already resolved.
+The "don't re-ask" list is the real handoff payload. Without it, the next step burns a round-trip rediscovering what this session already resolved.
 
 ## Rules
 
 - **One question at a time.** Never batch. User provides their recommended answer per question.
 - **Never silently drop a branch.** Every pruned option is logged with its killer.
 - **Never use numeric scores.** Three levels only: `✓` / `~` / `✗`.
-- **Never auto-invoke the next skill.** Recommend, don't chain.
+- **Never auto-invoke the next step.** Suggest, don't chain.
 - **Never proceed with zero constraints.** Success criteria at minimum.
 - **Never exceed 3 axes.** 8 leaves is already a lot.
 - **Never go deeper than 2 tree levels.** Deeper → hallucinated filler.

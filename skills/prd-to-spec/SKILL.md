@@ -252,7 +252,7 @@ Do NOT close or modify any parent issue.
 ## Post-Creation
 
 Tell user:
-> "SPEC.md created at `scripts/ralph/SPEC.md`. Review the tasks and acceptance criteria. When approved, run `/spec-to-tasks` to generate machine-readable tasks.json for Ralph Loop execution."
+> "SPEC.md created at `scripts/ralph/SPEC.md`. Review the tasks and acceptance criteria. When approved, convert the SPEC into whatever machine-readable task format your execution pipeline uses (e.g., a `tasks.json` for a task-runner loop)."
 
 ## Tips
 

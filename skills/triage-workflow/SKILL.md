@@ -1,6 +1,6 @@
 ---
 name: triage-workflow
-description: Triage issues through a state machine driven by triage roles (bug/enhancement × needs-triage/needs-info/ready-for-agent/ready-for-human/wontfix). Use when user wants to create an issue, triage issues, review incoming bugs or feature requests, prepare issues for an AFK agent, or manage issue workflow. For single-issue root-cause investigation with a TDD fix plan, use `triage-issue` instead.
+description: Triage issues through a state machine driven by triage roles (bug/enhancement × needs-triage/needs-info/ready-for-agent/ready-for-human/wontfix). Use when user wants to create an issue, triage issues, review incoming bugs or feature requests, prepare issues for an AFK agent, or manage issue workflow. For single-issue root-cause investigation that produces a TDD fix plan, a different workflow is a better fit.
 ---
 
 # Triage
@@ -66,7 +66,7 @@ Show counts and a one-line summary per issue. Let the maintainer pick.
 
 3. **Reproduce (bugs only).** Before any grilling, attempt reproduction: read the reporter's steps, trace the relevant code, run tests or commands. Report what happened — successful repro with code path, failed repro, or insufficient detail (a strong `needs-info` signal). A confirmed repro makes a much stronger agent brief.
 
-4. **Grill (if needed).** If the issue needs fleshing out, use the `grill-me` skill.
+4. **Grill (if needed).** If the issue needs fleshing out, run a structured grilling session — interview-style, one question at a time, challenging assumptions against any existing domain glossary or ADRs.
 
 5. **Apply the outcome:**
    - `ready-for-agent` — post an agent brief comment ([AGENT-BRIEF.md](AGENT-BRIEF.md)).

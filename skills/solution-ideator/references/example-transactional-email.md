@@ -133,7 +133,7 @@ Saved to `SOLUTION-TREE-transactional-email-2026-05-02.md` at repo root.
 
 ## Step 9 — Handoff
 
-> **Agent:** Approach settled: **SES behind a thin in-house wrapper**. Recommend `design-an-interface` next — the wrapper's shape is the thing to design now. These are decided — don't re-ask:
+> **Agent:** Approach settled: **SES behind a thin in-house wrapper**. Suggested next step: design the wrapper's interface — ideally by generating 2–3 alternative shapes and comparing them. These are decided — don't re-ask:
 >
 > - Success criteria: 99% delivery, $100/mo at 50k emails/mo, password-reset reliable
 > - MUST constraints: GDPR-compliant, budget ≤ $150/mo

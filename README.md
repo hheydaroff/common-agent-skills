@@ -58,6 +58,19 @@ skills/
     references/     ← optional docs loaded on-demand
 ```
 
+## Design Principle: Skills Should Be Independently Installable
+
+Each skill should work standalone. A user can install `solution-ideator` without `prd-creator`, or `diagnose` without `improve-codebase-architecture`, and nothing breaks.
+
+In practice this means:
+
+- **Describe the next *activity*, not a named skill.** Instead of *"use `prd-creator` next"*, say *"formalise the approach into a product spec next"*. If the user has a skill for that activity, they'll use it; if not, the phrase still makes sense.
+- **No hard dependencies in frontmatter descriptions.** A skill's description should trigger on the user's intent, not on the presence of a sibling skill.
+- **Cross-references use activity language.** *"Run a structured grilling session"* is portable; *"use the grill-me skill"* is not.
+- **Sibling skills in a family can name each other casually** (e.g. `cmux-browser` ↔ `cmux-markdown`) because they ship together, but even then prefer the capability framing.
+
+The workflow is implicit: a skill that produces a PRD naturally invites a skill that consumes one. Users who install adjacent skills will discover the pipeline; users who install only one still get a complete, useful tool.
+
 ## Tool Support
 
 | Tool | How skills are loaded |

@@ -102,7 +102,7 @@ constraints. No generic pros.]
 
 ## Next Step
 
-**Recommended skill:** `prd-creator` | `design-an-interface` | `grill-me` | none
+**Recommended next activity:** formalise into a PRD/spec | design the interface (generate alternatives) | pressure-test via grilling | none
 
 **Why:** [one sentence]
 
