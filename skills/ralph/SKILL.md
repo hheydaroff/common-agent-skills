@@ -85,6 +85,12 @@ cmux send --surface surface:<N> "cd $(pwd) && ./ralph.sh 20 SPEC.md"
 cmux send-key --surface surface:<N> enter
 ```
 
+With custom timeout (10 minutes):
+```bash
+cmux send --surface surface:<N> "cd $(pwd) && RALPH_TIMEOUT=600 ./ralph.sh 20 SPEC.md"
+cmux send-key --surface surface:<N> enter
+```
+
 ### Send to tmux
 
 ```bash
@@ -143,6 +149,8 @@ tmux display-message "🤖 Ralph Complete — all tasks finished"
 | Source file | Auto-detect (`SPEC.md` > `tasks.json` > `PRD.md`) | Task definition file |
 | Max iterations | 20 | Loop cap to prevent runaway |
 | Direction | right | Split direction for new pane |
+| `RALPH_TIMEOUT` env | 900 (15 min) | Per-task timeout in seconds. Task is killed if exceeded. |
+| `RALPH_RETRIES` env | 3 | Max retries per task after timeout before skipping |
 
 ## Example Interaction
 
