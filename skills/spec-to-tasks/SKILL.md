@@ -19,30 +19,46 @@ If missing, tell user: "SPEC.md not found. Generate one first — from a PRD via
 
 ## Workflow
 
-### 1. Validate SPEC
+### 1. Read & Validate SPEC
 
-Read `SPEC.md` (or user-specified file). Verify required sections exist:
+Read `SPEC.md` (or user-specified file). Verify these sections exist:
+- `# Feature Spec:` title
+- `## Atomic Tasks` section
+- `### TASK` blocks (at least one)
 
-```python
-required = ["# Feature Spec:", "## Atomic Tasks", "### TASK"]
-```
+If validation fails, list missing sections and stop.
 
-If validation fails, list missing sections.
+### 2. Extract Metadata
 
-### 2. Run Conversion
+From the SPEC, extract:
+- **Feature slug**: kebab-case from the title (e.g., "User Auth Flow" → `user-auth-flow`)
+- **Feature title**: the full title
+- **Phase count**: from `## Dependency Chain` or inferred from task phases
+- **Acceptance criteria**: from `## Acceptance Criteria` table
 
-```bash
-uv run .claude/skills/spec-to-tasks/scripts/spec_to_tasks.py
-```
+### 3. Convert Each Task Block
 
-With custom paths:
-```bash
-uv run .claude/skills/spec-to-tasks/scripts/spec_to_tasks.py [spec_path] [output_path]
-```
+For each `### TASK N:` block, extract:
+- **id**: `TASK-001`, `TASK-002`, etc.
+- **phase**: from `**Phase:**` line or dependency chain position
+- **category**: from `**Category:**` line (Backend, Frontend, Integration, etc.)
+- **type**: from `**Type:**` line — `AFK` (default) or `HITL`
+- **title**: the task heading text
+- **description**: body text / details
+- **satisfies**: which acceptance criteria IDs this task covers
+- **testCases**: extract happy path, error, and edge cases if specified
+- **dependencies**: from `**Depends on:**` line → array of task IDs
+- **verification**: from `**Verification:**` line, or infer from category (see patterns below)
+- **status**: always `"pending"`
 
-### 3. Report Results
+### 4. Write tasks.json
 
-Script outputs summary:
+Write the complete JSON file to `tasks.json` in the project root (or user-specified path).
+
+### 5. Report Results
+
+Print a summary table:
+
 ```
 ✅ Created tasks.json: N tasks in M phases
 
@@ -52,7 +68,7 @@ Script outputs summary:
 | TASK-002 | 2     | Frontend | Build form UI            | 001  |
 ```
 
-### 4. Next Step
+### 6. Next Step
 
 Tell user:
 > "Created `tasks.json` with N tasks. Ready for autonomous execution (e.g., ralph loop)."
@@ -88,20 +104,12 @@ Tell user:
       "satisfies": ["AC1"],
       "testCases": {"happy": "...", "error": "...", "edge": "..."},
       "dependencies": [],
-      "estimate": "4-5 hours",
       "verification": "npm test ...",
       "status": "pending"
     }
   ]
 }
 ```
-
-## Verification Patterns
-
-Script infers from category:
-
-| Category | Command Pattern |
-|----------|------------------|
 
 ## Task Types
 
@@ -114,6 +122,8 @@ The `type` field is extracted from the `**Type:**` line in each SPEC.md task blo
 
 ## Verification Patterns
 
+Infer verification command from category if not explicitly specified:
+
 | Category | Command Pattern |
 |----------|-----------------|
 | Backend (Node) | `npm test src/api/[name].test.ts` |
@@ -121,4 +131,4 @@ The `type` field is extracted from the `**Type:**` line in each SPEC.md task blo
 | Frontend | `npm test src/components/[Name].test.tsx` |
 | Integration | `npm run test:e2e` |
 
-Override in SPEC.md if needed by adding `**Verification:**` field to tasks.
+Override if the SPEC task has a `**Verification:**` field — use that instead.
