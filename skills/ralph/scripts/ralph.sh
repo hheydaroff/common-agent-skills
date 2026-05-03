@@ -1,13 +1,14 @@
 #!/bin/bash
 # ralph.sh - Autonomous task loop for pi
 # Usage: ./ralph.sh [max_iterations] [source_file]
-
-set -e
+#
+# NOTE: Intentionally NOT using set -e. Background processes + wait + set -e
+# is broken in bash 3.2 (macOS default). Handle errors explicitly.
 
 MAX=${1:-20}
 SOURCE=${2:-SPEC.md}
 PROGRESS="progress.txt"
-TASK_TIMEOUT=${RALPH_TIMEOUT:-900}  # 15 minutes (in seconds), override with RALPH_TIMEOUT env var
+TASK_TIMEOUT=${RALPH_TIMEOUT:-900}  # 15 minutes default, override with RALPH_TIMEOUT env var
 MAX_RETRIES=${RALPH_RETRIES:-3}     # Max retries per task on timeout
 
 [[ ! -f "$SOURCE" ]] && echo "❌ Missing: $SOURCE" && exit 1
@@ -15,34 +16,35 @@ MAX_RETRIES=${RALPH_RETRIES:-3}     # Max retries per task on timeout
 
 echo "🤖 Ralph Loop | Max: $MAX | Source: $SOURCE | Timeout: ${TASK_TIMEOUT}s | Retries: $MAX_RETRIES"
 
-# Run pi with timeout. Returns 0 on success, 1 on timeout.
+# Run pi with timeout. Returns 0 on success, 1 on timeout/failure.
+# Uses background watchdog + wait (pi stays as waited-on child, not polled).
 run_with_timeout() {
-  local pid
-  local exit_code
+  local prompt="$1"
+  local pi_pid watchdog_pid exit_code
 
-  # Run pi in background
-  pi -p @"$SOURCE" @"$PROGRESS" "$1" &
-  pid=$!
+  # Run pi in background — redirect stdin from /dev/null to prevent SIGTTIN
+  pi -p @"$SOURCE" @"$PROGRESS" "$prompt" </dev/null &
+  pi_pid=$!
 
-  # Watchdog: wait up to TASK_TIMEOUT seconds
-  local elapsed=0
-  while kill -0 "$pid" 2>/dev/null; do
-    if (( elapsed >= TASK_TIMEOUT )); then
-      echo ""
-      echo "⏰ TIMEOUT after ${TASK_TIMEOUT}s — killing task (PID: $pid)"
-      kill -TERM "$pid" 2>/dev/null
-      sleep 2
-      kill -9 "$pid" 2>/dev/null
-      wait "$pid" 2>/dev/null
-      return 1
-    fi
-    sleep 5
-    elapsed=$((elapsed + 5))
-  done
+  # Background watchdog: kills pi after TASK_TIMEOUT seconds
+  ( sleep "$TASK_TIMEOUT" && kill -TERM "$pi_pid" 2>/dev/null && sleep 2 && kill -9 "$pi_pid" 2>/dev/null ) &
+  watchdog_pid=$!
 
-  wait "$pid"
+  # Block until pi finishes (naturally or killed by watchdog)
+  wait "$pi_pid" 2>/dev/null
   exit_code=$?
-  return $exit_code
+
+  # Cleanup watchdog (if pi finished before timeout)
+  kill "$watchdog_pid" 2>/dev/null
+  wait "$watchdog_pid" 2>/dev/null
+
+  # exit > 128 means killed by signal (SIGTERM=143, SIGKILL=137)
+  if (( exit_code > 128 )); then
+    echo ""
+    echo "⏰ TIMEOUT after ${TASK_TIMEOUT}s — task killed (signal $((exit_code - 128)))"
+    return 1
+  fi
+  return "$exit_code"
 }
 
 for ((i=1; i<=MAX; i++)); do
