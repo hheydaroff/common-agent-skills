@@ -481,6 +481,7 @@ def cmd_technicals(ticker, period="6mo"):
 def cmd_screener(name):
     """Predefined screeners."""
     screeners = {
+        # === US ===
         "mega_tech": ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA"],
         "sector_etfs": ["XLK", "XLF", "XLE", "XLV", "XLI", "XLP", "XLU", "XLY", "XLC", "XLRE", "XLB"],
         "mag7": ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA"],
@@ -493,6 +494,21 @@ def cmd_screener(name):
         "commodities": ["GLD", "SLV", "USO", "UNG", "COPX", "WEAT"],
         "bonds": ["TLT", "IEF", "SHY", "HYG", "LQD", "AGG"],
         "crypto_related": ["COIN", "MARA", "RIOT", "MSTR", "BITF"],
+        # === European ===
+        "eu_mega": ["ASML.AS", "NOVO-B.CO", "MC.PA", "SAP.DE", "NESN.SW", "ROG.SW", "AZN.L", "SHEL.L", "SU.PA", "SIE.DE", "TTE.PA", "ALV.DE"],
+        "eu_indices": ["EXSA.DE", "^STOXX50E", "^GDAXI", "^FCHI", "^FTSE", "^SSMI", "^AEX", "^IBEX", "^OMX"],
+        "eu_sector_etfs": ["EXSA.DE", "EXH1.DE", "EXH2.DE", "EXH4.DE", "EXV6.DE", "EXH8.DE", "EXH9.DE", "EXV1.DE", "EXV2.DE", "EXV3.DE", "EXV4.DE", "EXV5.DE", "EXV7.DE", "EXH7.DE"],
+        "eu_defense": ["RHM.DE", "AIR.PA", "BA.L", "SAAB-B.ST", "LDO.MI"],
+        "eu_semiconductors": ["ASML.AS", "IFX.DE", "ASM.AS", "STMPA.PA"],
+        "eu_industrials": ["SIE.DE", "SU.PA", "ABBN.SW", "ASSA-B.ST", "SAND.ST", "ATCO-A.ST"],
+        "eu_luxury": ["MC.PA", "KER.PA", "RMS.PA", "CFR.SW"],
+        "eu_financials": ["BNP.PA", "ALV.DE", "MUV2.DE", "NDA-FI.HE"],
+        "eu_healthcare": ["NOVO-B.CO", "ROG.SW", "AZN.L", "SAN.PA"],
+        "eu_energy": ["SHEL.L", "TTE.PA", "EXV1.DE"],
+        "eu_telecom": ["DTE.DE", "ERIC-B.ST", "EXV7.DE"],
+        "eu_autos": ["VOLV-B.ST", "BMW.DE", "MBG.DE", "VOW3.DE"],
+        "eu_bonds": ["IBGL.AS", "IEAG.AS", "IBCI.AS", "IS0L.DE"],
+        "eu_nordics": ["NOVO-B.CO", "ERIC-B.ST", "VOLV-B.ST", "SAAB-B.ST", "SAND.ST", "ATCO-A.ST", "ASSA-B.ST", "NDA-FI.HE"],
     }
 
     if name not in screeners:

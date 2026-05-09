@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """
-Macroeconomic data fetcher using FRED (Federal Reserve Economic Data).
-Uses the public FRED website — no API key required (scrapes HTML/CSV).
-Falls back to yfinance for market-based macro indicators.
+Macroeconomic data fetcher — US and European markets.
+Uses yfinance for market-based macro indicators. No API key required.
 
 Usage: python3 macro_data.py <command>
 
 Commands:
-  rates              Fed funds rate, Treasury yields, yield curve
-  inflation          CPI, PCE data
-  employment         Unemployment, jobless claims
-  gdp                GDP growth
-  market_conditions  VIX, credit spreads, dollar index
-  summary            All-in-one macro dashboard
+  rates              US: Fed funds rate, Treasury yields, yield curve
+  inflation          US: CPI proxies, commodity signals
+  employment         US: Employment proxies + fetch guidance
+  gdp                US: GDP proxies, cyclical vs defensive
+  market_conditions  US: VIX, credit spreads, dollar index
+  summary            US: All-in-one macro dashboard
+
+  eu_rates           EU: ECB rates, Bund/OAT/BTP yields, spreads
+  eu_conditions      EU: STOXX indices, VSTOXX, EUR/USD, sector rotation
+  eu_inflation       EU: Inflation proxies, EUR commodities
+  eu_summary         EU: All-in-one European macro dashboard
 """
 
 import sys
@@ -325,6 +329,260 @@ def cmd_summary():
     print(json.dumps(dashboard, indent=2, default=str))
 
 
+# ============================================================
+# EUROPEAN MACRO COMMANDS
+# ============================================================
+
+def cmd_eu_rates():
+    """European government bond yields and rate indicators."""
+    results = {}
+
+    # Euro area government bond ETFs as yield proxies
+    bond_tickers = {
+        "eu_govt_bond_15_30y": "IBGL.AS",   # iShares Euro Govt Bond 15-30Y
+        "eu_govt_bond_aggregate": "IEAG.AS", # iShares Euro Aggregate Bond
+        "eu_inflation_linked": "IBCI.AS",    # iShares Euro Inflation-Linked
+        "eu_govt_bond_10_15y": "IS0L.DE",    # iShares EUR 10-15y Govt
+    }
+    results["bond_etf_proxies"] = get_fred_series_via_yf(bond_tickers)
+
+    # Major European indices for rate sensitivity
+    rate_sensitive = {
+        "stoxx_600_utilities": "EXH9.DE",
+        "stoxx_600_real_estate": "EXH7.DE",
+        "stoxx_600_banks": "EXH1.DE",
+    }
+    results["rate_sensitive_sectors"] = get_fred_series_via_yf(rate_sensitive)
+
+    # EUR/CHF as ECB policy proxy (Switzerland is safe haven)
+    fx_tickers = {
+        "eur_usd": "EURUSD=X",
+        "eur_gbp": "EURGBP=X",
+        "eur_chf": "EURCHF=X",
+    }
+    results["fx_rates"] = get_fred_series_via_yf(fx_tickers)
+
+    results["note"] = (
+        "For precise ECB rate decisions, use Tavily: 'ECB interest rate decision latest'. "
+        "For Bund yields: fetch r.jina.ai/https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_area_yield_curves/html/index.en.html"
+    )
+
+    print(json.dumps({"command": "eu_rates", "data": results}, indent=2, default=str))
+
+
+def cmd_eu_conditions():
+    """European market stress and conditions indicators."""
+    # Major European indices
+    index_tickers = {
+        "euro_stoxx_50": "^STOXX50E",
+        "dax": "^GDAXI",
+        "cac_40": "^FCHI",
+        "ftse_100": "^FTSE",
+        "smi": "^SSMI",
+        "aex": "^AEX",
+        "ibex_35": "^IBEX",
+        "omx_stockholm_30": "^OMX",
+        "omx_copenhagen_25": "^OMXC25",
+    }
+
+    results = get_fred_series_via_yf(index_tickers)
+
+    # Sector rotation — European sector ETFs
+    sector_tickers = {
+        "stoxx_600_broad": "EXSA.DE",
+        "stoxx_600_banks": "EXH1.DE",
+        "stoxx_600_insurance": "EXH2.DE",
+        "stoxx_600_industrials": "EXH4.DE",
+        "stoxx_600_healthcare": "EXV6.DE",
+        "stoxx_600_technology": "EXH8.DE",
+        "stoxx_600_utilities": "EXH9.DE",
+        "stoxx_600_energy": "EXV1.DE",
+        "stoxx_600_basic_resources": "EXV2.DE",
+        "stoxx_600_oil_gas": "EXV3.DE",
+        "stoxx_600_chemicals": "EXV4.DE",
+        "stoxx_600_food_bev": "EXV5.DE",
+        "stoxx_600_telecom": "EXV7.DE",
+        "stoxx_600_real_estate": "EXH7.DE",
+    }
+    results["sector_etfs"] = get_fred_series_via_yf(sector_tickers)
+
+    # EUR strength
+    fx_tickers = {
+        "eur_usd": "EURUSD=X",
+        "eur_gbp": "EURGBP=X",
+        "eur_chf": "EURCHF=X",
+    }
+    results["fx"] = get_fred_series_via_yf(fx_tickers)
+
+    # European cyclical vs defensive ratio
+    try:
+        cyclical = yf.Ticker("EXH4.DE").history(period="3mo")["Close"]  # Industrials
+        defensive = yf.Ticker("EXV5.DE").history(period="3mo")["Close"]  # Food & Bev
+        if not cyclical.empty and not defensive.empty:
+            ratio_now = cyclical.iloc[-1] / defensive.iloc[-1]
+            ratio_3m = cyclical.iloc[0] / defensive.iloc[0]
+            results["eu_cyclical_vs_defensive"] = {
+                "current_ratio": round(ratio_now, 4),
+                "3m_ago_ratio": round(ratio_3m, 4),
+                "signal": "risk-on (expansion)" if ratio_now > ratio_3m else "risk-off (contraction)",
+            }
+    except:
+        pass
+
+    print(json.dumps({"command": "eu_conditions", "data": results}, indent=2, default=str))
+
+
+def cmd_eu_inflation():
+    """European inflation indicators via market-based proxies."""
+    results = {}
+
+    # Inflation-linked bonds
+    inflation_tickers = {
+        "eu_inflation_linked_bonds": "IBCI.AS",  # iShares Euro Inflation-Linked
+    }
+    results["inflation_proxies"] = get_fred_series_via_yf(inflation_tickers)
+
+    # European commodity exposure
+    commodity_tickers = {
+        "gold_eur": "GLD",
+        "brent_oil": "BZ=F",
+        "natural_gas_eu": "TTF=F",  # Dutch TTF gas
+    }
+    results["commodity_signals"] = get_fred_series_via_yf(commodity_tickers)
+
+    # EUR food/energy inflation proxy via sector ETFs
+    energy_food = {
+        "stoxx_600_energy": "EXV1.DE",
+        "stoxx_600_food_bev": "EXV5.DE",
+        "stoxx_600_utilities": "EXH9.DE",
+    }
+    results["sector_inflation_proxies"] = get_fred_series_via_yf(energy_food)
+
+    results["note"] = (
+        "For precise Eurozone HICP inflation: use Tavily 'Eurostat HICP flash estimate latest'. "
+        "ECB inflation data: r.jina.ai/https://www.ecb.europa.eu/stats/macroeconomic_and_sectoral/hicp/html/index.en.html"
+    )
+
+    print(json.dumps({"command": "eu_inflation", "data": results}, indent=2, default=str))
+
+
+def cmd_eu_summary():
+    """All-in-one European macro dashboard."""
+    print("Fetching European macro dashboard...", file=sys.stderr)
+
+    dashboard = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "region": "Europe",
+        "sections": {},
+    }
+
+    # Major European indices
+    indices = {
+        "^STOXX50E": "Euro STOXX 50",
+        "^GDAXI": "DAX",
+        "^FCHI": "CAC 40",
+        "^FTSE": "FTSE 100",
+        "^SSMI": "SMI",
+        "^AEX": "AEX",
+        "^IBEX": "IBEX 35",
+        "^OMX": "OMX Stockholm 30",
+    }
+    dashboard["sections"]["indices"] = {}
+    for ticker, name in indices.items():
+        try:
+            h = yf.Ticker(ticker).history(period="5d")
+            if not h.empty and len(h) >= 2:
+                dashboard["sections"]["indices"][name] = {
+                    "price": round(h["Close"].iloc[-1], 2),
+                    "1d_change_pct": round((h["Close"].iloc[-1] / h["Close"].iloc[-2] - 1) * 100, 2),
+                }
+        except:
+            pass
+
+    # Broad STOXX 600
+    try:
+        stoxx = yf.Ticker("EXSA.DE").history(period="1mo")
+        if not stoxx.empty:
+            dashboard["sections"]["stoxx_600"] = {
+                "price": round(stoxx["Close"].iloc[-1], 2),
+                "1m_change_pct": round((stoxx["Close"].iloc[-1] / stoxx["Close"].iloc[0] - 1) * 100, 2),
+            }
+    except:
+        pass
+
+    # FX
+    try:
+        eur_usd = yf.Ticker("EURUSD=X").history(period="1mo")
+        eur_gbp = yf.Ticker("EURGBP=X").history(period="1mo")
+        eur_chf = yf.Ticker("EURCHF=X").history(period="1mo")
+        dashboard["sections"]["fx"] = {}
+        if not eur_usd.empty:
+            dashboard["sections"]["fx"]["EUR_USD"] = {
+                "rate": round(eur_usd["Close"].iloc[-1], 4),
+                "1m_change_pct": round((eur_usd["Close"].iloc[-1] / eur_usd["Close"].iloc[0] - 1) * 100, 2),
+            }
+        if not eur_gbp.empty:
+            dashboard["sections"]["fx"]["EUR_GBP"] = {
+                "rate": round(eur_gbp["Close"].iloc[-1], 4),
+                "1m_change_pct": round((eur_gbp["Close"].iloc[-1] / eur_gbp["Close"].iloc[0] - 1) * 100, 2),
+            }
+        if not eur_chf.empty:
+            dashboard["sections"]["fx"]["EUR_CHF"] = {
+                "rate": round(eur_chf["Close"].iloc[-1], 4),
+                "1m_change_pct": round((eur_chf["Close"].iloc[-1] / eur_chf["Close"].iloc[0] - 1) * 100, 2),
+            }
+    except:
+        pass
+
+    # EU Bond ETF proxy
+    try:
+        ibgl = yf.Ticker("IBGL.AS").history(period="1mo")
+        if not ibgl.empty:
+            dashboard["sections"]["bonds"] = {
+                "eu_long_govt_bond_ETF": {
+                    "price": round(ibgl["Close"].iloc[-1], 2),
+                    "1m_change_pct": round((ibgl["Close"].iloc[-1] / ibgl["Close"].iloc[0] - 1) * 100, 2),
+                }
+            }
+    except:
+        pass
+
+    # Sector snapshot
+    sector_map = {
+        "EXH1.DE": "Banks",
+        "EXH4.DE": "Industrials",
+        "EXV6.DE": "Healthcare",
+        "EXH8.DE": "Technology",
+        "EXV1.DE": "Energy",
+        "EXH9.DE": "Utilities",
+        "EXV2.DE": "Basic Resources",
+    }
+    dashboard["sections"]["sectors"] = {}
+    for ticker, name in sector_map.items():
+        try:
+            h = yf.Ticker(ticker).history(period="1mo")
+            if not h.empty:
+                dashboard["sections"]["sectors"][name] = {
+                    "1m_return_pct": round((h["Close"].iloc[-1] / h["Close"].iloc[0] - 1) * 100, 2),
+                }
+        except:
+            pass
+
+    # Commodities relevant to EU
+    try:
+        gold = yf.Ticker("GLD").history(period="1mo")
+        dashboard["sections"]["commodities"] = {}
+        if not gold.empty:
+            dashboard["sections"]["commodities"]["gold_GLD"] = {
+                "price": round(gold["Close"].iloc[-1], 2),
+                "1m_change_pct": round((gold["Close"].iloc[-1] / gold["Close"].iloc[0] - 1) * 100, 2),
+            }
+    except:
+        pass
+
+    print(json.dumps(dashboard, indent=2, default=str))
+
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__)
@@ -332,12 +590,18 @@ def main():
 
     command = sys.argv[1].lower()
     commands = {
+        # US
         "rates": cmd_rates,
         "inflation": cmd_inflation,
         "employment": cmd_employment,
         "gdp": cmd_gdp,
         "market_conditions": cmd_market_conditions,
         "summary": cmd_summary,
+        # European
+        "eu_rates": cmd_eu_rates,
+        "eu_conditions": cmd_eu_conditions,
+        "eu_inflation": cmd_eu_inflation,
+        "eu_summary": cmd_eu_summary,
     }
 
     if command in commands:

@@ -1,6 +1,6 @@
 ---
 name: investment-analyst
-description: "Comprehensive investment analysis covering stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Includes early opportunity scanning to find Phase 2 themes before the market reprices them. Uses yfinance (no API key), Alpaca (API key), Exa/Tavily for news & research, and r.jina.ai for SEC filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'what's early', 'be early'."
+description: "Comprehensive investment analysis covering US and European stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Covers US (NYSE, NASDAQ) and European markets (Xetra, Euronext, LSE, SIX, OMX, Borsa Italiana). Includes early opportunity scanning to find Phase 2 themes before the market reprices them, and laggard scanning to find under-followed companies in validated themes. Uses yfinance (no API key, US + EU), Alpaca (API key, US only), Exa/Tavily for news & research, and r.jina.ai for SEC/European filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'what's early', 'be early', 'find laggards', 'what's still cheap', 'find the next', 'who else does this', 'European stocks', 'EU market', 'DAX', 'STOXX'."
 ---
 
 # Investment Analyst
@@ -25,19 +25,31 @@ uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py dividends AAPL                # Dividend history
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py compare AAPL,MSFT,GOOGL       # Side-by-side comparison
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py technicals AAPL 6mo           # RSI, MACD, MAs, Bollinger Bands
-uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener mega_tech            # Predefined screeners
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener mega_tech            # Predefined US screeners
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_mega              # Top European stocks by market cap
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_sector_etfs       # STOXX 600 sector ETFs
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_defense           # European defense stocks
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_industrials       # European industrials
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_luxury            # European luxury stocks
 ```
 
 Shorthand (set alias in shell): `alias mktdata='uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py'`
 
 #### `scripts/macro_data.py` — Macroeconomic Data (NO API key needed)
 ```bash
+# US Macro
 uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py rates              # Treasury yields, spreads
 uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py inflation          # CPI proxies, commodity signals
 uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py employment         # Employment proxies + fetch guidance
 uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py gdp                # GDP proxies, cyclical vs defensive
 uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py market_conditions  # VIX, credit spreads, breadth
-uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py summary            # All-in-one macro dashboard
+uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py summary            # All-in-one US macro dashboard
+
+# European Macro
+uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py eu_rates           # ECB rate proxies, Bund ETFs, EU FX
+uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py eu_conditions      # STOXX indices, EU sectors, EUR/USD
+uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py eu_inflation       # EU inflation-linked, TTF gas, food/energy
+uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py eu_summary         # All-in-one European macro dashboard
 ```
 
 Shorthand: `alias macrodata='uv run --with yfinance --with pandas --with numpy python3 scripts/macro_data.py'`
@@ -63,8 +75,9 @@ uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account    
 Shorthand: `alias alpaca='uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py'`
 
 **When to use Alpaca vs yfinance:**
-- Alpaca: real-time quotes, intraday bars, options with Greeks, news, screener, crypto
-- yfinance: fundamentals, financials, analyst estimates, dividends, institutional holders
+- Alpaca: real-time quotes, intraday bars, options with Greeks, news, screener, crypto (US only)
+- yfinance: fundamentals, financials, analyst estimates, dividends, institutional holders (US + European)
+- For European stocks, use yfinance with exchange suffixes: `.DE` (Xetra/Frankfurt), `.PA` (Euronext Paris), `.AS` (Amsterdam), `.L` (London), `.SW` (SIX Swiss), `.ST` (Stockholm), `.CO` (Copenhagen), `.HE` (Helsinki), `.MI` (Milan), `.MC` (Madrid)
 
 #### Web Research (use existing Exa/Tavily skills)
 - **Exa**: Neural search for research papers, financial reports, sentiment
@@ -76,14 +89,16 @@ Shorthand: `alias alpaca='uv run --with alpaca-py --with pandas python3 scripts/
 ### 1. Stock Deep Dive (`/invest deep <TICKER>`)
 
 Run this sequence:
-1. `alpaca_data.py snapshot <TICKER>` — real-time price + daily bar
-2. `market_data.py price <TICKER>` — valuation metrics & fundamentals
+1. `alpaca_data.py snapshot <TICKER>` — real-time price + daily bar (US only; skip for EU tickers)
+2. `market_data.py price <TICKER>` — valuation metrics & fundamentals (works for US + EU)
 3. `market_data.py financials <TICKER>` — 3 statements
 4. `market_data.py technicals <TICKER> 1y` — trend & momentum
 5. `market_data.py recommendations <TICKER>` — Street consensus
-6. `alpaca_data.py news <TICKER>` — latest headlines
+6. `alpaca_data.py news <TICKER>` — latest headlines (US only; for EU use Exa/Tavily)
 7. Exa search: `"<COMPANY> earnings outlook analyst"` (category: financial report)
 8. Tavily search: `"<TICKER> risks catalysts 2025"` (time_range: month)
+
+**For European tickers:** Use exchange suffix (e.g., `ASML.AS`, `RHM.DE`, `MC.PA`). Steps 1 and 6 require Alpaca (US-only); substitute with `market_data.py price` and Exa/Tavily news search. For filings, use Investegate (UK), Bundesanzeiger (DE), or AMF (FR) instead of SEC EDGAR.
 
 **Output format:**
 
@@ -158,13 +173,21 @@ Views: bullish, bearish, neutral, volatile, income
 
 ### 3. Sector & Macro Analysis (`/invest macro` or `/invest sector <SECTOR>`)
 
-1. `macro_data.py summary` — macro dashboard
-2. `alpaca_data.py screener active` — most active stocks today
-3. `alpaca_data.py multisnapshot XLK,XLF,XLE,XLV,XLI,XLP,XLU,XLY,XLC,XLRE,XLB` — sector ETF prices
+**US:**
+1. `macro_data.py summary` — US macro dashboard
+2. `alpaca_data.py screener active` — most active US stocks today
+3. `alpaca_data.py multisnapshot XLK,XLF,XLE,XLV,XLI,XLP,XLU,XLY,XLC,XLRE,XLB` — US sector ETF prices
 4. `market_data.py compare` — sector ETFs valuation
 5. Tavily search: `"sector rotation market cycle 2025"` (time_range: week)
 
-**Output:** Market cycle phase, sector rankings, rotation signals, risk regime.
+**European (`/invest eu macro` or `/invest eu sector`):**
+1. `macro_data.py eu_summary` — European macro dashboard
+2. `market_data.py screener eu_sector_etfs` — STOXX 600 sector ETFs
+3. `market_data.py screener eu_mega` — top European stocks
+4. `macro_data.py eu_conditions` — full European conditions incl. FX
+5. Tavily search: `"ECB policy European sector rotation 2025"` (time_range: week)
+
+**Output:** Market cycle phase, sector rankings, rotation signals, risk regime. For European analysis, include ECB policy impact and EUR/USD dynamics.
 
 ### 4. Earnings Play (`/invest earnings <TICKER>`)
 
@@ -199,10 +222,13 @@ Phase 3: Analyst upgrades/ETF inclusion   → TOO LATE (already repriced, moment
    - Exa search: `"<THEME> construction permit contract signed procurement 2026"` (category: news, time: month)
    - Exa search: `"<THEME> series B series C funding raised 2026"` (category: news, time: month)
    - Tavily search: `"<THEME> regulatory approval legislation passed"` (time_range: month)
+   - **EU-specific:** Tavily search: `"<THEME> EU regulation directive approved"` (time_range: month)
+   - **EU-specific:** Tavily search: `"<THEME> European Investment Bank EIB funding"` (time_range: month)
 
 2. **Find the bottleneck suppliers** (picks-and-shovels)
    - Exa search: `"<THEME> supply chain bottleneck supplier shortage"`
    - Ask: "Who are the companies that EVERY player in this theme must buy from?"
+   - **EU-specific:** Check European mid-caps (often sole-source, under-followed)
 
 3. **Check if still under-followed**
    - `market_data.py recommendations <TICKER>` — look for < 10 analysts covering
@@ -214,10 +240,12 @@ Phase 3: Analyst upgrades/ETF inclusion   → TOO LATE (already repriced, moment
    - Compare forward P/E to sector peers
 
 5. **Confirm commitment signals (not just talk)**
-   - Permits filed or issued (NRC, FERC, DOE, EPA)
+   - **US:** Permits filed or issued (NRC, FERC, DOE, EPA)
+   - **EU:** TED contracts (ted.europa.eu), EU Commission directives, national procurement
    - Customer contracts signed (not MOUs or "exploring")
    - Capex announced in earnings calls
-   - Insider buying (Form 4 filings)
+   - **US:** Insider buying (Form 4 via openinsider.com)
+   - **EU:** Insider dealing (Disclosyr.com, Investegate.co.uk RNS, BaFin register)
    - Hiring surges in specific technical roles
 
 **Output format:**
@@ -296,6 +324,156 @@ When scanning for opportunities, follow these rules:
 6. **Define the exit before entry** — what specific event proves the thesis wrong?
 7. **The best time to buy is when it's boring** — if nobody's talking about it but commitments are real, that's the setup
 
+### 9. Bear Case Research (`/invest bear <TICKER>`)
+
+Systematically identify and probability-weight what can go wrong. Follow the methodology in `references/bear-case-research.md`. Always present the research process step-by-step so the user can reproduce it independently.
+
+### 10. Daily Investment Scan (`/invest scan`)
+
+Automated daily research sweep across tracked themes. Reads configuration from `finance/watchlist.md` in the user's vault.
+
+**Process:** See `references/daily-scan.md` for full methodology.
+
+**Quick summary:**
+1. Read `finance/watchlist.md` for themes, keywords, companies
+2. For each theme: search for constraint language (Tavily, time_range: week)
+3. Check SAM.gov for new contracts in theme keywords
+4. Check insider buying for tracked companies
+5. Check earnings surprises in tracked sectors
+6. Check hiring surges at Tier 1 companies
+7. Write output to `finance/invest-scan-YYYY-MM-DD.md`
+8. Return summary for daily brief integration
+
+**Tools used:**
+- Tavily: constraint keywords, contract news, insider activity, earnings
+- `market_data.py price <TICKER>`: watchlist price check
+- Exa: deeper research on HIGH signals
+
+**When invoked from daily brief:** Return 3-5 line summary only. Full details in the scan file.
+
+**When invoked standalone:** Show full scan results and offer to update watchlist if new opportunities found.
+
+### 11. Due Diligence Guide
+
+When the user asks "should I buy X?" — never jump to a conclusion. Assess what level they're at on the Due Diligence Ladder (see `references/due-diligence-ladder.md`) and guide them to the NEXT level. The process IS the edge.
+
+### 12. Laggard Scanner (`/invest laggard <THEME>`)
+
+Find under-followed companies doing the same work as recent blowout performers but trading at a fraction of the valuation. The core insight: when a Phase 3 company validates a thesis by reporting massive growth, the smart play is NOT to buy it at 40x EBITDA — it's to find the Phase 2 laggard in the same supply chain that hasn't repriced yet.
+
+**Process:**
+
+1. **Identify the winners (Phase 3 companies)**
+   - Tavily search: `"<THEME> Q1 2026 earnings record revenue backlog"` (time_range: month)
+   - Look for: revenue growth >50%, backlog records, raised guidance, RSI >70
+   - These are the VALIDATION, not the trade
+
+2. **Map the supply chain and peer set**
+   - What do the winners do? (site development, electrical, thermal, components)
+   - Who else does the same work? (check VOLT/GRID ETF holdings for smaller names)
+   - Who supplies the winners? (components, raw materials, subcontractors)
+   - Who are the winners ACQUIRING? (acquisition targets = Phase 2 companies)
+   - Tavily search: `"<WINNER> acquisition competitor smaller"`
+
+3. **Screen for laggards** (run for each candidate)
+   - `market_data.py price <TICKER>` — get PE, EV/EBITDA, PEG, market cap
+   - `market_data.py recommendations <TICKER>` — analyst count (<8 = under-followed)
+   - `market_data.py technicals <TICKER> 1y` — RSI (<65 = not overbought)
+   
+   **Filter criteria:**
+   | Metric | Threshold | Why |
+   |--------|-----------|-----|
+   | Market cap | $500M–$5B | Small enough to reprice significantly |
+   | Analyst count | < 8 | Under-followed = mispricing opportunity |
+   | PEG ratio | < 1.5 | Cheap relative to growth rate |
+   | RSI | < 65 | Not yet in momentum/chase phase |
+   | EV/EBITDA | < 0.6x peer average | Valuation gap exists |
+   | Revenue or backlog growth | > 20% | Demand is real, not just cheap |
+
+4. **Check for narrative mismatch**
+   - How does the market currently describe this company? (check Tavily, analyst notes)
+   - Is there a REASON it's cheap? (legacy issues, turnaround, hidden segment, recent IPO)
+   - Can the reason be RESOLVED by time + backlog conversion? If yes → opportunity
+   - Tavily search: `"<TICKER> <COMPANY> why undervalued cheap"`
+
+5. **Verify the thesis isn't broken**
+   - `market_data.py financials <TICKER>` — is revenue accelerating or decelerating?
+   - Backlog direction: growing = demand is real; shrinking = thesis dying
+   - Recent contract wins: are they entering the high-growth end market?
+   - Management commentary: do they mention the theme? (data centers, grid, AI)
+   - Tavily search: `"<TICKER> backlog data center contract 2026"`
+
+6. **Quantify the valuation gap**
+   - Create comparison table: Laggard vs Winners on same metrics
+   - Calculate: "If <LAGGARD> traded at 0.5x the winner's multiple, price = $X"
+   - This is the upside target if narrative changes
+
+7. **Pre-mortem: What kills the re-rating?**
+   - Why might the valuation gap PERSIST? (structural issue, not temporary)
+   - What event would close the gap? (earnings beat, analyst initiation, ETF inclusion)
+   - Timeline: when does the next data point arrive?
+
+**Output format:**
+```markdown
+# Laggard Scan: <THEME>
+Date: <today>
+
+## Phase 3 Winners (Validation, Not Trade)
+| Ticker | What They Do | EV/EBITDA | RSI | 52w Return |
+(Companies that PROVE the thesis is real)
+
+## Valuation Gap Table
+| Company | What They Do | EV/EBITDA | Gap vs Winners | Why Cheap? |
+(The laggards — same work, fraction of the price)
+
+## Top Candidates (Pass All Filters)
+| Ticker | MktCap | Fwd PE | EV/EBITDA | PEG | RSI | Analysts | Verdict |
+
+## For Each Candidate:
+### <TICKER> — <COMPANY>
+- **What they do:** (one sentence)
+- **Why they're cheap:** (the narrative mismatch)
+- **What changes the narrative:** (specific catalyst)
+- **Valuation re-rating math:** "At Xx EV/EBITDA (vs current Yx), stock = $Z"
+- **Timeline:** when does next data point arrive?
+- **Position sizing:** 2-5% based on conviction
+
+## Key Principle
+> Use winners to validate the thesis. Buy the laggards.
+> The gap between "what they do" and "what the market thinks they do" is your edge.
+```
+
+**When to use this workflow:**
+- After a theme produces its first Phase 3 blowout earnings
+- When scanning for new positions in a validated theme
+- When the user asks "how do I find the next X?" or "what's still cheap in this space?"
+- Quarterly after earnings season (re-run with updated data)
+
+---
+
+## Research Frameworks
+
+Detailed methodologies live in `references/`:
+
+| Reference | When to use |
+|-----------|-------------|
+| `references/phase-framework.md` | Assessing where an opportunity sits in its lifecycle |
+| `references/seven-signal-scoring.md` | Scoring any opportunity before investing |
+| `references/bear-case-research.md` | Identifying and probability-weighting what kills a thesis |
+| `references/due-diligence-ladder.md` | Guiding user from thesis → investment decision |
+| `references/weekly-ritual.md` | Ongoing research cadence for pattern recognition |
+| `references/daily-scan.md` | Automated daily scan methodology and output format |
+| `references/laggard-scanner.md` | Finding under-followed laggards after Phase 3 winners validate a theme |
+
+### Key Mental Models (quick reference)
+
+1. **"What does X need?"** — Follow supply chain backward from hype until you hit something boring
+2. **"Narrative Mismatch"** — Negative consensus + provable counter-thesis = opportunity
+3. **"Follow the constraint, not the hype"** — Trade publications > financial news (6 months earlier)
+4. **"Boring Cocktail Party Test"** — If you'd be embarrassed to mention it at dinner, you might be early
+5. **"The thesis is a hypothesis"** — Your job is to DISPROVE it. If you can't after genuine effort, it might be real.
+6. **"Validate with winners, buy the laggards"** — When a Phase 3 company blows out earnings, don't chase it at 40x. Find the Phase 2 company doing the same work at 15x. The valuation gap IS the opportunity.
+
 ---
 
 ## Analysis Principles
@@ -309,13 +487,46 @@ When scanning for opportunities, follow these rules:
 7. **Position sizing** — never analyze without considering how much to allocate
 8. **Catalyst-driven** — identify what changes the narrative, not just current state
 
-## SEC Filing Research
+## Filing Research (US & European)
 
-For deep fundamental work, fetch filings directly:
+### US — SEC EDGAR
 ```bash
 # Get latest 10-K or 10-Q via r.jina.ai
 curl -s "https://r.jina.ai/https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=<TICKER>&type=10-K&dateb=&owner=include&count=5"
 ```
+
+### European Filing Sources
+```bash
+# UK — Regulatory News Service (RNS) via Investegate
+curl -s "https://r.jina.ai/https://www.investegate.co.uk/company-search?company=<COMPANY>"
+
+# Germany — Bundesanzeiger (official company disclosures)
+curl -s "https://r.jina.ai/https://www.bundesanzeiger.de"
+
+# France — AMF (Autorité des marchés financiers)
+curl -s "https://r.jina.ai/https://www.amf-france.org/en"
+
+# Pan-European insider dealing tracker
+curl -s "https://r.jina.ai/https://disclosyr.com"
+
+# EU public procurement (equivalent to SAM.gov)
+# TED — Tenders Electronic Daily
+curl -s "https://r.jina.ai/https://ted.europa.eu/en/"
+```
+
+### European Regulatory Bodies
+| Country | Regulator | Insider Filings | Company Filings |
+|---------|-----------|-----------------|------------------|
+| UK | FCA | RNS via Investegate | Companies House |
+| Germany | BaFin | BaFin Insiderregister | Bundesanzeiger |
+| France | AMF | AMF déclarations | AMF BDIF |
+| Netherlands | AFM | AFM register | AFM |
+| Spain | CNMV | CNMV hechos relevantes | CNMV |
+| Italy | CONSOB | CONSOB | Borsa Italiana |
+| Sweden | FI | Finansinspektionen | FI.se |
+| Switzerland | FINMA | SIX disclosure | SIX |
+
+**Aggregator:** [Disclosyr.com](https://disclosyr.com) — consolidates insider transactions across all European regulators.
 
 ## Disclaimer
 
