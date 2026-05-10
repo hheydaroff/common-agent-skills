@@ -118,7 +118,58 @@ Analyze in three tiers, with increasing depth toward the present:
 
 ---
 
-### A3. Infrastructure & Critical Assets
+### A3. Geography & Topography
+
+**Physical Geography:**
+- Terrain type (mountainous, flat/plains, desert, jungle, archipelago, mixed)
+- Total area + usable/habitable land ratio
+- Coastline (length, type — open ocean vs enclosed sea vs landlocked)
+- Elevation profile (highlands vs lowlands — where are population centers?)
+- Natural barriers (mountain ranges, rivers, deserts, marshes that form defensive lines)
+
+**Strategic Terrain Assessment:**
+| Feature | Advantage | Disadvantage |
+|---------|-----------|---------------|
+| Mountains | Natural fortress, guerrilla warfare, missile concealment | Isolates regions, slows logistics, limits agriculture |
+| Flat/Plains | Easy logistics, agriculture, industry | Indefensible against air power, no cover |
+| Desert | Buffer zone, hard to traverse for invaders | Limits settlement, water-dependent |
+| Jungle/Forest | Concealment, asymmetric warfare | Disease, logistics nightmare |
+| Archipelago | Hard to invade (each island a fortress) | Hard to defend all islands, blockade-vulnerable |
+| Coastline | Trade access, naval projection | Exposed to naval attack, amphibious assault |
+| Landlocked | No naval vulnerability | No sea trade access, dependent on neighbors for ports |
+
+**Defensive Geography:**
+- Natural invasion corridors (where armies historically enter)
+- Natural defensive lines (rivers, mountains that stop advances)
+- Strategic depth (how far can you retreat and still survive?)
+- Fortress potential (can you hide military assets underground/in mountains?)
+- Historical precedent (who tried to invade, what happened?)
+
+**Climate & Environment:**
+- Climate zones (tropical, arid, temperate, continental, arctic)
+- Seasonal constraints on military operations (winter, monsoon, mud season)
+- Climate change exposure (sea level rise, desertification, extreme weather)
+- Agricultural seasons and capacity
+- Natural disaster risk (earthquakes, tsunamis, floods, volcanoes)
+
+**Position & Neighbors:**
+- Neighborhood type (hostile, friendly, mixed, buffer state)
+- Border lengths and with whom (long borders = hard to defend)
+- Buffer zones / neutral states between them and adversaries
+- Position relative to global choke points and trade routes
+- Continental position (heartland, rimland, island, peninsula)
+- Mackinder/Spykman classification (land power vs sea power orientation)
+
+**Geographic Leverage:**
+- Do they SIT ON a choke point? (Strait of Hormuz, Malacca, Suez, Panama, Bosphorus, Gibraltar)
+- Do they control passage between major regions?
+- Can they blockade others by geography alone?
+- Are they blockade-ABLE? (how many access routes exist?)
+- Natural resource geography (where are the oil fields, mines, aquifers relative to borders?)
+
+---
+
+### A4. Infrastructure & Critical Assets
 
 **Military Infrastructure:**
 - Military bases (domestic and foreign)
@@ -165,7 +216,7 @@ Analyze in three tiers, with increasing depth toward the present:
 
 ---
 
-### A4. Cultural & Religious Worldview
+### A5. Cultural & Religious Worldview
 
 **Demographics:**
 - Ethnic composition (majority, minorities, diaspora)
@@ -203,7 +254,7 @@ Analyze in three tiers, with increasing depth toward the present:
 
 ---
 
-### A5. Economic Strength
+### A6. Economic Strength
 
 **Macro Overview:**
 - GDP (nominal + PPP) + growth trajectory
@@ -251,7 +302,7 @@ Analyze in three tiers, with increasing depth toward the present:
 
 ---
 
-### A6. Relationships & Alliances
+### A7. Relationships & Alliances
 
 **Alliance Architecture:**
 | Partner/Bloc | Type | Depth | Based On | Vulnerability |
@@ -294,7 +345,7 @@ For top 5 relationships:
 
 ---
 
-### A7. Military & Security Capabilities
+### A8. Military & Security Capabilities
 
 **Force Structure:**
 - Active personnel / reserves
@@ -356,14 +407,14 @@ Distill the dossier into the chess model:
 
 **QUEEN — Grand Strategy**
 - Published doctrine: [from A1 + research]
-- True objective: [derived from A2-A6 analysis]
-- Ideology/Eschatology: [from A4]
-- Timeline: [urgent vs patient — from A5 economic runway]
+- True objective: [derived from A2-A7 analysis]
+- Ideology/Eschatology: [from A5]
+- Timeline: [urgent vs patient — from A6 economic runway]
 
 **ATTACK VECTORS (Rook, Bishop, Knight)**
-1. [Derived from A3 + A7 — strongest capability]
-2. [Derived from A5 + A6 — economic/diplomatic weapon]
-3. [Derived from A4 — soft power / ideological tool]
+1. [Derived from A3+A4+A8 — geographic/military strength]
+2. [Derived from A6+A7 — economic/diplomatic weapon]
+3. [Derived from A5 — soft power / ideological tool]
 
 **PAWNS — Expendable Assets**
 - [From A6 — client states, proxies, allies they'd sacrifice]
@@ -382,17 +433,17 @@ Distill the dossier into the chess model:
 | | | | | |
 
 **Forced Moves:**
-For each player: "Given their position (resources from A3/A5, relationships from A6, vulnerabilities from A1/A4), what MUST they do?"
+For each player: "Given their position (geography from A3, resources from A4/A6, relationships from A7, vulnerabilities from A1/A5), what MUST they do?"
 
 **Escalation Chain:**
 ```
 Player A does X → Player B must respond with Y (because of [incentive]) →
-This forces Player C to Z (because of [dependency from A6]) → ...
+This forces Player C to Z (because of [dependency from A7]) → ...
 ```
 
 **Triangulation:**
-- Who benefits from staying neutral? (from A6 relationship analysis)
-- What deal satisfies both parties? (from A5 economic needs)
+- Who benefits from staying neutral? (from A7 relationship analysis)
+- What deal satisfies both parties? (from A6 economic needs)
 
 ---
 
@@ -401,7 +452,7 @@ This forces Player C to Z (because of [dependency from A6]) → ...
 From A3 infrastructure data:
 - Map critical flows (energy, food, data, money)
 - Identify who can cut whom off
-- Calculate time-to-strangulation (reserves from A3 / daily consumption)
+- Calculate time-to-strangulation (reserves from A4 / daily consumption)
 - Alternative routes available?
 
 ---
@@ -419,7 +470,7 @@ From A2 recent history + current dynamics, find the rhyme:
 - Thirty Years War (religious + political fragmentation)
 - Scramble for Africa (resource race + partition)
 
-**Empire Lifecycle Position** (from A1 + A2 + A5):
+**Empire Lifecycle Position** (from A1 + A2 + A6):
 | Indicator | Status | Direction |
 |-----------|--------|-----------|
 | Debt | | ↑↓→ |
@@ -439,12 +490,12 @@ From A2 recent history + current dynamics, find the rhyme:
 |---------------------------|------------------------------------------|---------------------------|
 | | | |
 
-**Who controls the narrative?** (from A4 media + A6 patron relationships)
+**Who controls the narrative?** (from A5 media + A7 patron relationships)
 
 **System Fragility:**
 - What's the weakest link in the current arrangement?
 - What would cause cascading collapse?
-- Signs of "questioning the shadows" (protests, independent media growth, institutional distrust from A4)
+- Signs of "questioning the shadows" (protests, independent media growth, institutional distrust from A5)
 
 ---
 
