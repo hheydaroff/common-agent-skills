@@ -1,6 +1,6 @@
 ---
 name: investment-analyst
-description: "Comprehensive investment analysis covering US and European stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Covers US (NYSE, NASDAQ) and European markets (Xetra, Euronext, LSE, SIX, OMX, Borsa Italiana). Includes early opportunity scanning to find Phase 2 themes before the market reprices them, and laggard scanning to find under-followed companies in validated themes. Uses yfinance (no API key, US + EU), Alpaca (API key, US only), Exa/Tavily for news & research, and r.jina.ai for SEC/European filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'find laggards', 'European stocks', 'EU market', 'DAX', 'STOXX'."
+description: "Comprehensive investment analysis covering US and European stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Covers US (NYSE, NASDAQ) and European markets (Xetra, Euronext, LSE, SIX, OMX, Borsa Italiana). Includes early opportunity scanning to find Phase 2 themes before the market reprices them, laggard scanning to find under-followed companies in validated themes, and exit strategy frameworks (when/how/how much to sell — thesis kills, profit targets, time decay, rebalancing). Uses yfinance (no API key, US + EU), Alpaca (API key, US only), Exa/Tavily for news & research, and r.jina.ai for SEC/European filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'find laggards', 'exit strategy', 'when to sell', 'take profits', 'European stocks', 'EU market', 'DAX', 'STOXX'."
 ---
 
 # Investment Analyst
@@ -150,6 +150,14 @@ Date: <today>
 
 ## Position Sizing Suggestion
 - Based on conviction level and volatility (Kelly fraction simplified)
+
+## Exit Plan
+- T1 (sell 33%): $X — sector median multiple applied
+- T2 (sell 33%): $X — premium peer multiple applied
+- T3 (trail 34%): $X — 15% trailing stop
+- Thesis Kill Triggers: [2 specific scenarios that disprove the thesis]
+- Time Limit: 12 months without catalyst progression
+- Weekly Watch: [3 key indicators to monitor]
 ```
 
 ### 2. Options Strategy (`/invest options <TICKER> <VIEW>`)
@@ -295,14 +303,21 @@ For a user-provided watchlist or theme, run a systematic check:
    - Technical: Improving / Stable / Deteriorating
    - Fundamental: Accelerating / Steady / Decelerating  
    - Catalyst proximity: Near-term / Medium-term / Distant
+   - Exit signals: None / Approaching T1 / Thesis challenged / Time decay
    - Action: Add / Hold / Trim / Exit
 
 **Output format:**
 ```markdown
 # Watchlist Check — <DATE>
 
-| Ticker | Price | Δ Since Last | Technical | Fundamental | Next Catalyst | Action |
-|--------|-------|-------------|-----------|-------------|---------------|--------|
+| Ticker | Price | Δ Since Last | Technical | Fundamental | Next Catalyst | Exit Signal | Action |
+|--------|-------|-------------|-----------|-------------|---------------|-------------|--------|
+
+## Exit Alerts
+- [Any positions approaching T1/T2/T3 targets]
+- [Any thesis kill triggers approaching]
+- [Any time decay positions (>9 months, flat)]
+- [Any positions exceeding size limits]
 
 ## Alerts
 - [Any triggered thresholds, unusual volume, news events]
@@ -321,7 +336,7 @@ When scanning for opportunities, follow these rules:
 3. **Under-followed = edge** — if <10 analysts cover a $2-20B company, the market may be mispricing it
 4. **Convergence > single signal** — regulation + capital + customers all pointing same direction = high conviction
 5. **Size for uncertainty** — early bets get 2-5% allocation each, never YOLO
-6. **Define the exit before entry** — what specific event proves the thesis wrong?
+6. **Define the exit before entry** — what specific event proves the thesis wrong? (see `/invest exit plan`)
 7. **The best time to buy is when it's boring** — if nobody's talking about it but commitments are real, that's the setup
 
 ### 9. Bear Case Research (`/invest bear <TICKER>`)
@@ -357,7 +372,110 @@ Automated daily research sweep across tracked themes. Reads configuration from `
 
 When the user asks "should I buy X?" — never jump to a conclusion. Assess what level they're at on the Due Diligence Ladder (see `references/due-diligence-ladder.md`) and guide them to the NEXT level. The process IS the edge.
 
-### 12. Laggard Scanner (`/invest laggard <THEME>`)
+### 12. Exit Strategy (`/invest exit <TICKER>` or `/invest exit plan <TICKER>`)
+
+Define, monitor, and execute exit strategies for held positions. Every position needs a pre-committed exit plan. See `references/exit-strategy.md` for the complete framework.
+
+**The 4 Exit Types:**
+```
+1. THESIS KILL   — Foundational reason disproven → exit 100% in 1-3 days
+2. TARGET HIT    — Fair value reached / Phase 3 repricing → scale out in thirds
+3. TIME DECAY    — 6-12 months, no catalysts fired → redeploy capital
+4. PORTFOLIO TRIM — Position exceeds size limits → mechanical rebalance
+```
+
+**Process for `/invest exit <TICKER>` (evaluate existing position):**
+
+1. `market_data.py price <TICKER>` — current price vs targets
+2. `market_data.py technicals <TICKER> 6mo` — trend health, RSI, distribution
+3. `market_data.py recommendations <TICKER>` — analyst shift (upgrades = Phase 3?)
+4. `market_data.py financials <TICKER>` — earnings trajectory still intact?
+5. Tavily search: `"<TICKER> risk downgrade concerns 2026"` (time_range: month)
+6. Check insider activity (OpenInsider US / Disclosyr EU)
+
+**Evaluate against exit signals:**
+
+| Check | Method | Exit Signal |
+|-------|--------|-------------|
+| Phase progression | Analyst count, media, ETF inclusion | Phase 3 confirmed → scale out |
+| Thesis integrity | Original thesis vs current evidence | Thesis killed → full exit |
+| Valuation stretch | Current multiple vs sector & targets | Above T2 → start trailing |
+| Momentum health | RSI, MACD, volume pattern | Distribution pattern → accelerate exit |
+| Time in position | Entry date vs today | >12 months flat → exit for opportunity cost |
+| Position size | Current weight vs limits | >8% portfolio → trim to target |
+
+**Process for `/invest exit plan <TICKER>` (create exit plan at entry):**
+
+Generate the Exit Plan Template with specific values:
+
+```markdown
+## Exit Plan: <TICKER>
+
+**Entry date:** <today>
+**Entry price:** $X (from market_data.py price)
+**Position size:** X% of portfolio
+**Thesis:** "..."
+
+### Price Targets (calculated from peer multiples + DCF)
+- T1 (conservative): $X — sell 33% (sector median multiple)
+- T2 (base case): $X — sell 33% (premium peer multiple)
+- T3 (euphoria): $X — trail remaining 34% with 15% stop
+
+### Thesis Kill Triggers (exit 100% immediately)
+1. [Specific disproving scenario based on original thesis]
+2. [Second kill scenario]
+
+### Time Limit
+- 6-month review: <date>
+- Maximum hold without catalyst: 12 months (<date>)
+
+### Weekly Watch List
+- [ ] RSI divergence / distribution volume
+- [ ] Insider selling pattern
+- [ ] Analyst revision direction
+- [ ] Sector relative strength
+- [ ] Thesis-specific KPI (backlog, contracts, etc.)
+
+### Earnings Protocol
+- Pre-earnings: [hold/trim based on position size]
+- Beat + raise: hold/add
+- Miss + lower: exit 75-100%
+```
+
+**Output format for exit evaluation:**
+
+```markdown
+# Exit Evaluation: <TICKER>
+Date: <today>
+
+## Current Status
+- Entry: $X on YYYY-MM-DD | Current: $Y | Return: +/-Z%
+- Holding period: X months
+- Position size: X% of portfolio
+
+## Exit Signal Dashboard
+| Signal | Status | Action Triggered? |
+|--------|--------|------------------|
+| Thesis Kill | 🟢 Intact / 🟡 Challenged / 🔴 Broken | |
+| Target Hit | T1 ☐ T2 ☐ T3 ☐ | |
+| Time Decay | X months / 12 max | |
+| Position Size | X% / max Y% | |
+| Phase | Still Phase 2 / Entering Phase 3 | |
+| Momentum | Healthy / Weakening / Distributing | |
+
+## Recommendation
+- Action: HOLD / TRIM X% / SCALE OUT / EXIT
+- Reason: [specific trigger or combination]
+- Timeline: [immediate / next week / at earnings]
+- Where to redeploy: [cash / alternative opportunity]
+
+## Updated Exit Plan
+- Next checkpoint: <date>
+- Adjusted targets (if applicable): ...
+- New thesis kill triggers (if environment changed): ...
+```
+
+### 13. Laggard Scanner (`/invest laggard <THEME>`)
 
 Find under-followed companies doing the same work as recent blowout performers but trading at a fraction of the valuation. The core insight: when a Phase 3 company validates a thesis by reporting massive growth, the smart play is NOT to buy it at 40x EBITDA — it's to find the Phase 2 laggard in the same supply chain that hasn't repriced yet.
 
@@ -459,6 +577,7 @@ Detailed methodologies live in `references/`:
 |-----------|-------------|
 | `references/phase-framework.md` | Assessing where an opportunity sits in its lifecycle |
 | `references/seven-signal-scoring.md` | Scoring any opportunity before investing |
+| `references/exit-strategy.md` | When/how/how much to sell — thesis kills, targets, time decay, rebalancing |
 | `references/bear-case-research.md` | Identifying and probability-weighting what kills a thesis |
 | `references/due-diligence-ladder.md` | Guiding user from thesis → investment decision |
 | `references/weekly-ritual.md` | Ongoing research cadence for pattern recognition |
@@ -486,6 +605,8 @@ Detailed methodologies live in `references/`:
 6. **Separate data from opinion** — clearly label what's fact vs interpretation
 7. **Position sizing** — never analyze without considering how much to allocate
 8. **Catalyst-driven** — identify what changes the narrative, not just current state
+9. **Exit before entry** — every deep dive and scan MUST include an exit plan with T1/T2/T3 targets and thesis kill triggers
+10. **Scale out, don't time tops** — selling in thirds captures more upside than trying to nail the peak
 
 ## Filing Research (US & European)
 
