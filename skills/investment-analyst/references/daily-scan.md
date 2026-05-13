@@ -10,7 +10,7 @@ The scan mimics what a human analyst would do each morning:
 3. Check insider buying activity
 4. Check for earnings surprises in tracked sectors
 5. Check for hiring surges at tracked companies
-6. Check Reddit sentiment for narrative shifts and contrarian signals
+6. Check Reddit for retail sentiment and narrative shifts
 
 ## Input
 
@@ -112,19 +112,43 @@ For Tier 1 companies only (keep focused):
 2. Flag: hiring surges in specific technical roles (welders, electrical engineers, process engineers)
 3. Score: HIGH if 50+ technical roles posted, MEDIUM if notable hiring, LOW if nothing
 
-### Step 6: Reddit Sentiment
+### Step 6: Reddit Sentiment (via Tavily/Exa)
 
-Check retail investor sentiment for tracked tickers and themes:
-1. `reddit_sentiment.py summary --period day` — daily overview of most-discussed tickers
-2. For each tracked Tier 1 company: check if ticker appears in top mentions
-3. Flag: sudden spike in mentions vs prior week = narrative shift (could be opportunity or crowded trade)
-4. Flag: extreme bearish sentiment on a thesis-intact stock = potential contrarian signal
+Check retail investor sentiment using the same research tools with Reddit domain scoping:
+
+1. **Broad sentiment sweep** — Tavily search:
+   ```
+   query: "stock market what are you buying this week"
+   include_domains: ["reddit.com"]
+   time_range: "week"
+   max_results: 10
+   ```
+2. **Per-ticker check** — for each Tier 1 company, Tavily search:
+   ```
+   query: "<TICKER> stock analysis bullish bearish"
+   include_domains: ["reddit.com"]
+   time_range: "week"
+   max_results: 5
+   ```
+3. **Theme-level sentiment** — Exa search (better semantic matching):
+   ```
+   query: "<theme keywords> investing opportunity"
+   includeDomains: ["reddit.com"]
+   startPublishedDate: "<7 days ago ISO>"
+   numResults: 5
+   ```
+4. From results, assess:
+   - Is retail piling into a name you're watching? (crowded → be cautious)
+   - Is retail abandoning a thesis-intact stock? (contrarian buy signal)
+   - Are new themes emerging that aren't on the watchlist?
 5. Score: HIGH if tracked ticker shows sudden sentiment reversal, MEDIUM if mentions rising, LOW if nothing
 
 **Contrarian signals to watch:**
 - "I'm selling all my [TICKER]" posts with high engagement = possible capitulation bottom
 - "[TICKER] to the moon" consensus = possible exhaustion top
 - New theme appearing across multiple subs that isn't on the watchlist = early narrative detection
+
+**Note:** Tavily returns content snippets from Reddit posts. Exa finds posts semantically but can't extract body text (Reddit blocks). Use both: Exa for discovery, Tavily for content.
 
 ## Output Format
 
