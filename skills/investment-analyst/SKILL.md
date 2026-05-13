@@ -1,6 +1,6 @@
 ---
 name: investment-analyst
-description: "Comprehensive investment analysis covering US and European stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Covers US (NYSE, NASDAQ) and European markets (Xetra, Euronext, LSE, SIX, OMX, Borsa Italiana). Includes early opportunity scanning to find Phase 2 themes before the market reprices them, laggard scanning to find under-followed companies in validated themes, and exit strategy frameworks (when/how/how much to sell — thesis kills, profit targets, time decay, rebalancing). Uses yfinance (no API key, US + EU), Alpaca (API key, US only), Exa/Tavily for news & research, and r.jina.ai for SEC/European filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'find laggards', 'exit strategy', 'when to sell', 'take profits', 'European stocks', 'EU market', 'DAX', 'STOXX'."
+description: "Comprehensive investment analysis covering US and European stocks, options, futures, ETFs, and macro. Performs fundamental analysis (DCF, ratios, moat), technical analysis (indicators from price data), options strategy evaluation, sector rotation, and sentiment analysis. Covers US (NYSE, NASDAQ) and European markets (Xetra, Euronext, LSE, SIX, OMX, Borsa Italiana). Includes early opportunity scanning to find Phase 2 themes before the market reprices them, laggard scanning to find under-followed companies in validated themes, exit strategy frameworks (when/how/how much to sell — thesis kills, profit targets, time decay, rebalancing), leveraged certificate entry timing (Factor Certificates/Optionsscheine with 3-signal system: RSI + MACD + market filter), and Reddit sentiment scanning for retail investor positioning and contrarian signals. Uses yfinance (no API key, US + EU), Alpaca (API key, US only), Reddit JSON API (no API key), Exa/Tavily for news & research, and r.jina.ai for SEC/European filings. Triggers on: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'valuation', 'should I buy/sell', 'earnings analysis', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find early plays', 'check my watchlist', 'find laggards', 'exit strategy', 'when to sell', 'take profits', 'European stocks', 'EU market', 'DAX', 'STOXX', 'factor certificate', 'Optionsschein', 'leveraged play', 'certificate entry', 'reddit sentiment', 'what is reddit saying'."
 ---
 
 # Investment Analyst
@@ -78,6 +78,28 @@ Shorthand: `alias alpaca='uv run --with alpaca-py --with pandas python3 scripts/
 - Alpaca: real-time quotes, intraday bars, options with Greeks, news, screener, crypto (US only)
 - yfinance: fundamentals, financials, analyst estimates, dividends, institutional holders (US + European)
 - For European stocks, use yfinance with exchange suffixes: `.DE` (Xetra/Frankfurt), `.PA` (Euronext Paris), `.AS` (Amsterdam), `.L` (London), `.SW` (SIX Swiss), `.ST` (Stockholm), `.CO` (Copenhagen), `.HE` (Helsinki), `.MI` (Milan), `.MC` (Madrid)
+
+#### `scripts/reddit_sentiment.py` — Reddit Investment Sentiment (NO API key needed)
+```bash
+python3 scripts/reddit_sentiment.py top --period week              # Top posts from investment subreddits (past week)
+python3 scripts/reddit_sentiment.py top --period day               # Top posts from past 24h
+python3 scripts/reddit_sentiment.py hot                            # Currently hot posts
+python3 scripts/reddit_sentiment.py ticker NVDA --period week      # Posts mentioning $NVDA
+python3 scripts/reddit_sentiment.py ticker INTC --period month     # Longer lookback for less-discussed tickers
+python3 scripts/reddit_sentiment.py summary --period week          # Condensed summary: top tickers, themes, sentiment
+python3 scripts/reddit_sentiment.py top --subs "stocks,ValueInvesting" --period week  # Custom sub list
+```
+
+**Tracked subreddits:** r/wallstreetbets, r/stocks, r/investing, r/options, r/stockmarket, r/ValueInvesting, r/dividends, r/SecurityAnalysis, r/semiconductors, r/EnergyStorage, r/nuclearpower, r/weedstocks, r/Biotechplays, r/economics, r/finance, r/EuropeanStocks, r/eupersonalfinance
+
+**What it provides:**
+- Most-discussed tickers by mention count and engagement
+- Sentiment proxy (bullish/bearish word detection per ticker)
+- High-engagement posts sorted by score × comments
+- Flair distribution as additional sentiment signal
+- No authentication required (uses Reddit public JSON API)
+
+Shorthand: `alias reddit='python3 scripts/reddit_sentiment.py'`
 
 #### Web Research (use existing Exa/Tavily skills)
 - **Exa**: Neural search for research papers, financial reports, sentiment
@@ -567,6 +589,84 @@ Date: <today>
 - When the user asks "how do I find the next X?" or "what's still cheap in this space?"
 - Quarterly after earnings season (re-run with updated data)
 
+### 14. Leveraged Certificate Entry (`/invest certificate <TICKER>`)
+
+Time entries on Factor Certificates (Faktor-Optionsscheine) — daily-leveraged products (2x–8x) available on European brokers. See full methodology in `references/leveraged-certificate-entry.md`.
+
+**The 3-Signal Entry System** (backtested on 15 stocks, 2025):
+
+1. `market_data.py technicals <TICKER> 6mo` — check RSI < 30 (oversold candidate)
+2. Thesis assessment — is the business intact or structurally broken?
+3. `market_data.py technicals SPY 6mo` — is S&P 500 above its 50-day MA? (market health)
+4. From step 1: is MACD histogram positive? (momentum confirmed turning)
+
+**Entry rule:** ALL of: RSI was recently < 30 + thesis intact + SPY > 50MA + MACD positive = enter certificate.
+
+**If SPY < 50MA:** Recommend stock purchase only. Do NOT recommend certificates — backtest shows 50% win rate and negative average returns in down markets.
+
+**Output format:**
+```markdown
+# Certificate Entry Analysis: <TICKER>
+
+## Signal Checklist
+| Signal | Status | Value |
+|--------|--------|-------|
+| RSI < 30 (recently) | ✅/❌ | RSI = X |
+| Thesis intact | ✅/❌ | [reason] |
+| SPY > 50-day MA | ✅/❌ | SPY: $X vs 50MA: $Y |
+| MACD histogram > 0 | ✅/❌ | Histogram: X |
+
+## Recommendation
+- Action: ENTER / WAIT / NO (stock only)
+- Product: Xx Factor Long on <TICKER>
+- Position size: €X (1% of portfolio)
+- Stop loss: -40% on certificate
+- Profit target: +60-80%
+- Time limit: 10 trading days
+- Exit date: <date>
+
+## Risk
+- What kills this in 10 days: [specific near-term risk]
+- If stopped out: [accept loss, do not re-enter same setup]
+```
+
+**When to use:**
+- User asks about factor certificates, leveraged plays, or "Optionsscheine"
+- User wants to add leverage to a watchlist position
+- User asks how to play an oversold bounce with more upside
+- Always pair with risk warnings about total loss potential
+
+### 15. Reddit Sentiment Scan (`/invest reddit` or `/invest reddit <TICKER>`)
+
+Gauge retail investor sentiment from Reddit's investment communities. Useful as a contrarian signal (extreme consensus often marks inflection points) and for early detection of emerging narratives.
+
+**Full scan (`/invest reddit`):**
+1. `reddit_sentiment.py summary --period week` — weekly sentiment overview
+2. Identify top-mentioned tickers and compare against your watchlist
+3. Note any extreme sentiment (>80% bullish or bearish on a name)
+4. Flag emerging themes not yet covered by sell-side
+
+**Ticker-specific (`/invest reddit <TICKER>`):**
+1. `reddit_sentiment.py ticker <TICKER> --period week` — recent mentions
+2. If few results: `reddit_sentiment.py ticker <TICKER> --period month`
+3. Assess: is Reddit ahead of Wall Street, or chasing a move?
+4. Cross-reference with technicals and fundamentals
+
+**How to interpret Reddit signals:**
+
+| Signal | Meaning | Action |
+|--------|---------|--------|
+| Sudden spike in mentions + bullish sentiment | Retail FOMO, possible late-stage momentum | If you're already long: consider trimming. If not: probably too late. |
+| High engagement + mixed sentiment (heated debate) | Controversial thesis, high uncertainty | Worth researching — one side will be wrong |
+| Consistent mentions + bearish "it's dead" sentiment | Possible contrarian buy signal | Check fundamentals — if thesis intact, could be capitulation |
+| Ticker mentioned in r/SecurityAnalysis or r/ValueInvesting | Higher-quality discussion, longer time horizon | Prioritize reading these threads |
+| Ticker ONLY in r/wallstreetbets | Momentum/meme play, short time horizon | Not suitable for thesis-based investing unless fundamentals support it |
+
+**Integration with other workflows:**
+- Use before `/invest deep <TICKER>` to understand retail positioning
+- Use in `/invest bear <TICKER>` to check if crowd is ignoring risks
+- Use in `/invest scan` daily to detect narrative shifts early
+
 ---
 
 ## Research Frameworks
@@ -583,6 +683,7 @@ Detailed methodologies live in `references/`:
 | `references/weekly-ritual.md` | Ongoing research cadence for pattern recognition |
 | `references/daily-scan.md` | Automated daily scan methodology and output format |
 | `references/laggard-scanner.md` | Finding under-followed laggards after Phase 3 winners validate a theme |
+| `references/leveraged-certificate-entry.md` | Timing entries on leveraged Factor Certificates (2x–8x) using RSI + MACD + market filter |
 
 ### Key Mental Models (quick reference)
 
