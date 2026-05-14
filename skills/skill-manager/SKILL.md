@@ -31,7 +31,7 @@ Deploy targets (written to by deploy.sh, never edited directly):
    ```markdown
    ---
    name: skill-name
-   description: What this skill does and when to use it. Be specific.
+   description: What this skill does and when to use it. Be specific about triggers.
    ---
 
    # Skill Name
@@ -45,6 +45,56 @@ Deploy targets (written to by deploy.sh, never edited directly):
    cd ~/development/common-agent-skills
    git add -A && git commit -m "add: skill-name" && git push
    ```
+
+## Skill Structure
+
+```
+skill-name/
+├── SKILL.md              # Main instructions (required, keep under 150 lines)
+├── references/           # Detailed docs (if SKILL.md would exceed 150 lines)
+│   ├── guide.md
+│   └── examples.md
+└── scripts/              # Utility scripts (deterministic operations only)
+    └── helper.sh
+```
+
+### When to Split Files
+- SKILL.md exceeds ~150 lines → move detail into `references/`
+- Content has distinct domains (e.g. fundamentals vs advanced)
+- Scripts save tokens vs generating the same code repeatedly
+
+## Description Requirements
+
+The description is **the only thing agents see** when deciding which skill to load. It’s surfaced in the system prompt alongside all other installed skills.
+
+**Format:**
+- Max 1024 characters
+- First sentence: what it does
+- Second sentence: "Use when [specific triggers/keywords]"
+- Include trigger phrases the user might say
+
+**Good:**
+```
+Find deepening opportunities in a codebase — refactors that turn shallow modules
+into deep ones for better testability. Use when user wants to improve architecture,
+find refactoring opportunities, or make a codebase more testable.
+```
+
+**Bad:**
+```
+Helps improve code.
+```
+
+## Quality Checklist (before committing)
+
+- [ ] Description includes trigger phrases ("Use when...")
+- [ ] SKILL.md under 150 lines (split if larger)
+- [ ] No time-sensitive info that will go stale
+- [ ] Consistent terminology throughout
+- [ ] Concrete examples or workflows included
+- [ ] References at most one level deep (no reference chains)
+- [ ] Scripts are deterministic (validation, formatting — not AI-generated each time)
+- [ ] Tested: does the skill actually trigger when expected?
 
 ## Editing an Existing Skill
 
