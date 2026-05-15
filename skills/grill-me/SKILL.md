@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Stress-test a plan or design through relentless interviewing until reaching shared understanding. Use when user wants to be grilled on their plan, stress-test a design, poke holes in an idea, or says "grill me", "challenge my plan", "what am I missing".
+description: "Stress-test a plan or design through relentless interviewing. Use when user says \"grill me\", \"challenge my plan\", \"what am I missing\", or wants to poke holes in an idea."
 ---
 
 # Grill Me
@@ -10,10 +10,11 @@ Interview the user relentlessly about every aspect of their plan until reaching 
 ## Rules
 
 - Ask questions **one at a time** — never batch
-- For each question, **provide your recommended answer** so the user can agree, disagree, or refine
+- For each question, **attach your hypothesis/guess** so the user can agree, disagree, or refine. Format: `Q: [question] / GUESS: [your best answer + reasoning]`. This is faster for the user (reacting > generating) and commits you to a testable position.
 - If a question can be answered by **exploring the codebase**, do that instead of asking
 - Resolve dependency branches in order — don't jump ahead to decisions that depend on unresolved ones
 - Be thorough but not adversarial — the goal is shared understanding, not gotchas
+- **Watch for "should want" answers** — when the user says things like "it should be scalable", "best practices say...", "the standard approach", probe with: *"If you didn't have to justify this to anyone, what would you actually want?"*
 
 ## Question Areas
 
@@ -37,11 +38,24 @@ Cover all branches of the decision tree. Typical areas include:
 1. Read the plan (file, conversation context, or ask user to describe it)
 2. If inside a repo, explore relevant code to ground your questions
 3. Read existing documentation for domain awareness (see below)
-4. Start with the highest-leverage question — the one where a wrong assumption would waste the most effort
-5. For each answer, probe deeper if it reveals new branches
-6. When a branch is fully resolved, move to the next
-7. Summarize resolved decisions periodically so nothing gets lost
-8. When all branches are resolved, present a final summary of all decisions made
+4. **State your initial hypothesis with a confidence number** before asking anything:
+   ```
+   HYPOTHESIS: [one-sentence read of what the user wants/plans to do]
+   CONFIDENCE: ~[0-100]%
+   ```
+5. Start with the highest-leverage question — the one where a wrong assumption would waste the most effort
+6. For each answer, probe deeper if it reveals new branches
+7. When a branch is fully resolved, move to the next
+8. Summarize resolved decisions periodically so nothing gets lost
+9. **Stop condition (95% confidence):** You're done when you can predict the user's reaction to the next three questions you would ask. If yes → present final summary. If not → keep grilling.
+10. When all branches are resolved, present a final summary of all decisions made
+
+### Accepting Answers
+
+These are NOT valid confirmations — probe further:
+- "Whatever you think is best" → re-ask with two concrete options as a choice
+- "Sounds good" / "Sure" → ask: "Anything you'd refine?"
+- Buzzwords without specifics ("scalable", "clean", "modern") → probe for the actual outcome they want
 
 ## Domain Awareness
 

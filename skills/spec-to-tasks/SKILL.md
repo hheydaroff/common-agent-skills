@@ -1,6 +1,6 @@
 ---
 name: spec-to-tasks
-description: Convert approved SPEC.md into tasks.json for Ralph Loop execution. Use after user has an approved SPEC.md, says "convert spec to tasks", "generate tasks.json", "prepare for Ralph Loop", or wants machine-executable task format.
+description: "Convert approved SPEC.md into tasks.json for Ralph Loop. Use when user says \"convert spec to tasks\", \"generate tasks.json\", or wants machine-executable task format."
 ---
 
 # SPEC to Tasks Conversion

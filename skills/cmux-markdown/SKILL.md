@@ -1,6 +1,6 @@
 ---
 name: cmux-markdown
-description: Open markdown files in a formatted viewer panel with live reload. Use when you need to display plans, documentation, or notes alongside the terminal with rich rendering (headings, code blocks, tables, lists).
+description: "Display markdown in a formatted viewer panel with live reload. Use when you need to show plans, docs, or notes alongside the terminal."
 ---
 
 # Markdown Viewer with cmux

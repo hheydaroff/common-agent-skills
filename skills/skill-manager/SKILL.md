@@ -1,6 +1,6 @@
 ---
 name: skill-manager
-description: Manage the unified agent skills repository (common-agent-skills). Use when adding, editing, removing, or deploying skills across tools (Pi, Claude Code, Codex). Covers where the source of truth lives, how to create a skill, how to deploy, and the git workflow.
+description: "Manage the common-agent-skills repository. Use when adding, editing, removing, or deploying skills across Pi, Claude Code, and Codex."
 ---
 
 # Skill Manager

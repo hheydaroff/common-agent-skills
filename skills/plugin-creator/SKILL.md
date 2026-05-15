@@ -1,7 +1,6 @@
 ---
 name: plugin-creator
-description: |
-  Automatically creates new Claude Code plugins with proper structure, validation, and marketplace integration when user mentions creating a plugin, new plugin, or plugin from template. Specific to claude-code-plugins repository workflow.
+description: "Create Claude Code plugins with proper structure and marketplace integration. Use when user wants to create a new plugin or scaffold from template. Specific to claude-code-plugins repo."
 allowed-tools: Write, Read, Grep, Bash
 version: 1.0.0
 ---

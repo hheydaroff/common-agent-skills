@@ -1,6 +1,6 @@
 ---
 name: anki-card-generator
-description: Generate high-quality Anki flashcards following LessWrong best practices and cognitive science principles. Outputs simple-anki-sync compatible markdown. Use when user requests to create Anki cards, make flashcards, or learn material—phrases like "create flashcards", "make Anki cards", "help me memorize", "generate cards for", "study with cards".
+description: "Generate Anki flashcards using cognitive science principles (simple-anki-sync markdown). Use when user wants to create flashcards, memorize material, or study with spaced repetition."
 ---
 
 # Anki Card Generator

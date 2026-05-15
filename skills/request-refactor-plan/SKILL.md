@@ -1,6 +1,6 @@
 ---
 name: request-refactor-plan
-description: Create a detailed refactor plan with tiny safe commits via user interview. Use when user wants to plan a refactor, create a refactoring RFC, break a refactor into safe incremental steps, or says "plan a refactor", "refactor plan", "how should I refactor this".
+description: "Create a detailed refactor plan with tiny safe commits via user interview. Use when user says \"plan a refactor\", \"refactor plan\", or wants safe incremental refactoring steps."
 ---
 
 # Refactor Plan Creator

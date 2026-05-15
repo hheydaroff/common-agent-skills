@@ -1,6 +1,6 @@
 ---
 name: ralph
-description: Launch and manage an autonomous Ralph Loop in a separate terminal pane. Supports cmux and tmux — auto-detects the environment. Runs pi in a task-execution loop against a SPEC.md or tasks.json while the current session monitors progress. Use when user says "run ralph", "start ralph loop", "autonomous loop", "run tasks autonomously", "AFK mode", or wants pi to execute a task file unattended in a background terminal.
+description: "Launch autonomous Ralph Loop in a separate terminal pane (cmux/tmux). Executes SPEC.md or tasks.json unattended while current session monitors. Use when user says \"run ralph\", \"autonomous loop\", \"AFK mode\", or wants background task execution."
 ---
 
 # Ralph Loop

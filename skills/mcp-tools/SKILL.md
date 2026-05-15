@@ -1,6 +1,6 @@
 ---
 name: mcp-tools
-description: Call Docker MCP tools (web search, browser, Atlassian, fetch) from any agent via mcporter CLI. Use when you need to search the web, fetch URLs, automate a browser, or query Jira/Confluence but have no native MCP support (e.g. Pi coding agent).
+description: "Call Docker MCP tools (web search, browser, Atlassian, fetch) via mcporter CLI. Use when you need web search, URL fetching, or Jira/Confluence access without native MCP support."
 ---
 
 # MCP Tools via mcporter

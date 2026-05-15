@@ -1,6 +1,6 @@
 ---
 name: solution-ideator
-description: "Explore what to build (Opportunity Solution Tree) or how to build it (decision tree). Two modes: Discovery mode maps a business outcome to customer opportunities, solutions, and experiments. Decision mode expands a known problem into alternative approaches, prunes against constraints, and recommends one path with an ADR-ready log. Use when user says \"brainstorm options\", \"explore solutions\", \"opportunity solution tree\", \"OST\", \"what should we build\", \"should I build X or Y\", \"what are the alternatives\", \"ideate on this problem\", or presents a vague problem with no obvious approach yet."
+description: "Explore what to build (Opportunity Solution Tree) or how (decision tree). Two modes: Discovery maps outcomes to opportunities/solutions; Decision prunes alternatives against constraints. Use when user says \"brainstorm options\", \"explore solutions\", \"OST\", or has a vague problem."
 ---
 
 # Solution Ideator
@@ -123,6 +123,20 @@ For each prioritized opportunity, brainstorm **at least 3 solutions**. Ideate fr
 - **PM perspective** — process/flow changes, positioning, packaging
 - **Designer perspective** — UX patterns, information architecture, progressive disclosure
 - **Engineer perspective** — technical capabilities that enable new experiences
+
+Additionally, apply **divergent thinking lenses** to force non-obvious ideas:
+
+| Lens | Prompt |
+|------|--------|
+| **Inversion** | "What if we did the opposite?" |
+| **Constraint removal** | "What if budget/time/tech weren't factors?" |
+| **Audience shift** | "What if this were for [different user]?" |
+| **Combination** | "What if we merged this with [adjacent idea]?" |
+| **Simplification** | "What's the version that's 10x simpler?" |
+| **10x version** | "What would this look like at massive scale?" |
+| **Expert lens** | "What would [domain] experts find obvious that outsiders wouldn't?" |
+
+Pick 2-3 lenses per opportunity to push past conventional thinking.
 
 Rules:
 - Never commit to the first idea. The "compare and contrast" principle is non-negotiable.

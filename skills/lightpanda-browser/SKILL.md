@@ -1,6 +1,6 @@
 ---
 name: lightpanda-browser
-description: Headless browser automation via Lightpanda and Chrome DevTools Protocol. Use when you need to fetch web pages, extract content, evaluate JavaScript, or automate headless browsing without requiring a full Chrome installation. Lightweight alternative to browser-tools that works on any Linux system.
+description: "Headless browser via Lightpanda + CDP. Use when you need to fetch pages, extract content, or automate browsing on Linux without Chrome. Lightweight alternative to browser-tools."
 ---
 
 # Lightpanda Browser

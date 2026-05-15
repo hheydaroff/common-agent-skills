@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions "red-green-refactor", wants integration tests, or asks for test-first development.
+description: "Test-driven development with red-green-refactor loop. Use when user wants TDD, test-first development, or mentions \"red-green-refactor\"."
 ---
 
 # Test-Driven Development
@@ -103,4 +103,64 @@ After all tests pass, look for refactor candidates (see [references/refactoring.
 [ ] Test would survive internal refactor
 [ ] Code is minimal for this test
 [ ] No speculative features added
+```
+
+## Bug Fix Pattern (Prove-It)
+
+When fixing a bug, always reproduce with a test FIRST:
+
+```
+1. Write a test that demonstrates the bug (must FAIL with current code)
+2. Confirm the test fails (proves the bug exists)
+3. Fix the code
+4. Confirm the test passes (proves the fix works)
+5. The test becomes a regression guard forever
+```
+
+Never fix a bug without a failing test first — otherwise you can’t prove you fixed it, and it can regress silently.
+
+## Coverage Scenarios
+
+For every function or component, consider:
+
+| Scenario | Example |
+|----------|---------||
+| Happy path | Valid input produces expected output |
+| Empty input | Empty string, empty array, null, undefined |
+| Boundary values | Min, max, zero, negative |
+| Error paths | Invalid input, network failure, timeout |
+| Concurrency | Rapid repeated calls, out-of-order responses |
+
+## Browser TDD (UI Components)
+
+For browser-based code, TDD can be combined with runtime verification:
+
+1. **Write failing test** (component test with Testing Library or E2E with Playwright)
+2. **Implement** the component/feature
+3. **Verify in browser** — use DevTools or browser-tools to confirm:
+   - DOM renders correctly
+   - Console has no errors/warnings
+   - Network requests fire correctly
+   - Layout doesn't shift (CLS)
+4. **Green** — test passes AND browser confirms behavior
+
+This bridges the gap between test-passing and actually-works-in-browser. Tests can pass while the UI is visually broken (z-index, overflow, animation timing). Browser verification catches what tests miss.
+
+## Test Naming
+
+Test names should read like specifications:
+
+```typescript
+// Good: describes behavior in plain English
+describe('TaskService', () => {
+  it('creates a task with valid input', () => {});
+  it('rejects tasks with empty titles', () => {});
+  it('assigns the creating user as owner', () => {});
+});
+
+// Bad: describes implementation
+describe('TaskService', () => {
+  it('calls repository.save', () => {});
+  it('validates the DTO', () => {});
+});
 ```

@@ -1,6 +1,6 @@
 ---
 name: tavily
-description: Web search, URL content extraction, site crawling, and deep research via the Tavily API. Use search.sh to find current web information on any topic. Use extract.sh to get clean content from specific URLs you already know. Use crawl.sh to download an entire site or documentation as markdown. Use research.sh for comprehensive multi-source research reports with citations. Requires tavily_api_key in ~/.pi/.secrets/.
+description: "Web search, URL extraction, site crawling, and deep research via Tavily API. Use when you need current web info, clean content from URLs, full site downloads, or comprehensive research reports with citations."
 ---
 
 # Tavily

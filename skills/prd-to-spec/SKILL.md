@@ -1,6 +1,6 @@
 ---
 name: prd-to-spec
-description: Convert PRD.md into structured SPEC.md with atomic development tasks. Use when user has a PRD and says "convert to spec", "create spec from PRD", "PRD to tasks", "prepare for Ralph Loop", or wants a development-ready task breakdown with user stories, acceptance criteria, and INVEST-compliant atomic tasks.
+description: "Convert PRD.md into SPEC.md with atomic INVEST-compliant tasks, user stories, and acceptance criteria. Use when user says \"convert to spec\", \"PRD to tasks\", or wants development-ready task breakdown."
 ---
 
 # PRD to SPEC Conversion

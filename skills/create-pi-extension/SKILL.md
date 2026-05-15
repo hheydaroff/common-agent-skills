@@ -1,6 +1,6 @@
 ---
 name: create-pi-extension
-description: Create pi coding-agent extensions. Covers registering custom tools, slash commands, keyboard shortcuts, event handlers, system prompt modifications, state management, custom TUI rendering, and multi-tool extensions. Use whenever the user wants to build, scaffold, modify, or debug a pi extension.
+description: "Create pi coding-agent extensions (custom tools, slash commands, shortcuts, event handlers, system prompt mods, TUI rendering). Use when user wants to build, scaffold, modify, or debug a pi extension."
 ---
 
 # Create Pi Extension

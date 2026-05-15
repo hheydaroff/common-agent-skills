@@ -1,6 +1,6 @@
 ---
 name: triage-issue
-description: Triage a bug or issue by exploring the codebase to find root cause, then create a fix plan with TDD cycles. Use when user reports a bug, wants to investigate a problem, mentions "triage", or wants to diagnose and plan a fix.
+description: "Triage a bug by exploring codebase for root cause, then create a TDD fix plan. Use when user reports a bug, says \"triage\", or wants to investigate and plan a fix."
 ---
 
 # Triage Issue

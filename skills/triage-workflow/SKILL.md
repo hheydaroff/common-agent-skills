@@ -1,6 +1,6 @@
 ---
 name: triage-workflow
-description: Triage issues through a state machine driven by triage roles (bug/enhancement × needs-triage/needs-info/ready-for-agent/ready-for-human/wontfix). Use when user wants to create an issue, triage issues, review incoming bugs or feature requests, prepare issues for an AFK agent, or manage issue workflow. For single-issue root-cause investigation that produces a TDD fix plan, a different workflow is a better fit.
+description: "Issue triage state machine (bug/enhancement x needs-triage/needs-info/ready-for-agent/ready-for-human/wontfix). Use when managing multiple issues, reviewing incoming bugs/features, or preparing issues for AFK agents. For single-issue root-cause, use triage-issue instead."
 ---
 
 # Triage

@@ -1,6 +1,6 @@
 ---
 name: exa
-description: Neural and keyword web search, content retrieval from specific URLs, find-similar pages, AI-powered answers with citations, and async deep research via the Exa API. Better than traditional search for semantic or conceptual queries, research papers, and finding related pages. Use search.sh to find pages, contents.sh to fetch full text from known URLs, find-similar.sh to discover related pages, answer.sh for direct AI answers grounded in live web data, research.sh for comprehensive multi-source reports. Requires exa_api_key in ~/.pi/.secrets/.
+description: "Neural/keyword web search, URL content retrieval, find-similar pages, AI answers, and deep research via Exa API. Better than traditional search for semantic queries and research papers. Tools: search, contents, find-similar, answer, research."
 ---
 
 # Exa

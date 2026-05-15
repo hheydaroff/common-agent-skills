@@ -1,14 +1,6 @@
 ---
 name: fullstack-dev
-description: |
-  Full-stack backend architecture and frontend-backend integration guide.
-  TRIGGER when: building a full-stack app, creating REST API with frontend, scaffolding backend service,
-  building todo app, building CRUD app, building real-time app, building chat app,
-  Express + React, Next.js API, Node.js backend, Python backend, Go backend,
-  designing service layers, implementing error handling, managing config/auth,
-  setting up API clients, implementing auth flows, handling file uploads,
-  adding real-time features (SSE/WebSocket), hardening for production.
-  DO NOT TRIGGER when: pure frontend UI work, pure CSS/styling, database schema only.
+description: "Full-stack backend architecture and frontend-backend integration. Use when building full-stack apps, REST APIs, service layers, auth flows, file uploads, real-time features (SSE/WebSocket), or production hardening. NOT for pure frontend UI/CSS or database schema only."
 license: MIT
 metadata:
   category: full-stack
@@ -1035,3 +1027,4 @@ This skill includes deep-dive references for specialized topics. Read the releva
 | Design database schema, indexes, migrations, multi-tenancy | [references/db-schema.md](references/db-schema.md) |
 | Auth flow (JWT bearer, token refresh, Next.js SSR, RBAC, middleware order) | [references/auth-flow.md](references/auth-flow.md) |
 | CORS config, env vars per environment, common CORS issues | [references/environment-management.md](references/environment-management.md) |
+| Security hardening (OWASP, input validation, npm audit triage, headers) | [references/security-checklist.md](references/security-checklist.md) |

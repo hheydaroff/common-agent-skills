@@ -1,17 +1,6 @@
 ---
 name: minimax-pdf
-description: >
-  Use this skill when visual quality and design identity matter for a PDF.
-  CREATE (generate from scratch): "make a PDF", "generate a report", "write a proposal",
-  "create a resume", "beautiful PDF", "professional document", "cover page",
-  "polished PDF", "client-ready document".
-  FILL (complete form fields): "fill in the form", "fill out this PDF",
-  "complete the form fields", "write values into PDF", "what fields does this PDF have".
-  REFORMAT (apply design to an existing doc): "reformat this document", "apply our style",
-  "convert this Markdown/text to PDF", "make this doc look good", "re-style this PDF".
-  This skill uses a token-based design system: color, typography, and spacing are derived
-  from the document type and flow through every page. The output is print-ready.
-  Prefer this skill when appearance matters, not just when any PDF output is needed.
+description: "Design-quality PDF generation with token-based design system. Three modes: create from scratch, fill form fields, reformat existing docs. Use when visual quality matters for PDF output (resumes, proposals, reports) even if user doesn't say \"PDF\" explicitly."
 license: MIT
 metadata:
   version: "1.0"

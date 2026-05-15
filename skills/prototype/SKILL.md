@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Build a throwaway prototype to answer a design question before committing to it. Two modes — a runnable terminal app for state/logic questions, or radically different UI variations on one route. Use when user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says "prototype this", "let me play with it", "try a few designs".
+description: "Build throwaway prototypes to answer design questions. Two modes: terminal app for state/logic, or multiple UI variations. Use when user says \"prototype this\", \"let me play with it\", wants to sanity-check a model, or explore design options."
 ---
 
 # Prototype

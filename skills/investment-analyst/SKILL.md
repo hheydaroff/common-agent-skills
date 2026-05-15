@@ -1,6 +1,6 @@
 ---
 name: investment-analyst
-description: "Comprehensive investment analysis for US and European stocks, options, ETFs, and macro. Fundamental (DCF, moat), technical (RSI, MACD), options strategies, sector rotation, sentiment. Early opportunity and laggard scanning, exit frameworks, leveraged certificate entry timing. Uses yfinance, Alpaca, Exa/Tavily, r.jina.ai. Triggers: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'should I buy/sell', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find laggards', 'exit strategy', 'when to sell', 'European stocks', 'DAX', 'factor certificate', 'Optionsschein'."
+description: "Comprehensive investment analysis for US and European stocks, options, ETFs, and macro. Fundamental (DCF, moat), technical (regime-aware RSI, MACD), options strategies, sector rotation, sentiment. Early opportunity and laggard scanning, exit frameworks, leveraged certificate entry timing. Short-term tactical trading (1-7 day breakouts, earnings gaps, sector rotation catches, news momentum, shorts). Uses yfinance, Alpaca, Exa/Tavily, r.jina.ai. Triggers: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'should I buy/sell', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find laggards', 'exit strategy', 'when to sell', 'European stocks', 'DAX', 'factor certificate', 'Optionsschein', 'short-term plays', 'what can I trade this week', 'tactical scan', 'swing trade'."
 ---
 
 # Investment Analyst
@@ -112,6 +112,11 @@ Date: <today>
 - Confidence: High / Medium / Low
 
 ## Valuation
+### Growth-Adjusted Assessment
+- PEG ratio: X (Forward P/E ÷ EPS growth rate)
+- Revenue acceleration: [accelerating / steady / decelerating]
+- Verdict: ["Multiple justified by growth" or "Multiple stretched vs growth" — never flag P/E alone]
+
 ### DCF Model
 - Revenue growth assumptions (3 scenarios)
 - Terminal growth rate & WACC
@@ -129,10 +134,21 @@ Date: <today>
 - FCF yield, capex intensity, working capital trends
 
 ## Technical Analysis
+### Regime Classification
+- **Current Regime:** Trending Up / Trending Down / Range-Bound / Transitioning
+- **Evidence:** [price vs 50MA vs 200MA, higher highs/lows pattern, golden/death cross]
+- **Implication:** [which indicator framework applies — trend-following vs mean-reversion]
+
+### Trend & Levels
 - Trend: Uptrend / Downtrend / Range-bound
 - Key levels: Support $X, Resistance $Y
-- Momentum: RSI, MACD signal
-- Moving averages: 50/200 DMA positioning
+- Moving averages: 50/200 DMA positioning, golden/death cross status
+
+### Momentum (interpreted within regime)
+- RSI: X — [interpretation given the regime, e.g., "strong trend" not "overbought"]
+- MACD: [signal line cross, histogram direction, divergence check]
+- Volume: [confirmation or divergence from price action]
+- **Bearish divergence check:** Does RSI make a lower high while price makes a higher high? [Yes/No]
 
 ## Moat & Competitive Position
 - Sources of moat (network effects, switching costs, IP, scale, brand)
@@ -644,6 +660,64 @@ Gauge retail investor sentiment from Reddit — used as a contrarian signal (ext
 - Use in `/invest bear <TICKER>` to check if crowd is ignoring risks
 - Use in `/invest scan` daily to detect narrative shifts early
 
+### 16. Short-Term Tactical Scan (`/invest tactical` or `/invest short-term`)
+
+Capture 8-15%+ moves within 1-7 days using shares (primary) or leveraged certificates (when exceptional setup). Designed to clear 26.375% German tax and deliver meaningful net gains. Full methodology in `references/short-term-tactical.md`.
+
+**Daily scan sequence:**
+1. `market_data.py technicals SPY 6mo` — market context (VIX, regime)
+2. Screen watchlist + related names for: breakouts, earnings gaps, sector rotation, catalyst momentum, breakdowns
+3. Reddit/news discovery: Tavily search for `"stock breakout today"`, `"earnings beat"`, sector-specific catalysts
+4. Score candidates: catalyst strength (30%), technical confirmation (25%), risk/reward (25%), timing (20%)
+5. Take top 1-2 candidates only
+
+**Five trade types:**
+| Type | Hold Period | Min Move (Shares) | Trigger |
+|------|------------|-------------------|---------|
+| Breakout Momentum | 3-7 days | 8%+ | 2+ week consolidation breaks on 2x volume |
+| Earnings Gap Continuation | 1-5 days | 8-15% | EPS beat ≥10%, gap ≥5%, volume ≥3x |
+| Sector Rotation Catch | 1-3 days | 4-8% | Sector ETF +2%, single names lagging |
+| News Catalyst Momentum | 1-3 days | 5-10% | Material announcement, +5% on 2x volume |
+| Short (breakdown/miss) | 3-7 days | 8-15% | Below 50MA on volume, or earnings miss gap |
+
+**Hard rules:**
+- Max position: 3% portfolio (shares) or €100-200 (certs)
+- Max concurrent: 3 short-term positions
+- Stop loss: -5% shares, -30% certs (non-negotiable)
+- Time stop: Day 7 max (Day 3 for catalyst/rotation)
+- Math floor: Trade must clear €50+ net after 26.375% tax or skip it
+- No averaging down, no holding through earnings, no chasing day 3+ moves
+
+**Output format:**
+```markdown
+# Short-Term Tactical Scan — <Date>
+
+## Market Context
+- SPY regime: [trending/range-bound]
+- VIX: [level] — [implication]
+- Key events this week: [to avoid]
+
+## Active Opportunities
+
+### <TICKER> — <Trade Type>
+- **Catalyst:** [what's driving this]
+- **Setup:** [pattern + where we are]
+- **Entry:** $X | **Stop:** $X (-Y%) | **Target:** $X (+Z%)
+- **Time limit:** N days
+- **Instrument:** Shares / Cert (specify)
+- **Math check:** Expected gross €X → net €X → ✅/❌
+- **Source:** [watchlist / Reddit / news / screener]
+
+## Passed On
+- [TICKER]: [reason — too late, below floor, unclear, etc.]
+```
+
+**When to use:**
+- Daily morning scan for short-term opportunities
+- User asks "what can I trade this week", "short-term plays", "quick gains"
+- User asks about momentum plays, breakouts, or swing trades
+- Complement to long-term analysis — separate book, separate rules
+
 ---
 
 ## Research Frameworks
@@ -652,6 +726,7 @@ Detailed methodologies live in `references/`:
 
 | Reference | When to use |
 |-----------|-------------|
+| `references/technical-signal-interpretation.md` | Interpreting RSI, MACD, 52-wk highs, volume in context. Regime-first framework. |
 | `references/phase-framework.md` | Assessing where an opportunity sits in its lifecycle |
 | `references/seven-signal-scoring.md` | Scoring any opportunity before investing |
 | `references/exit-strategy.md` | When/how/how much to sell — thesis kills, targets, time decay, rebalancing |
@@ -661,6 +736,7 @@ Detailed methodologies live in `references/`:
 | `references/daily-scan.md` | Automated daily scan methodology and output format |
 | `references/laggard-scanner.md` | Finding under-followed laggards after Phase 3 winners validate a theme |
 | `references/leveraged-certificate-entry.md` | Timing entries on leveraged Factor Certificates (2x–8x) using RSI + MACD + market filter |
+| `references/short-term-tactical.md` | Short-term (1-7 day) tactical trades — breakouts, earnings gaps, sector rotation, news momentum, shorts |
 
 ### Key Mental Models (quick reference)
 
@@ -685,6 +761,10 @@ Detailed methodologies live in `references/`:
 8. **Catalyst-driven** — identify what changes the narrative, not just current state
 9. **Exit before entry** — every deep dive and scan MUST include an exit plan with T1/T2/T3 targets and thesis kill triggers
 10. **Scale out, don't time tops** — selling in thirds captures more upside than trying to nail the peak
+11. **Regime before signals** — ALWAYS identify market regime (trending / range-bound / transitioning) BEFORE interpreting any technical indicator. RSI > 70 in an uptrend = strength, not a sell signal. RSI > 70 in a range = mean-reversion candidate. See `references/technical-signal-interpretation.md`.
+12. **Growth-adjusted valuation** — NEVER flag "high P/E" as a standalone concern. Always calculate PEG (P/E ÷ growth rate) and compare to sector. PEG < 2 with accelerating revenue = the multiple is justified. Present valuation WITH growth context.
+13. **52-week high is bullish** — per George & Hwang (2004), stocks at 52-week highs with fundamental support OUTPERFORM over 6-12 months. The default interpretation is continuation, not reversal. The burden of proof is on the bear case.
+14. **Momentum persists** — in secular growth trends, "it's gone up a lot" is NOT a concern. Trends persist longer than expected. Only flag exhaustion when there is bearish divergence (price higher high + RSI lower high) AND price breaks below MA support.
 
 ## Filing Research (US & European)
 

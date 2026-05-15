@@ -1,12 +1,6 @@
 ---
 name: frontend-dev
-description: |
-  Full-stack frontend development combining premium UI design, cinematic animations,
-  persuasive copywriting, and visual art. Builds complete,
-  visually striking web pages with real media, advanced motion, and compelling copy.
-  Use when: building landing pages, marketing sites, product pages, dashboards,
-  writing conversion copy,
-  creating generative art, or implementing cinematic scroll animations.
+description: "Premium frontend: UI design, cinematic animations, copywriting, and visual art. Use when building landing pages, marketing sites, dashboards, writing conversion copy, creating generative art, or implementing scroll animations."
 license: MIT
 metadata:
   version: "1.0.0"
@@ -40,6 +34,8 @@ frontend-dev/
 ├── SKILL.md                      # Core skill (this file)
 ├── references/                   # Detailed guides (read as needed)
 │   ├── motion-recipes.md         # Animation code snippets
+│   ├── performance-checklist.md  # Core Web Vitals, budgets, anti-patterns
+│   ├── accessibility-checklist.md # WCAG 2.1 AA, ARIA, keyboard nav
 │   └── troubleshooting.md        # Common issues
 ├── templates/                    # Visual art templates
 │   ├── viewer.html               # p5.js interactive art base
@@ -523,6 +519,25 @@ Refine, don't add. Make it crisp. Polish into masterpiece.
 - [ ] Perpetual animations in `React.memo` leaf components
 - [ ] Only GPU properties animated
 - [ ] Heavy libraries lazy-loaded
+
+**Performance** (see `references/performance-checklist.md` for full details):
+- [ ] Images: WebP/AVIF, `width`/`height` set, lazy-loaded below fold, `fetchpriority="high"` on hero
+- [ ] Bundle: code-split routes with `lazy()`, initial JS < 200KB gzipped
+- [ ] Fonts: WOFF2 only, ≤ 3 families, preloaded if LCP-critical, `font-display: swap`
+- [ ] No layout thrashing — animations use `transform`/`opacity` only
+- [ ] Long lists virtualized (`react-window` or similar)
+- [ ] Core Web Vitals: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1
+
+**Accessibility** (see `references/accessibility-checklist.md` for full details):
+- [ ] All interactive elements keyboard-accessible (Tab, Enter, Escape)
+- [ ] Focus visible on all interactive elements
+- [ ] Images have `alt` text (or `alt=""` for decorative)
+- [ ] Form inputs have associated labels
+- [ ] Icon-only buttons have `aria-label`
+- [ ] Color contrast ≥ 4.5:1 (normal text) / ≥ 3:1 (large text)
+- [ ] Color is NOT the sole information channel
+- [ ] Dynamic content announced via `aria-live`
+- [ ] Touch targets ≥ 44x44px on mobile
 
 **General:**
 - [ ] Dependencies verified in `package.json`

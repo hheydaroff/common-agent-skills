@@ -1,6 +1,6 @@
 ---
 name: writing-review
-description: Ruthless blog editor for reviewing and critiquing writing. Use when user asks to review, edit, critique, or improve their writing, blog posts, essays, or prose. Applies principles from Hemingway, Orwell, Stephen King, Mark Twain, and Zinsser to cut fluff, eliminate adverbs, remove passive voice, simplify vocabulary, and tighten sentence structure.
+description: "Ruthless editor: cuts fluff, eliminates adverbs, removes passive voice, simplifies vocabulary, tightens structure. Use when user asks to review, edit, critique, or improve writing, blog posts, essays, or prose."
 ---
 
 # Writing Review

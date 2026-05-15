@@ -1,6 +1,6 @@
 ---
 name: ddg-search
-description: Search the web using DuckDuckGo. No API key required. Use when user asks to "search for", "look up", "find articles about", or needs current information from the web and no paid search API is available.
+description: "Web search via DuckDuckGo (no API key). Use when user needs current web information and no paid search API is available."
 ---
 
 # DuckDuckGo Web Search

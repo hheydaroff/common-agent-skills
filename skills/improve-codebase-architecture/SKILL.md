@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: Find deepening opportunities in a codebase — refactors that turn shallow modules into deep ones for better testability, maintainability, and AI-navigability. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable.
+description: "Find deepening opportunities that turn shallow modules into deep ones. Use when user wants to improve architecture, find refactoring opportunities, or make code more testable and AI-navigable."
 ---
 
 # Improve Codebase Architecture

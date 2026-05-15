@@ -1,6 +1,6 @@
 ---
 name: geopolitical-analysis
-description: Produce comprehensive geopolitical intelligence on any country, bilateral relationship, regional conflict, or strategic theme using Professor Jiang's game-theoretic prediction framework. Use when user says "geopolitical analysis", "analyze [country/region]", "Jiang method", "country profile", asks about power dynamics, grand strategy, geopolitical predictions, conflicts, alliances, or requests intelligence briefings.
+description: "Geopolitical intelligence on countries, bilateral relationships, conflicts, or strategic themes using Jiang's game-theoretic framework. Use when user asks about power dynamics, grand strategy, predictions, alliances, or requests intelligence briefings."
 ---
 
 # Geopolitical Analysis Skill (Jiang Method Extended)
