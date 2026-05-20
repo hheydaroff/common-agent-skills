@@ -101,6 +101,12 @@ uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account    
 | [technical-signal-interpretation.md](references/technical-signal-interpretation.md) | Interpreting RSI, MACD, 52-wk highs, volume in context |
 | [weekly-ritual.md](references/weekly-ritual.md) | Ongoing research cadence for pattern recognition |
 | [filing-research.md](references/filing-research.md) | SEC EDGAR, European regulatory filings, insider tracking |
+| [thesis-tracker.md](references/thesis-tracker.md) | Persistent thesis per position — pillars, scorecard, update log (`/invest thesis`) |
+| [iv-vs-rv-analysis.md](references/iv-vs-rv-analysis.md) | Implied vs realized vol — run before any options strategy (`/invest vol`) |
+| [peer-quartile-benchmarking.md](references/peer-quartile-benchmarking.md) | Quartile peer comparison for `/invest deep` |
+| [earnings-catalyst-checklist.md](references/earnings-catalyst-checklist.md) | Pre-earnings: ranked catalysts + implied vs historical moves |
+| [catalyst-calendar.md](references/catalyst-calendar.md) | Forward event calendar for watchlist (`/invest calendar`) |
+| [estimate-revision.md](references/estimate-revision.md) | Post-earnings estimate update (`/invest update`) |
 
 ---
 
