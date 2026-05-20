@@ -63,6 +63,22 @@ skill-name/
 - Content has distinct domains (e.g. fundamentals vs advanced)
 - Scripts save tokens vs generating the same code repeatedly
 
+### Reference Routing (required if you have references/)
+
+The model cannot search or guess reference filenames. SKILL.md **must** contain an explicit routing table:
+
+```markdown
+## Reference Files
+
+| File | When to load |
+|------|--------------|
+| [deep-dive.md](references/deep-dive.md) | User asks to analyze a stock |
+| [options.md](references/options.md) | User asks about options strategy |
+| [macro.md](references/macro.md) | User asks about sector/macro outlook |
+```
+
+Without this, the model either loads everything (wasteful) or guesses from filenames (unreliable).
+
 ## Description Requirements
 
 The description is **the only thing agents see** when deciding which skill to load. It’s surfaced in the system prompt alongside all other installed skills.
