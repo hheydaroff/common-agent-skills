@@ -56,15 +56,16 @@ mkdir -p <PROJECT_ROOT>/.understand-anything
 
 ### 6. Launch the dashboard
 
-Copy the dashboard viewer and open it:
+Copy the dashboard viewer and serve it:
 
 ```bash
 cp <SKILL_DIR>/dashboard.html <PROJECT_ROOT>/.understand-anything/index.html
-open <PROJECT_ROOT>/.understand-anything/index.html  # macOS
-# or: xdg-open on Linux
+cd <PROJECT_ROOT>/.understand-anything && python3 -m http.server 8080 &
+open http://localhost:8080  # macOS
+# or: xdg-open http://localhost:8080 on Linux
 ```
 
-The dashboard reads `knowledge-graph.json` from the same directory.
+The HTML file loads `knowledge-graph.json` via fetch from the same directory. A local server is required (browsers block fetch on file:// URLs). Kill the server after viewing with `kill %1`.
 
 ## Reference Files
 
@@ -83,7 +84,8 @@ If `.understand-anything/knowledge-graph.json` already exists:
 
 ## Tips
 
-- Keep summaries under 2 sentences — they appear as tooltips
+- Keep summaries under 2 sentences — they appear as tooltips in the dashboard
 - Use consistent node ID format: `type:path` or `type:path:name`
 - Every node needs at least one edge (no orphans)
-- The dashboard works offline — it's a single HTML file with embedded D3.js
+- The dashboard is a single HTML file with D3.js loaded from CDN
+- Output goes to `.understand-anything/` — add this to `.gitignore` or commit it for team sharing
