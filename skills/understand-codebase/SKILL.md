@@ -56,16 +56,33 @@ mkdir -p <PROJECT_ROOT>/.understand-anything
 
 ### 6. Launch the dashboard
 
-Copy the dashboard viewer and serve it:
+Generate a self-contained HTML file with the graph data embedded inline:
 
 ```bash
 cp <SKILL_DIR>/dashboard.html <PROJECT_ROOT>/.understand-anything/index.html
-cd <PROJECT_ROOT>/.understand-anything && python3 -m http.server 8080 &
-open http://localhost:8080  # macOS
-# or: xdg-open http://localhost:8080 on Linux
 ```
 
-The HTML file loads `knowledge-graph.json` via fetch from the same directory. A local server is required (browsers block fetch on file:// URLs). Kill the server after viewing with `kill %1`.
+Then embed the JSON data into the HTML (replaces the `/* __GRAPH_DATA_EMBED__ */` comment):
+
+```bash
+node -e "
+const fs = require('fs');
+const json = fs.readFileSync('<PROJECT_ROOT>/.understand-anything/knowledge-graph.json', 'utf8');
+let html = fs.readFileSync('<PROJECT_ROOT>/.understand-anything/index.html', 'utf8');
+html = html.replace('/* __GRAPH_DATA_EMBED__ */', 'const __GRAPH_DATA__ = ' + json + ';');
+fs.writeFileSync('<PROJECT_ROOT>/.understand-anything/index.html', html);
+console.log('Dashboard ready:', html.length, 'bytes');
+"
+```
+
+Then open directly (no server needed):
+
+```bash
+open <PROJECT_ROOT>/.understand-anything/index.html  # macOS
+# or: xdg-open on Linux
+```
+
+The HTML works standalone — data is inlined so no fetch/server/CORS issues. If `knowledge-graph.json` exists alongside it, the dashboard can also load from that as a fallback (requires a local HTTP server).
 
 ## Reference Files
 
@@ -87,5 +104,5 @@ If `.understand-anything/knowledge-graph.json` already exists:
 - Keep summaries under 2 sentences — they appear as tooltips in the dashboard
 - Use consistent node ID format: `type:path` or `type:path:name`
 - Every node needs at least one edge (no orphans)
-- The dashboard is a single HTML file with D3.js loaded from CDN
+- The dashboard is a single HTML file with data inlined — opens directly, no server needed
 - Output goes to `.understand-anything/` — add this to `.gitignore` or commit it for team sharing

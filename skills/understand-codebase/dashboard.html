@@ -99,6 +99,7 @@ svg { width: 100%; height: 100%; }
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
+/* __GRAPH_DATA_EMBED__ */
 const LAYER_COLORS = [
   '#58a6ff', '#3fb950', '#d2a8ff', '#f78166',
   '#79c0ff', '#56d364', '#d8b4fe', '#ffa657',
@@ -118,9 +119,13 @@ let layerColorMap = {};
 
 async function loadGraph() {
   try {
-    const resp = await fetch('knowledge-graph.json');
-    if (!resp.ok) throw new Error('knowledge-graph.json not found');
-    graph = await resp.json();
+    if (typeof __GRAPH_DATA__ !== 'undefined') {
+      graph = __GRAPH_DATA__;
+    } else {
+      const resp = await fetch('knowledge-graph.json');
+      if (!resp.ok) throw new Error('knowledge-graph.json not found');
+      graph = await resp.json();
+    }
     init();
   } catch (e) {
     document.getElementById('loading').innerHTML =
