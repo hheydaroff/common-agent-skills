@@ -1,6 +1,6 @@
 ---
 name: understand-codebase
-description: "Analyze a codebase and produce an interactive knowledge graph showing architecture, components, and relationships. Use when user says 'understand this codebase', 'map the architecture', 'knowledge graph', 'how does this project work', 'onboard me', or wants a visual overview of code structure."
+description: "Analyze a codebase and produce an interactive knowledge graph showing architecture, components, and relationships. Also queries an existing graph for chat, diff impact, explain, and onboarding. Use when user says 'understand this codebase', 'map the architecture', 'knowledge graph', 'how does this project work', 'onboard me', 'what would this change affect', 'explain this file', or wants a visual overview of code structure."
 ---
 
 # Understand Codebase
@@ -90,6 +90,7 @@ The HTML works standalone — data is inlined so no fetch/server/CORS issues. If
 |------|--------------|
 | [schema.md](references/schema.md) | Always — defines the JSON structure for nodes, edges, layers, tour |
 | [analysis-guide.md](references/analysis-guide.md) | When analyzing files — extraction patterns per language |
+| [using-the-graph.md](references/using-the-graph.md) | When graph already exists — querying, diff impact, explain, onboarding, domain extraction |
 
 ## Incremental Updates
 
