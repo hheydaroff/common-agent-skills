@@ -352,11 +352,46 @@ Only enter if EV is positive AND the bull case offers **>3:1** reward vs. the ba
 
 ---
 
+## KO Buffer: Beta-Adjusted Minimum (Hard Rule)
+
+A percentage buffer means nothing without adjusting for how much the stock actually moves.
+
+```
+Minimum KO buffer = MAX( 8% × beta,  2.5 × ATR(14) as % of price )
+```
+
+| Beta | Min Buffer | Max Practical Leverage |
+|------|-----------|------------------------|
+| <1.0 | 8-10% | 10-12x |
+| 1.0-1.3 | 10-13% | 8-10x |
+| 1.3-1.8 | 13-15% | 6-8x |
+| >1.8 | 15%+ | 5x max |
+
+**Also mandatory:** KO must be below the 20-day low AND nearest support. If the available KO level doesn't meet these rules, the resulting leverage is too low to bother → skip the turbo, buy shares instead.
+
+**Never buy a Long turbo on a stock in a downtrend** (below 20MA + making lower lows). Trend + leverage + tight KO = certain death.
+
+---
+
+## Post-Mortem Log
+
+Every KO'd certificate. Pattern recognition > theory.
+
+| Date | Ticker | Entry | KO | Buffer | Beta | Days | Cause |
+|------|--------|-------|----|--------|------|------|-------|
+| 2026-05-19 | BA | $229 | $215.31 | 6.0% | 1.8 | 3 | Downtrend + buffer needed 14.4% |
+| 2026-05-22 | BABA | $141 | $126.96 | 10.0% | 1.3 | 6 | Fading catalyst + trend reversal |
+
+---
+
 ## Anti-Patterns (Both Approaches)
 
 | Mistake | Why It Fails |
 |---------|-------------|
 | KO too tight (< 5% buffer) | Normal volatility knocks you out before catalyst |
+| **Buffer not beta-adjusted** | 10% on beta-1.8 = effectively 5.5% — noise kills you |
+| **Turbo on a downtrending stock** | KO acts as a magnet when trend is against you |
+| **Tight KO to chase higher leverage** | Trading survival probability for leverage ratio |
 | Buying AFTER +10% move on the news | You're buying someone else's profit-taking |
 | Holding past the catalyst date | Theta/time kills you; the edge was the event |
 | All-in on one certificate | One gap-down = total wipeout |

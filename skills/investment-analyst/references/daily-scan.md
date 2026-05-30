@@ -221,6 +221,53 @@ When called as part of `/daily-brief`:
   - Any alert-worthy findings
 - Full details saved to `daily/invest-scan-YYYY-MM-DD.md`
 
+## Portfolio Intelligence Check (MANDATORY — run BEFORE thematic scan)
+
+Before hunting for new names, tend what you own. Load [portfolio-intelligence.md](portfolio-intelligence.md) for full framework.
+
+### Quick Check (5 min)
+
+1. **Recent earnings from holdings?** Check if any portfolio position reported since last scan.
+   - If yes → run Signal Propagation (what does it mean for other holdings + watchlist?)
+   - If yes → update trajectory (accelerating, stable, decelerating?)
+   - If yes → decision: add / hold / trim?
+
+2. **Upcoming catalysts (next 14 days)?** Check earnings calendar for all holdings.
+   - If earnings approaching → flag for pre-earnings review
+   - If analyst day / product launch → note
+
+3. **Regime-portfolio fit:** Does current market regime favor your largest or smallest positions?
+   - If narrow AI leadership and you're underweight your best AI names → flag
+   - If broadening and your value names are waking up → flag adds
+
+4. **Holdings price check:** Run technicals on all holdings. Flag:
+   - Any holding with RSI > 75 AND decelerating fundamentals → trim candidate
+   - Any holding with RSI < 35 AND accelerating fundamentals → add candidate  
+   - Any holding up >20% in 20d → check if position sizing still appropriate
+   - Any holding that gapped >15% on news → mandatory "add or hold" review
+
+### Output Section (add to scan output)
+
+```markdown
+## Portfolio Intelligence
+
+### Holdings Reported Since Last Scan
+| Ticker | Date | Revenue | Beat/Miss | Signal For |
+
+### Upcoming Catalysts (14 days)
+| Ticker | Event | Date | Pre-Event Action |
+
+### Trajectory Flags
+| Ticker | Direction | RSI | Action |
+
+### Regime Alignment
+Current regime: [type]
+Favors: [which holdings]
+Underweight in: [names to consider adding]
+```
+
+---
+
 ## Weekly Roll-Up (Friday)
 
 On Fridays, additionally:
@@ -228,3 +275,5 @@ On Fridays, additionally:
 2. Synthesize: which themes showed repeated signals?
 3. Flag: any company appearing in multiple signal types = convergence
 4. Suggest: "Based on this week's signals, [TICKER] warrants deeper research (Level 2)"
+5. **Full trajectory table:** Refresh quarterly data for all holdings, assess acceleration/deceleration
+6. **Position sizing audit:** Are your largest positions your highest-conviction accelerating names? If not, why?

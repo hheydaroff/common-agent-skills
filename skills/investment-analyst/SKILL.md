@@ -107,6 +107,7 @@ uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account    
 | [earnings-catalyst-checklist.md](references/earnings-catalyst-checklist.md) | Pre-earnings: ranked catalysts + implied vs historical moves |
 | [catalyst-calendar.md](references/catalyst-calendar.md) | Forward event calendar for watchlist (`/invest calendar`) |
 | [estimate-revision.md](references/estimate-revision.md) | Post-earnings estimate update (`/invest update`) |
+| [portfolio-intelligence.md](references/portfolio-intelligence.md) | Tend existing holdings: trajectory, signal propagation, strength adds, catalyst map (`/invest tend`, `/invest portfolio`, any scan) |
 
 ---
 
@@ -126,6 +127,8 @@ uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account    
 12. **Growth-adjusted valuation** — NEVER flag "high P/E" as a standalone concern. Always calculate PEG and compare to sector.
 13. **52-week high is bullish** — per George & Hwang (2004), stocks at 52-week highs with fundamental support OUTPERFORM over 6-12 months.
 14. **Momentum persists** — in secular growth trends, "it's gone up a lot" is NOT a concern. Only flag exhaustion with bearish divergence AND price breaking MA support.
+15. **Tend before hunt** — ALWAYS check existing holdings (trajectory, catalysts, signals) BEFORE scanning for new opportunities. Your portfolio is a live sensor network — use it.
+16. **Propagate signals** — when one holding reports, ask what it means for every OTHER holding and watchlist name. One earnings report is sector intelligence, not just a single-stock event.
 
 ## Key Mental Models
 

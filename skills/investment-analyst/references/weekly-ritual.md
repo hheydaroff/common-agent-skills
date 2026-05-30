@@ -4,7 +4,17 @@
 
 ## Monday — Constraint Language Scan (10 min)
 
-**Pick ONE trade publication per week (rotate):**
+**First: Portfolio Intelligence Quick Check (5 min)**
+
+Before anything else, ask:
+1. Did any holding report earnings since Friday? → Run signal propagation
+2. Any holding move >10% in past week? → Why? Thesis strengthening or breaking?
+3. Any catalyst in next 7 days for any holding? → Pre-catalyst prep
+4. Current regime still favoring the same names? → Sizing still correct?
+
+See [portfolio-intelligence.md](portfolio-intelligence.md) for full framework.
+
+**Then: Pick ONE trade publication per week (rotate):**
 
 | Publication | Focus | Region |
 |-------------|-------|--------|
