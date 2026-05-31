@@ -5,6 +5,12 @@ description: "Simplify code for clarity without changing behavior. Use when refa
 
 # Code Simplification
 
+## Reference Files
+
+| File | When to load |
+|------|-------------|
+| [code-principles.md](references/code-principles.md) | When writing new code, reviewing authoring quality, or need the "target state" for simplification |
+
 Simplify code by reducing complexity while preserving exact behavior. The goal is not fewer lines — it's code that is easier to read, understand, modify, and debug. Every simplification must pass a simple test: "Would a new team member understand this faster than the original?"
 
 ## When to Use

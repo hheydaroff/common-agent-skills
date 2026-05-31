@@ -100,3 +100,4 @@ For the chosen design, classify dependencies and plan accordingly (see [referenc
 - [references/language.md](references/language.md) — Full vocabulary definitions and principles
 - [references/deepening.md](references/deepening.md) — How to deepen modules safely given dependencies
 - [references/interface-design.md](references/interface-design.md) — "Design It Twice" pattern for interface exploration
+- [references/code-principles.md](references/code-principles.md) — 10 authoring constraints defining what "good" looks like at the code level
