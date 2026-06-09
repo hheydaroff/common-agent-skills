@@ -25,6 +25,12 @@ RESET='\033[0m'
 ok()  { echo -e "${GREEN}✓${RESET} $*"; }
 dim() { echo -e "${DIM}$*${RESET}"; }
 
+# ── Pre-flight validation ───────────────────────────────────────────────────
+# Validate all SKILL.md frontmatter (catches unquoted-colon YAML errors) and
+# detect duplicate skill names BEFORE syncing anything. Fail fast so broken
+# frontmatter never reaches the deploy targets.
+bash "$REPO_DIR/validate-skills.sh"
+
 echo ""
 echo "Deploying from: $SKILLS_DIR"
 echo ""
