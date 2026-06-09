@@ -1,6 +1,6 @@
 ---
 name: research-skill-foundation
-description: Deep research phase before building a new agent skill. Runs parallel Exa + Tavily searches, pulls official GitHub repos (MCP servers, existing skill implementations, API docs), fetches raw SKILL.md and reference files, organizes everything into /tmp/<name>-research/ with numbered markdown docs. Produces a ready-to-use research folder the skill-generation step can read directly. Use when user wants to build a new skill and needs comprehensive prior art, API coverage, and official implementations pulled first. Triggers: 'research for skill', 'gather references for skill', 'pull docs before building skill', 'find prior art for skill'.
+description: "Deep research phase before building a new agent skill. Runs parallel Exa + Tavily searches, pulls official GitHub repos (MCP servers, existing skill implementations, API docs), fetches raw SKILL.md and reference files, organizes everything into /tmp/<name>-research/ with numbered markdown docs. Produces a ready-to-use research folder the skill-generation step can read directly. Use when user wants to build a new skill and needs comprehensive prior art, API coverage, and official implementations pulled first. Triggers: 'research for skill', 'gather references for skill', 'pull docs before building skill', 'find prior art for skill'."
 ---
 
 # Research Skill Foundation
