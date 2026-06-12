@@ -1,6 +1,6 @@
 ---
 name: cmux-browser
-description: "Browser automation with cmux surfaces. Use when you need to open sites, interact with pages, wait for state changes, and extract data in cmux."
+description: "End-user browser automation with cmux. Use when you need to open sites, interact with pages, wait for state changes, and extract data from cmux browser surfaces."
 ---
 
 # Browser Automation with cmux

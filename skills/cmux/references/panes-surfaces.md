@@ -33,4 +33,4 @@ cmux move-surface --surface surface:7 --workspace workspace:2 --window window:1 
 cmux reorder-surface --surface surface:7 --before surface:3
 ```
 
-Surface identity is stable across move/reorder operations.
+Surface identity is stable across move/reorder/split-off operations. Layout commands are focus-neutral by default; pass `--focus true` only when you want the moved or created surface selected.

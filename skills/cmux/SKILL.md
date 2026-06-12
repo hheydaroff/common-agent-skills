@@ -30,10 +30,36 @@ cmux list-pane-surfaces --pane pane:1
 cmux new-workspace
 cmux new-split right --panel pane:1
 cmux move-surface --surface surface:7 --pane pane:2 --focus true
+cmux split-off --surface surface:7 right
 cmux reorder-surface --surface surface:7 --before surface:3
 
 # attention cue
 cmux trigger-flash --surface surface:7
+```
+
+## Settings and Docs
+
+Use `cmux docs settings` before changing cmux-owned settings. It prints the docs URL, schema URL, raw GitHub resources, cmux.json paths, and reload command.
+
+```bash
+cmux docs settings
+cmux settings path
+```
+
+cmux-owned settings live in `~/.config/cmux/cmux.json`. Legacy `~/.config/cmux/settings.json` and `~/Library/Application Support/com.cmuxterm.app/settings.json` files are read only as fallback for missing keys. Before editing, copy any existing `cmux.json` file to a timestamped `.bak` next to it so the user can revert. Edit the user file, then reload:
+
+```bash
+cmux reload-config
+```
+
+`cmux reload-config` reloads BOTH `cmux.json` and Ghostty config (`~/.config/ghostty/config`) and refreshes terminals in place. No app restart needed.
+
+Use cmux settings for app behavior, sidebar, notifications, browser behavior, automation, workspace colors, and cmux-owned shortcuts. Terminal rendering settings such as font, cursor style, theme, scrollback, background transparency (`background-opacity`), and blur (`background-blur`) belong in Ghostty config at `~/.config/ghostty/config`.
+
+```bash
+cmux settings
+cmux settings cmux-json
+cmux settings shortcuts
 ```
 
 ## Handle Model
@@ -50,5 +76,9 @@ cmux trigger-flash --surface surface:7
 | [references/windows-workspaces.md](references/windows-workspaces.md) | Window/workspace lifecycle and reorder/move |
 | [references/panes-surfaces.md](references/panes-surfaces.md) | Splits, surfaces, move/reorder, focus routing |
 | [references/trigger-flash-and-health.md](references/trigger-flash-and-health.md) | Flash cue and surface health checks |
+| [references/workspace.md](references/workspace.md) | Current-caller workspace scoping and non-disruptive automation rules |
+| [references/workspace-commands.md](references/workspace-commands.md) | Full workspace/pane/surface/notification command catalog |
 | [../cmux-browser/SKILL.md](../cmux-browser/SKILL.md) | Browser automation on surface-backed webviews |
 | [../cmux-markdown/SKILL.md](../cmux-markdown/SKILL.md) | Markdown viewer panel with live file watching |
+| [../cmux-settings/SKILL.md](../cmux-settings/SKILL.md) | Safe cmux.json settings edits and validation |
+| [../cmux-customization/SKILL.md](../cmux-customization/SKILL.md) | cmux.json actions, dock controls, workspace layouts, tab-bar buttons |
