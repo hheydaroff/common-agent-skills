@@ -17,8 +17,13 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="$REPO_DIR/skills"
 
 # Locate the `yaml` package pi bundles, so we validate exactly like pi does.
-YAML_PKG="$(find /opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent \
-  ~/.pi/agent/npm 2>/dev/null -type d -path '*node_modules/yaml' | head -1)"
+# Searches macOS (Homebrew) and Linux (~/.local/lib) install paths.
+# The `|| true` guards against `find` exiting non-zero when some paths don't exist.
+YAML_PKG="$(find \
+  /opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent \
+  /home/"$USER"/.local/lib/node_modules/@earendil-works/pi-coding-agent \
+  ~/.pi/agent/npm \
+  2>/dev/null -type d -path '*node_modules/yaml' | head -1 || true)"
 
 node - "$SKILLS_DIR" "$YAML_PKG" <<'NODE'
 const fs = require("fs");
