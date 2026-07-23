@@ -60,7 +60,7 @@ for ((i=1; i<=MAX; i++)); do
 
 $RECENT_COMMITS
 
-Implement EXACTLY ONE task — the next incomplete task only. Do NOT continue to other tasks. Steps: 1) Identify the next incomplete task from progress.txt 2) Implement it 3) Verify it works 4) Commit 5) Update progress.txt marking ONLY that task as DONE. If this was the LAST task (all are now DONE), also add RALPH_COMPLETE as the final line. STOP after updating progress.txt."
+Implement EXACTLY ONE task — the next incomplete task only. Do NOT continue to other tasks. Develop the task test-first (follow the tdd skill): write the failing test from the task's testCases first, confirm it fails, then implement to green — skip the test only for trivial config/plumbing with no meaningful behavior. Steps: 1) Identify the next incomplete task from progress.txt 2) Implement it test-first 3) Verify it works (run the task's proof-of-work / verification command) 4) Commit 5) Update progress.txt marking ONLY that task as DONE. If this was the LAST task (all are now DONE), also add RALPH_COMPLETE as the final line. STOP after updating progress.txt."
 
   # Attempt the task with retries on timeout
   attempt=0
