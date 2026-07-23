@@ -85,6 +85,7 @@ Break the work into **tracer-bullet vertical slices**. Each slice is a thin end-
 **Vertical slice rules:**
 - Each slice delivers a narrow but COMPLETE path through every layer
 - A completed slice is demoable or verifiable on its own
+- **Independently usable:** once the slice is done, that feature solves its problem on its own — the user can test/use it without waiting for a later task and without something not yet in hand. If a slice only works after a sibling lands, merge them or reorder.
 - Prefer many thin slices over few thick ones
 - Each slice should map to one or more acceptance criteria
 
@@ -144,8 +145,17 @@ From the approved slices, create tasks that satisfy **INVEST**:
 
 **Dependencies:** [Task #s that must complete first, or "None"]
 
+**Verification:** [single runnable pass/fail command — see below]
+
 **Estimate:** [4-8 hours]
 ```
+
+**Verification is a proof-of-work command, not "a test exists."** Give one command that exits 0 on pass / non-zero on fail, runnable in isolation once dependencies are done:
+- Strip suite-wide coverage gates on the isolated proof (`--no-cov` / `--coverage=false`) so it doesn't fail on a global threshold.
+- If no asserting test exists (config/temp/plumbing change), the task includes adding one test that fails before and passes after.
+- If a layer has no test runner (e.g. eslint-only frontend), fall back to `build + typecheck` plus an inspectable artifact and a documented manual check — don't add a test framework for one change.
+
+Each task must be **independently usable**: after it completes, its feature works on its own to solve its problem, with every dependency listed and earlier.
 
 ## Output: SPEC.md
 
@@ -191,6 +201,7 @@ Summary of the approved slice breakdown with dependency relationships.
 - ✓ Error: [scenario]
 - ✓ Edge: [scenario]
 **Dependencies:** None
+**Verification:** [single runnable pass/fail command]
 **Estimate:** [hours]
 
 ### TASK 2: [Action Verb] [Component]

@@ -48,8 +48,10 @@ For each `### TASK N:` block, extract:
 - **satisfies**: which acceptance criteria IDs this task covers
 - **testCases**: extract happy path, error, and edge cases if specified
 - **dependencies**: from `**Depends on:**` line → array of task IDs
-- **verification**: from `**Verification:**` line, or infer from category (see patterns below)
+- **verification**: the single runnable **proof-of-work command** for this task (see Proof-of-Work below). From `**Verification:**` line, or infer from category.
 - **status**: always `"pending"`
+
+**Every task MUST have a proof-of-work command and MUST be independently usable** — see the two hard rules below. If a task can't satisfy both, it's mis-scoped: split or merge it before writing tasks.json.
 
 ### 4. Write tasks.json
 
@@ -120,15 +122,35 @@ Tell user:
 
 The `type` field is extracted from the `**Type:**` line in each SPEC.md task block. Defaults to `AFK` if not specified.
 
-## Verification Patterns
+## Proof-of-Work (verification field)
 
-Infer verification command from category if not explicitly specified:
+Every task's `verification` is a **single runnable command that exits 0 on pass, non-zero on fail** — not "a test exists," an actual pass/fail proof. The autonomous loop runs exactly this command to decide if the task is done.
+
+Infer from category if not explicitly specified:
 
 | Category | Command Pattern |
 |----------|-----------------|
-| Backend (Node) | `npm test src/api/[name].test.ts` |
-| Backend (Python) | `uv run -m pytest tests/test_[name].py` |
-| Frontend | `npm test src/components/[Name].test.tsx` |
-| Integration | `npm run test:e2e` |
+| Backend (Node) | `npm test -- src/api/[name].test.ts` |
+| Backend (Python) | `uv run pytest tests/test_[name].py --no-cov` |
+| Frontend (has test runner) | `npm test -- src/components/[Name].test.tsx` |
+| Frontend (eslint-only, no runner) | `npm run build && npm run typecheck` + documented manual check |
+| Integration | `npm run test:e2e -- [spec]` |
 
-Override if the SPEC task has a `**Verification:**` field — use that instead.
+Override with the SPEC task's `**Verification:**` field if present.
+
+### Gotchas the proof-of-work command must handle
+
+1. **Strip per-test coverage gates.** An isolated task proof runs a subset of the suite, so a suite-wide coverage threshold makes it fail spuriously. Add `--no-cov` (pytest) / `--coverage=false` (jest) / equivalent so the single-task command proves *that task's* behavior, not global coverage.
+2. **No asserting test exists yet? Add one.** For config/temp/plumbing changes with no natural test, the task's first deliverable is the asserting test itself — one test that fails before the change and passes after. The proof-of-work command runs that test. Don't accept "manually verified" when a cheap assert is possible.
+3. **Layer has no test runner? Don't drag in a framework for one change.** Fall back to `build + typecheck` **plus** an inspectable artifact (e.g. an exported `const` the change sets) **plus** a one-line documented manual check in the task. Adding Jest/Vitest to an eslint-only frontend just to prove one change is over-engineering — the build/typecheck + manual check is the lazy proof.
+
+## Independent Usability (hard rule)
+
+Each task must be a **working, independently testable solution** — after it completes, that feature is usable on its own to solve its problem, with no "but first you also need TASK-X." A task is not just "a slice of a feature"; it must stand up and run by itself once its declared `dependencies` are done.
+
+When converting, reject/flag any task where:
+- The feature can't be exercised until a *later* task lands (hidden forward dependency → merge them or reorder).
+- It only makes sense combined with a sibling (→ they're one task).
+- Its proof-of-work command can't run without something not in its `dependencies`.
+
+Every declared dependency must be an *earlier* task. If a task needs something to be usable, that something is either a listed dependency or part of this task.
