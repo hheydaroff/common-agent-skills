@@ -231,14 +231,14 @@ Any additional context, references, or considerations.
 
 ## Output Options
 
-Save PRD using Write tool:
+Save PRD using the Write tool, into the repo's `docs/` folder (create it if missing):
 ```
-PRD-[ProjectName]-[YYYY-MM-DD].md
+docs/PRD_[ProjectName]-[YYYY-MM-DD].md
 ```
 
 If the user requests, also submit as a **GitHub issue** using:
 ```bash
-gh issue create --title "PRD: [Project Name]" --body-file PRD-[ProjectName]-[YYYY-MM-DD].md
+gh issue create --title "PRD: [Project Name]" --body-file docs/PRD_[ProjectName]-[YYYY-MM-DD].md
 ```
 
 ## Feedback Loop

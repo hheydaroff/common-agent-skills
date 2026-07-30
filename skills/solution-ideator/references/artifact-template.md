@@ -1,6 +1,6 @@
 # Artifact Template
 
-Saved as `SOLUTION-TREE-[slug]-[YYYY-MM-DD].md` at repo root (or `~/solution-trees/` outside a repo).
+Saved as `docs/planning_decision-[slug]-[YYYY-MM-DD].md` in the repo's `docs/` folder (or `~/solution-trees/` outside a repo).
 
 ```markdown
 # Solution Tree: [Problem Statement]

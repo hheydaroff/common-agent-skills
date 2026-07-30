@@ -1,6 +1,6 @@
 # OST Artifact Template
 
-Saved as `OST-[slug]-[YYYY-MM-DD].md` at repo root (or `~/solution-trees/` outside a repo).
+Saved as `docs/planning_OST-[slug]-[YYYY-MM-DD].md` in the repo's `docs/` folder (or `~/solution-trees/` outside a repo).
 
 ```markdown
 # Opportunity Solution Tree: [Outcome Statement]

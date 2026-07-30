@@ -9,19 +9,19 @@ Convert human-readable SPEC.md into machine-executable tasks.json.
 
 ## Prerequisites
 
-SPEC.md must exist in the project root (or user-specified location) with:
+SPEC file must exist at `docs/SPEC_*.md` (or user-specified location; also checks `SPEC.md` at the repo root) with:
 - `# Feature Spec: [Name]` title
 - `## Acceptance Criteria` table (Given/When/Then)
 - `## Atomic Tasks` with `### TASK N:` blocks
 - `## Dependency Chain` showing phases
 
-If missing, tell user: "SPEC.md not found. Generate one first — from a PRD via whatever PRD-to-spec workflow you use, or author it manually."
+If missing, tell user: "SPEC file not found in `docs/`. Generate one first — from a PRD via whatever PRD-to-spec workflow you use, or author it manually."
 
 ## Workflow
 
 ### 1. Read & Validate SPEC
 
-Read `SPEC.md` (or user-specified file). Verify these sections exist:
+Read the SPEC from `docs/SPEC_*.md` (or a user-specified file; fall back to `SPEC.md` at the repo root). Verify these sections exist:
 - `# Feature Spec:` title
 - `## Atomic Tasks` section
 - `### TASK` blocks (at least one)
@@ -55,7 +55,7 @@ For each `### TASK N:` block, extract:
 
 ### 4. Write tasks.json
 
-Write the complete JSON file to `tasks.json` in the project root (or user-specified path).
+Write the complete JSON file to `docs/tasks.json` (create `docs/` if missing; or a user-specified path).
 
 ### 5. Report Results
 
@@ -73,7 +73,7 @@ Print a summary table:
 ### 6. Next Step
 
 Tell user:
-> "Created `tasks.json` with N tasks. Ready for autonomous execution (e.g., ralph loop)."
+> "Created `docs/tasks.json` with N tasks. Ready for autonomous execution (e.g., ralph loop)."
 
 ## tasks.json Schema
 

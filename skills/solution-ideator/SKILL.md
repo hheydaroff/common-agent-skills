@@ -198,7 +198,7 @@ Present the complete OST:
 
 ## D7. Save artifact
 
-Save as `OST-[slug]-[YYYY-MM-DD].md`. Location: repo root if inside a git repo, else `~/solution-trees/`.
+Save as `docs/planning_OST-[slug]-[YYYY-MM-DD].md` in the repo's `docs/` folder (create it if missing). If not inside a git repo, fall back to `~/solution-trees/`.
 
 Full artifact structure in [references/ost-artifact-template.md](references/ost-artifact-template.md).
 
@@ -213,7 +213,7 @@ Full artifact structure in [references/ost-artifact-template.md](references/ost-
 
 Handoff format:
 
-> "Discovery complete. Top opportunity: **[opportunity]**. Most promising solution: **[solution]**. Next step: [activity]. See `OST-[slug]-[date].md`."
+> "Discovery complete. Top opportunity: **[opportunity]**. Most promising solution: **[solution]**. Next step: [activity]. See `docs/planning_OST-[slug]-[date].md`."
 
 If transitioning to Decision mode, carry forward:
 - The chosen opportunity (becomes the "problem" input)
@@ -347,7 +347,7 @@ The "when you'd revisit" section is non-optional — it makes the decision audit
 
 ## Step 8 — Save artifact
 
-Save as `SOLUTION-TREE-[slug]-[YYYY-MM-DD].md`. Location: repo root if inside a git repo, else `~/solution-trees/`.
+Save as `docs/planning_decision-[slug]-[YYYY-MM-DD].md` in the repo's `docs/` folder (create it if missing). If not inside a git repo, fall back to `~/solution-trees/`.
 
 Full artifact structure in [references/artifact-template.md](references/artifact-template.md).
 
@@ -363,7 +363,7 @@ Full artifact structure in [references/artifact-template.md](references/artifact
 
 Handoff format:
 
-> "Approach settled: **[recommendation]**. Suggested next step: [activity]. Don't re-ask: [list]. See `SOLUTION-TREE-[slug]-[date].md`."
+> "Approach settled: **[recommendation]**. Suggested next step: [activity]. Don't re-ask: [list]. See `docs/planning_decision-[slug]-[date].md`."
 
 ---
 

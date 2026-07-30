@@ -11,7 +11,7 @@ Convert comprehensive PRD into structured SPEC.md with atomic, testable developm
 
 ### 1. Read PRD
 
-Read `PRD.md` (or user-specified file). Extract:
+Read the PRD from `docs/PRD_*.md` (or a user-specified file; fall back to `PRD.md` at the repo root if that's where it lives). Extract:
 - Project name and objective
 - Target user/persona
 - All features and requirements
@@ -157,9 +157,9 @@ From the approved slices, create tasks that satisfy **INVEST**:
 
 Each task must be **independently usable**: after it completes, its feature works on its own to solve its problem, with every dependency listed and earlier.
 
-## Output: SPEC.md
+## Output: SPEC
 
-Write to `SPEC.md` in the project root (or next to the PRD file if it lives elsewhere):
+Write to `docs/SPEC_[FeatureName].md` in the repo's `docs/` folder (create it if missing; or write next to the PRD file if it lives elsewhere):
 
 ```markdown
 # Feature Spec: [Feature Name]

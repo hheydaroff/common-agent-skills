@@ -20,14 +20,14 @@ This skill closes that gap: one end-to-end pass that exercises the **assembled f
 
 ## When to run
 
-- After the loop signals completion (`RALPH_COMPLETE` in `progress.txt`, or all `tasks.json` statuses `DONE`).
+- After the loop signals completion (`RALPH_COMPLETE` in `progress.txt`, or all `docs/tasks.json` statuses `DONE`).
 - Any time the user wants a final "does the whole thing actually work" check.
 
 ## Workflow
 
 ### 1. Load the contract
 
-Read `SPEC.md` → `## Acceptance Criteria` (Given/When/Then rows). If `tasks.json` exists, read it too — every `acceptanceCriteria[]` entry is an integration scenario. These rows are the test list. If there is no acceptance-criteria section, fall back to the **smoke test** (below).
+Read the SPEC from `docs/SPEC_*.md` (or a user-specified file; fall back to `SPEC.md` at the repo root) → `## Acceptance Criteria` (Given/When/Then rows). If `docs/tasks.json` exists, read it too — every `acceptanceCriteria[]` entry is an integration scenario. These rows are the test list. If there is no acceptance-criteria section, fall back to the **smoke test** (below).
 
 ### 2. Detect how the assembled thing runs
 
@@ -46,7 +46,7 @@ Independence matters: judge behavior against the acceptance criteria, not agains
 
 ### 4. Run and report
 
-Run the suite (or `scripts/integration-check.sh`). Emit a compact report — write it to `integration-report.md`:
+Run the suite (or `scripts/integration-check.sh`). Emit a compact report — write it to `docs/report_integration-[YYYY-MM-DD].md` (create `docs/` if missing):
 
 ```
 # Integration Report — <feature>  (<timestamp>)
@@ -63,7 +63,7 @@ rejects empty carts — TASK-003 validates client-side only.
 ### 5. Close the loop (self-correct)
 
 For each failing AC, the fix is a new task, not a manual patch here:
-- Append a task to `tasks.json` (status `pending`) or a line to `progress.txt` describing the failing scenario + observed vs expected, and mark the feature not-complete (remove/negate `RALPH_COMPLETE`).
+- Append a task to `docs/tasks.json` (status `pending`) or a line to `progress.txt` describing the failing scenario + observed vs expected, and mark the feature not-complete (remove/negate `RALPH_COMPLETE`).
 - Re-run ralph. Its per-task loop fixes the composition bug, then this skill runs again. Green integration report = truly done.
 
 If the user isn't running a loop, just hand them the report and the failing scenarios.
@@ -85,4 +85,4 @@ A smoke test proves "it assembles and starts," not "every scenario works." Say w
 - **Real interface only.** Mocking the collaborators turns an integration test back into a unit test — the exact thing that already passed. Boot the real thing.
 - **Don't add a test framework** to prove composition. Reuse the runner, or smoke-test with build+boot.
 - **Failures become tasks**, fed back to the loop — don't silently fix them here (that hides the composition bug from the record).
-- One report file (`integration-report.md`), pass/fail per AC, one line of evidence per failure.
+- One report file (`docs/report_integration-[YYYY-MM-DD].md`), pass/fail per AC, one line of evidence per failure.

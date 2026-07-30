@@ -12,7 +12,7 @@ Supports **cmux** and **tmux** — auto-detects which is available.
 ## Prerequisites
 
 - Running inside cmux OR tmux (at least one must be available)
-- A task source file exists: `SPEC.md`, `tasks.json`, or user-specified file
+- A task source file exists: `docs/SPEC_*.md`, `docs/tasks.json`, or user-specified file (also checks the repo root)
 - `pi` CLI available in PATH
 
 ## 1. Detect Environment
@@ -30,13 +30,11 @@ fi
 ## 2. Locate Task File
 
 ```bash
-if [ -f "SPEC.md" ]; then
-  SOURCE="SPEC.md"
-elif [ -f "tasks.json" ]; then
-  SOURCE="tasks.json"
-elif [ -f "PRD.md" ]; then
-  SOURCE="PRD.md"
-fi
+# Prefer docs/ (new convention); fall back to repo root for older projects.
+SOURCE=""
+for f in docs/SPEC_*.md docs/tasks.json docs/PRD_*.md SPEC.md tasks.json PRD.md; do
+  [ -f "$f" ] && { SOURCE="$f"; break; }
+done
 ```
 
 ## 3. Spawn Ralph Terminal
@@ -146,7 +144,7 @@ tmux display-message "🤖 Ralph Complete — all tasks finished"
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| Source file | Auto-detect (`SPEC.md` > `tasks.json` > `PRD.md`) | Task definition file |
+| Source file | Auto-detect (`docs/SPEC_*.md` > `docs/tasks.json` > `docs/PRD_*.md`, then repo root) | Task definition file |
 | Max iterations | 20 | Loop cap to prevent runaway |
 | Direction | right | Split direction for new pane |
 | `RALPH_TIMEOUT` env | 900 (15 min) | Per-task timeout in seconds. Task is killed if exceeded. |

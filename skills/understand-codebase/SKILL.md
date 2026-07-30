@@ -48,10 +48,10 @@ Create 5-10 tour steps ordered by dependency (start from entry point, follow the
 
 ### 5. Save the graph
 
-Write the final JSON to `.understand-anything/knowledge-graph.json`:
+Write the final JSON to `docs/understand-anything/knowledge-graph.json`:
 
 ```bash
-mkdir -p <PROJECT_ROOT>/.understand-anything
+mkdir -p <PROJECT_ROOT>/docs/understand-anything
 ```
 
 ### 6. Launch the dashboard
@@ -59,7 +59,7 @@ mkdir -p <PROJECT_ROOT>/.understand-anything
 Generate a self-contained HTML file with the graph data embedded inline:
 
 ```bash
-cp <SKILL_DIR>/dashboard.html <PROJECT_ROOT>/.understand-anything/index.html
+cp <SKILL_DIR>/dashboard.html <PROJECT_ROOT>/docs/understand-anything/index.html
 ```
 
 Then embed the JSON data into the HTML (replaces the `/* __GRAPH_DATA_EMBED__ */` comment):
@@ -67,10 +67,10 @@ Then embed the JSON data into the HTML (replaces the `/* __GRAPH_DATA_EMBED__ */
 ```bash
 node -e "
 const fs = require('fs');
-const json = fs.readFileSync('<PROJECT_ROOT>/.understand-anything/knowledge-graph.json', 'utf8');
-let html = fs.readFileSync('<PROJECT_ROOT>/.understand-anything/index.html', 'utf8');
+const json = fs.readFileSync('<PROJECT_ROOT>/docs/understand-anything/knowledge-graph.json', 'utf8');
+let html = fs.readFileSync('<PROJECT_ROOT>/docs/understand-anything/index.html', 'utf8');
 html = html.replace('/* __GRAPH_DATA_EMBED__ */', 'const __GRAPH_DATA__ = ' + json + ';');
-fs.writeFileSync('<PROJECT_ROOT>/.understand-anything/index.html', html);
+fs.writeFileSync('<PROJECT_ROOT>/docs/understand-anything/index.html', html);
 console.log('Dashboard ready:', html.length, 'bytes');
 "
 ```
@@ -78,7 +78,7 @@ console.log('Dashboard ready:', html.length, 'bytes');
 Then open directly (no server needed):
 
 ```bash
-open <PROJECT_ROOT>/.understand-anything/index.html  # macOS
+open <PROJECT_ROOT>/docs/understand-anything/index.html  # macOS
 # or: xdg-open on Linux
 ```
 
@@ -94,7 +94,7 @@ The HTML works standalone — data is inlined so no fetch/server/CORS issues. If
 
 ## Incremental Updates
 
-If `.understand-anything/knowledge-graph.json` already exists:
+If `docs/understand-anything/knowledge-graph.json` already exists:
 1. Check which files changed: `git diff --name-only <last-commit>..HEAD`
 2. Re-analyze only changed files
 3. Remove old nodes/edges for those files, insert new ones
@@ -106,4 +106,4 @@ If `.understand-anything/knowledge-graph.json` already exists:
 - Use consistent node ID format: `type:path` or `type:path:name`
 - Every node needs at least one edge (no orphans)
 - The dashboard is a single HTML file with data inlined — opens directly, no server needed
-- Output goes to `.understand-anything/` — add this to `.gitignore` or commit it for team sharing
+- Output goes to `docs/understand-anything/` — add this to `.gitignore` or commit it for team sharing

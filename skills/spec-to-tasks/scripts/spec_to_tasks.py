@@ -12,8 +12,8 @@ Usage:
     uv run spec_to_tasks.py [spec_path] [output_path]
 
 Defaults:
-    spec_path: scripts/ralph/SPEC.md
-    output_path: scripts/ralph/tasks.json
+    spec_path: docs/SPEC.md
+    output_path: docs/tasks.json
 """
 
 import json
@@ -313,8 +313,8 @@ def print_summary(data: dict):
 
 def main():
     # Default paths
-    spec_path = Path("scripts/ralph/SPEC.md")
-    output_path = Path("scripts/ralph/tasks.json")
+    spec_path = Path("docs/SPEC.md")
+    output_path = Path("docs/tasks.json")
 
     if len(sys.argv) > 1:
         spec_path = Path(sys.argv[1])

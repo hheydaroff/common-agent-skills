@@ -15,12 +15,12 @@ Extract and formalize domain terminology from the current conversation into a co
    - Different words used for the same concept (synonyms)
    - Vague or overloaded terms
 3. **Propose a canonical glossary** with opinionated term choices
-4. **Write to `UBIQUITOUS_LANGUAGE.md`** in the working directory using the format below
+4. **Write to `docs/glossary_[project].md`** in the repo's `docs/` folder (create it if missing) using the format below
 5. **Output a summary** inline in the conversation
 
 ## Output Format
 
-Write a `UBIQUITOUS_LANGUAGE.md` file with this structure:
+Write a `docs/glossary_[project].md` file with this structure:
 
 ```markdown
 # Ubiquitous Language
@@ -71,7 +71,7 @@ Write a `UBIQUITOUS_LANGUAGE.md` file with this structure:
 
 When invoked again in the same conversation:
 
-1. Read the existing `UBIQUITOUS_LANGUAGE.md`
+1. Read the existing `docs/glossary_*.md`
 2. Incorporate any new terms from subsequent discussion
 3. Update definitions if understanding has evolved
 4. Re-flag any new ambiguities

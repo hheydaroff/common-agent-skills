@@ -63,6 +63,10 @@ skill-name/
 - Content has distinct domains (e.g. fundamentals vs advanced)
 - Scripts save tokens vs generating the same code repeatedly
 
+### Artifact Output Convention
+
+If a skill generates a document/artifact (PRD, spec, plan, glossary, report, diagram, dashboard, etc.), write it into the repo's `docs/` folder with the type in the filename: `docs/TYPE_descriptor.md` (e.g. `docs/PRD_checkout-2026-07.md`, `docs/SPEC_auth.md`, `docs/planning_*.md`, `docs/report_integration-*.md`). Create `docs/` if missing; fall back to `~/` only when there is no repo. Skills that **read** another skill's artifact must look in `docs/` first, then fall back to the repo root so older projects keep working. Exception: repo-root convention files read by many tools (`CONTEXT.md`, `AGENTS.md`, `README.md`) stay at root.
+
 ### Reference Routing (required if you have references/)
 
 The model cannot search or guess reference filenames. SKILL.md **must** contain an explicit routing table:
