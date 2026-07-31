@@ -1,6 +1,6 @@
 ---
 name: unslop
-description: "Cut AI tells from writing — significance inflation, AI vocabulary (delve, tapestry, underscore), em-dash/colon overuse, negative parallelisms, rule-of-three, inline-header lists, title-case headings, decorative emojis, sycophantic filler — then add human voice. Use when asked to de-slop, remove AI patterns, make text not sound AI-generated, humanize copy, or polish AI-drafted prose. Complements writing-review (which cuts general fluff)."
+description: "Cut AI tells from writing — significance inflation, AI vocabulary (delve, tapestry), em-dash/colon overuse, negative parallelisms, rule-of-three, inline-header lists, decorative emojis, sycophantic filler — then add human voice. Use when asked to de-slop, remove AI patterns, humanize copy, or make text not sound AI-generated. Complements writing-review."
 ---
 
 # Unslop

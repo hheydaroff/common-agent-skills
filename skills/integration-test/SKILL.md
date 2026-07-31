@@ -1,6 +1,6 @@
 ---
 name: integration-test
-description: "Verify a whole feature works end-to-end after autonomous execution finishes — that all completed tasks actually compose, not just pass in isolation. Derives scenarios from SPEC.md acceptance criteria, runs them through the real public interface, reports pass/fail, and feeds failures back as fix tasks. Use after ralph/AFK loop completes, or when user says \"does it all work together\", \"integration test\", \"end-to-end test\", \"smoke test the build\", \"verify the whole feature\"."
+description: "Verify a whole feature works end-to-end after autonomous execution — that completed tasks actually compose, not just pass in isolation. Derives scenarios from SPEC.md acceptance criteria, runs them through the real public interface, and feeds failures back as fix tasks. Use after a ralph/AFK loop, or for 'does it all work together', 'end-to-end test', 'smoke test the build'."
 ---
 
 # Integration Test

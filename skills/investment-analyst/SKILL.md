@@ -1,6 +1,6 @@
 ---
 name: investment-analyst
-description: "Comprehensive investment analysis for US and European stocks, options, ETFs, and macro. Fundamental (DCF, moat), technical (regime-aware RSI, MACD), options strategies, sector rotation, sentiment. Early opportunity and laggard scanning, exit frameworks, leveraged certificate entry timing. Short-term tactical trading (1-7 day breakouts, earnings gaps, sector rotation catches, news momentum, shorts). Uses yfinance, Alpaca, Exa/Tavily, r.jina.ai. Triggers: 'analyze stock', 'investment thesis', 'options strategy', 'market analysis', 'should I buy/sell', 'sector rotation', 'portfolio review', 'scan for opportunities', 'find laggards', 'exit strategy', 'when to sell', 'European stocks', 'DAX', 'factor certificate', 'Optionsschein', 'short-term plays', 'what can I trade this week', 'tactical scan', 'swing trade'."
+description: "Comprehensive investment analysis for US and European stocks, options, ETFs, and macro — fundamental (DCF, moat), technical (RSI, MACD), options strategies, sector rotation, opportunity/laggard scanning, exit timing, and short-term tactical trades. Use for stock analysis, investment thesis, options strategy, buy/sell decisions, portfolio review, opportunity scans, exit/when-to-sell, or European/DAX plays (Optionsschein, factor certificate). Uses yfinance, Alpaca, Exa/Tavily."
 ---
 
 # Investment Analyst

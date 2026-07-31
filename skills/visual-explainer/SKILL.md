@@ -1,6 +1,6 @@
 ---
 name: visual-explainer
-description: Generate self-contained HTML visual explanations for systems, code changes, plans, data, and technical concepts — diagrams, architecture overviews, diff/plan reviews, project recaps, comparison tables, and slide decks. Use when the output is inherently visual (a table with 4+ rows or 3+ columns, a flowchart, an architecture map), when the user says "draw/diagram/visualize this", "make a visual doc", "slide deck", "review this diff/plan visually", or when terminal ASCII art would be unreadable. Supports an optional smart Europe brand theme.
+description: Generate self-contained HTML visual explanations — diagrams, architecture overviews, diff/plan reviews, project recaps, comparison tables, and slide decks. Use when the output is inherently visual (a 4+ row or 3+ column table, a flowchart, an architecture map), when the user says "draw/diagram/visualize this", "make a visual doc", or "slide deck", or when terminal ASCII would be unreadable. Optional smart Europe brand theme.
 license: MIT
 metadata:
   author: nicobailon (adapted)

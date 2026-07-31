@@ -1,6 +1,6 @@
 ---
 name: taste-frontend
-description: "Anti-slop frontend for landing pages, portfolios, and redesigns. Reads the brief, infers the design language, picks real design systems, and ships interfaces that do not look templated. Use when building marketing sites, landing pages, portfolios, or redesigning an existing site and avoiding generic AI-looking output is the priority. Triggers: 'build a landing page', 'design this site', 'make it not look AI-generated', 'redesign this', 'anti-slop', 'premium frontend', 'awwwards-style'."
+description: "Anti-slop frontend for landing pages, portfolios, and redesigns — infers the design language, picks real design systems, and ships interfaces that do not look templated. Use when building marketing sites, landing pages, or portfolios, redesigning a site, or when avoiding generic AI-looking output is the priority. Triggers: anti-slop, premium frontend, awwwards-style."
 license: MIT
 metadata:
   version: "2.0.0"

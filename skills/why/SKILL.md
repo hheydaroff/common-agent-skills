@@ -1,6 +1,6 @@
 ---
 name: why
-description: "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs via the pi mcp gateway and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, product analytics warehouse) in parallel via subagents, then returns a cited read on decisions and tradeoffs."
+description: "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs via the pi gateway and queries each evidence category (source control, issue tracker, docs, chat, observability, error tracking, analytics) in parallel via subagents, then returns a cited read on decisions and tradeoffs."
 ---
 
 # Why

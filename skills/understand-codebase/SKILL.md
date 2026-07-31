@@ -1,6 +1,6 @@
 ---
 name: understand-codebase
-description: "Analyze a codebase and produce an interactive knowledge graph showing architecture, components, and relationships. Also queries an existing graph for chat, diff impact, explain, and onboarding. Use when user says 'understand this codebase', 'map the architecture', 'knowledge graph', 'how does this project work', 'onboard me', 'what would this change affect', 'explain this file', or wants a visual overview of code structure."
+description: "Analyze a codebase into an interactive knowledge graph of architecture, components, and relationships; also query an existing graph for chat, diff impact, and onboarding. Use when the user says 'understand this codebase', 'map the architecture', 'knowledge graph', 'how does this project work', 'onboard me', or 'what would this change affect'."
 ---
 
 # Understand Codebase

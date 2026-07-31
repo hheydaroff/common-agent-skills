@@ -1,6 +1,6 @@
 ---
 name: databricks-data-explore
-description: "Explore data in a Databricks workspace using SQL or Python. Authenticate, pick a profile, find tables, discover schemas, and run multiple ad-hoc SQL queries to answer analytical questions — via the Databricks CLI or the Python SDK. Use when the user wants to query Databricks/Unity Catalog data, investigate a question with several SQL queries, inspect or compare table schemas, validate data, pull results into Python/pandas, or set up Databricks CLI auth. Triggers: 'query Databricks', 'explore Databricks tables', 'discover schema', 'Unity Catalog', 'run SQL on the warehouse', 'analyze this in Databricks', 'databricks auth'."
+description: "Explore data in a Databricks workspace with SQL or Python — authenticate, pick a profile, find tables, discover schemas, and run ad-hoc queries via the Databricks CLI or Python SDK. Use when querying Databricks/Unity Catalog data, investigating a question with several SQL queries, comparing schemas, pulling results into pandas, or setting up Databricks CLI auth."
 compatibility: Requires databricks CLI 1.0+ (or >= v0.292.0). Python paths need databricks-sdk (and optionally databricks-sql-connector).
 metadata:
   version: "0.2.0"

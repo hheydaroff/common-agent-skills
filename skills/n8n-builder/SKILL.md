@@ -1,6 +1,6 @@
 ---
 name: n8n-builder
-description: "Build n8n workflows and custom n8n nodes. Use when the user wants to create, edit, validate, test, debug, publish, or manage n8n workflows (via the n8n Workflow-SDK MCP or @n8n/workflow-sdk code), or to build community/custom n8n nodes (declarative REST, programmatic, trigger, or AI sub-nodes) with the @n8n/node-cli toolchain. Triggers: n8n workflow, n8n node, build/scaffold n8n node, community node, n8n-node CLI, workflow SDK, create/publish workflow, n8n expression syntax, Code node (JavaScript/Python), AI agent workflow, webhook/HTTP/database/scheduled workflow, node credentials, validation errors, n8n-mcp."
+description: "Build and manage n8n workflows and build custom n8n nodes. Use when the user wants to create, edit, validate, test, debug, or publish n8n workflows (via the Workflow-SDK MCP or @n8n/workflow-sdk), or to build community/custom nodes (declarative REST, programmatic, trigger, AI sub-nodes) with @n8n/node-cli. Covers n8n expressions, Code node, credentials, and validation errors."
 ---
 
 # n8n Builder
