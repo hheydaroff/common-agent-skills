@@ -56,11 +56,11 @@ Rules:
 
 ### 5. Create the Fix Plan
 
-Save as a file and/or create a GitHub issue.
+Save as a file in the repository's `docs/` directory and/or create a GitHub issue. Create the `docs/` directory if it doesn't exist.
 
 **File output:**
 ```
-TRIAGE-[IssueName]-[YYYY-MM-DD].md
+docs/TRIAGE-[IssueName]-[YYYY-MM-DD].md
 ```
 
 **GitHub issue (if requested):**
