@@ -5,16 +5,38 @@ description: "Stress-test a plan or design through relentless interviewing. Use 
 
 # Grill Me
 
-Interview the user relentlessly about every aspect of their plan until reaching shared understanding. Walk down each branch of the decision tree, resolving dependencies between decisions one-by-one.
+Interview the user relentlessly about every aspect of their plan until reaching shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
 
-## Rules
+## Rounds and the Frontier
 
-- Ask questions **one at a time** — never batch
-- For each question, **attach your hypothesis/guess** so the user can agree, disagree, or refine. Format: `Q: [question] / GUESS: [your best answer + reasoning]`. This is faster for the user (reacting > generating) and commits you to a testable position.
-- If a question can be answered by **exploring the codebase**, do that instead of asking
-- Resolve dependency branches in order — don't jump ahead to decisions that depend on unresolved ones
-- Be thorough but not adversarial — the goal is shared understanding, not gotchas
+Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
+
+Each question is formatted like so:
+
+```
+❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+
+➡️ <your recommended answer + reasoning>
+```
+
+Each round the user answers reshapes the tree — settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
+
+Finding _facts_ is your job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, codebase), look it up yourself — or dispatch background exploration if it's slow. Don't block the round on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait — ask the rest of the frontier now. The _decisions_ are the user's — put each to them and wait.
+
+The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on the result until the user confirms you have reached a shared understanding.
+
+## Question Quality
+
+- Recommending an answer (➡️) is mandatory — reacting beats generating, and it commits you to a testable position the user can agree, disagree, or refine with.
+- Be thorough but not adversarial — the goal is shared understanding, not gotchas.
 - **Watch for "should want" answers** — when the user says things like "it should be scalable", "best practices say...", "the standard approach", probe with: *"If you didn't have to justify this to anyone, what would you actually want?"*
+
+### Accepting Answers
+
+These are NOT valid confirmations — probe further:
+- "Whatever you think is best" → re-ask with two concrete options as a choice
+- "Sounds good" / "Sure" → ask: "Anything you'd refine?"
+- Buzzwords without specifics ("scalable", "clean", "modern") → probe for the actual outcome they want
 
 ## Question Areas
 
@@ -43,19 +65,10 @@ Cover all branches of the decision tree. Typical areas include:
    HYPOTHESIS: [one-sentence read of what the user wants/plans to do]
    CONFIDENCE: ~[0-100]%
    ```
-5. Start with the highest-leverage question — the one where a wrong assumption would waste the most effort
-6. For each answer, probe deeper if it reveals new branches
-7. When a branch is fully resolved, move to the next
-8. Summarize resolved decisions periodically so nothing gets lost
-9. **Stop condition (95% confidence):** You're done when you can predict the user's reaction to the next three questions you would ask. If yes → present final summary. If not → keep grilling.
-10. When all branches are resolved, present a final summary of all decisions made
-
-### Accepting Answers
-
-These are NOT valid confirmations — probe further:
-- "Whatever you think is best" → re-ask with two concrete options as a choice
-- "Sounds good" / "Sure" → ask: "Anything you'd refine?"
-- Buzzwords without specifics ("scalable", "clean", "modern") → probe for the actual outcome they want
+5. Compute the first frontier and ask it as round 1 — highest-leverage questions first within the round
+6. After each round: fold in answers, recompute the frontier, ask the next round
+7. Summarize resolved decisions periodically so nothing gets lost
+8. When the frontier is empty, present a final summary of all decisions and get confirmation
 
 ## Domain Awareness
 

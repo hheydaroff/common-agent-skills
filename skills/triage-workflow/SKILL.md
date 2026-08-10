@@ -7,6 +7,8 @@ description: "Issue triage state machine (bug/enhancement x needs-triage/needs-i
 
 Move issues on the project issue tracker through a small state machine of triage roles.
 
+If the repo treats external pull requests as a request surface, triage covers them too: **a PR is an issue with attached code** — same roles, same states, same machine, with a few deltas marked "for a PR" below. Resolve a bare `#42` to an issue or PR as appropriate.
+
 Every comment or issue posted to the issue tracker during triage **must** start with this disclaimer:
 
 ```
@@ -32,6 +34,8 @@ Five **state** roles:
 - `ready-for-agent` — fully specified, ready for an AFK agent
 - `ready-for-human` — needs human implementation
 - `wontfix` — will not be actioned
+
+For a PR, the same states read against the attached code: `ready-for-agent` means a brief is attached and an agent should take the next step on the diff; `ready-for-human` means it's ready for a human to merge.
 
 Every triaged issue should carry exactly one category role and one state role. If state roles conflict, flag it and ask the maintainer before doing anything else.
 
@@ -69,11 +73,11 @@ Show counts and a one-line summary per issue. Let the maintainer pick.
 4. **Grill (if needed).** If the issue needs fleshing out, run a structured grilling session — interview-style, one question at a time, challenging assumptions against any existing domain glossary or ADRs.
 
 5. **Apply the outcome:**
-   - `ready-for-agent` — post an agent brief comment ([AGENT-BRIEF.md](AGENT-BRIEF.md)).
+   - `ready-for-agent` — post an agent brief comment ([AGENT-BRIEF.md](AGENT-BRIEF.md)). For a PR, the brief describes what's left to do *to the existing diff* — finish it, close gaps, address review points.
    - `ready-for-human` — same structure as an agent brief, but note why it can't be delegated (judgment calls, external access, design decisions, manual testing).
    - `needs-info` — post triage notes (template below).
    - `wontfix` (bug) — polite explanation, then close.
-   - `wontfix` (enhancement) — write to `.out-of-scope/`, link to it from a comment, then close ([OUT-OF-SCOPE.md](OUT-OF-SCOPE.md)).
+   - `wontfix` (enhancement) — write to `.out-of-scope/`, link to it from a comment, then close ([OUT-OF-SCOPE.md](OUT-OF-SCOPE.md)). Applies to enhancement PRs too — a rejected PR is recorded so the same request doesn't return as fresh code.
    - `needs-triage` — apply the role. Optional comment if there's partial progress.
 
 ## Quick state override

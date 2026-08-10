@@ -10,5 +10,5 @@ adapted to this repo's conventions (frontmatter, references/ layout, pi tooling)
   fix+regression test → cleanup) and `scripts/hitl-loop.template.sh`.
 
 ## Upstream status (checked 2026-08-10)
-Upstream added a **Redact section** (v1.2.3: write `<REDACTED>`, build loops
-against env vars, quote only signal lines) which our copy lacks.
+**Synced 2026-08-10:** Redact section (v1.2.3), the red-capable completion
+criterion, the Phase 2 minimise step, and the hitl-template capture note ported.

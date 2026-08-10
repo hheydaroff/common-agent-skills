@@ -32,6 +32,11 @@ This skill is informed by the project's domain model — `CONTEXT.md` and any `d
 
 ### 1. Explore
 
+**Scope before you scan — YAGNI.** Deepening a module pays off by making future changes to it easier, so put extra weight on the parts of the codebase that have recently changed. Decide *where* to look before you look:
+
+- If the user named a direction — a module, a subsystem, a pain point — take it, and skip the inference below.
+- Otherwise, walk back a good stretch of the commit history (`git log --oneline`) to find the codebase's hot spots — the files and areas that keep coming up — and let those paths pull your attention first. If the changes are scattered with no clear hot spot, widen the net.
+
 Read existing documentation first:
 
 - `CONTEXT.md` (or `CONTEXT-MAP.md` + each `CONTEXT.md` in a multi-context repo)
@@ -49,24 +54,34 @@ Then explore the codebase organically and note where you experience friction:
 
 Apply the **deletion test** to anything you suspect is shallow: would deleting it concentrate complexity, or just move it?
 
-### 2. Present Candidates
+### 2. Present Candidates as an HTML Report
 
-Present a numbered list of deepening opportunities. For each candidate:
+Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from `$TMPDIR`, falling back to `/tmp`, and write to `<tmpdir>/architecture-review-<timestamp>.html` so each run gets a fresh file. Open it for the user — `open <path>` on macOS, `xdg-open <path>` on Linux — and tell them the absolute path.
+
+The report uses **Tailwind via CDN** for layout and styling, and **Mermaid via CDN** for diagrams where a graph/flow/sequence reliably communicates the structure. Mix Mermaid with hand-crafted CSS/SVG visuals — use Mermaid when relationships are graph-shaped (call graphs, dependencies, sequences), and hand-built divs/SVG when you want something more editorial (mass diagrams, cross-sections). Each candidate gets a **before/after visualisation**. Be visual.
+
+For each candidate, render a card with:
 
 - **Files** — which files/modules are involved
 - **Problem** — why the current architecture is causing friction
 - **Solution** — plain English description of what would change
 - **Benefits** — explained in terms of locality and leverage, and how tests would improve
+- **Before / After diagram** — side-by-side, custom-drawn, illustrating the shallowness and the deepening
+- **Recommendation strength** — one of `Strong`, `Worth exploring`, `Speculative`, rendered as a badge
+
+End the report with a **Top recommendation** section: which candidate you'd tackle first and why.
+
+See [references/html-report.md](references/html-report.md) for the full HTML scaffold, diagram patterns, and styling guidance.
 
 **Use CONTEXT.md vocabulary for the domain, and glossary vocabulary for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module" — not "the FooBarHandler."
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting. Mark it clearly (e.g. _"contradicts ADR-0007 — but worth reopening because…"_).
 
-Do NOT propose interfaces yet. Ask the user: "Which of these would you like to explore?"
+Do NOT propose interfaces yet. After the file is written, ask the user: "Which of these would you like to explore?"
 
 ### 3. Grilling Loop
 
-Once the user picks a candidate, drop into a grilling conversation. Walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
+Once the user picks a candidate, run the **grill-me** skill to walk the decision tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
 
 Side effects happen inline as decisions crystallize:
 
@@ -98,6 +113,7 @@ For the chosen design, classify dependencies and plan accordingly (see [referenc
 ## References
 
 - [references/language.md](references/language.md) — Full vocabulary definitions and principles
+- [references/html-report.md](references/html-report.md) — HTML report scaffold, diagram patterns, and styling guidance
 - [references/deepening.md](references/deepening.md) — How to deepen modules safely given dependencies
 - [references/interface-design.md](references/interface-design.md) — "Design It Twice" pattern for interface exploration
 - [references/code-principles.md](references/code-principles.md) — 10 authoring constraints defining what "good" looks like at the code level

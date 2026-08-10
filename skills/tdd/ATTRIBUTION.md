@@ -14,4 +14,5 @@ adapted to this repo's conventions (frontmatter, references/ layout, pi tooling)
 ## Upstream status (checked 2026-08-10)
 Upstream rewritten around **pre-agreed seams** ("no test at an unconfirmed seam"),
 a **tautological-test** anti-pattern, and new `tests.md` + `mocking.md` references.
-Our copy predates that rewrite.
+**Synced 2026-08-10:** seams block + tautological tests ported; our richer local
+sections (browser TDD, bug-fix pattern, coverage table) kept.

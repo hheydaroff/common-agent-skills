@@ -16,4 +16,5 @@ adapted to this repo's conventions (frontmatter, references/ layout, pi tooling)
 ## Upstream status (checked 2026-08-10)
 Upstream split the engine into `grilling` (frontier-rounds: numbered questions with
 recommended answers, sub-agent fact-gathering) + thin `grill-me` wrapper + separate
-`grill-with-docs`. Our copy predates the frontier-rounds rewrite.
+`grill-with-docs`. **Synced 2026-08-10:** frontier-rounds engine ported into this
+skill; we deliberately keep the merged grill-with-docs side effects and a single skill.

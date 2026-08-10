@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: "Build throwaway prototypes to answer design questions. Two modes: terminal app for state/logic, or multiple UI variations. Use when user says \"prototype this\", \"let me play with it\", wants to sanity-check a model, or explore design options."
+description: "Build throwaway prototypes to answer design questions. Two modes: a shareable single-file HTML demo for state/logic, or multiple UI variations. Use when user says \"prototype this\", \"let me play with it\", wants to sanity-check a model, or explore design options."
 ---
 
 # Prototype
@@ -9,92 +9,27 @@ A prototype is **throwaway code that answers a question**. The question decides 
 
 ## Pick a Branch
 
-Identify which question is being answered — from the user's prompt, code context, or by asking:
+Identify which question is being answered — from the user's prompt, the surrounding code, or by asking if the user is around:
 
-- **"Does this logic / state model feel right?"** → [LOGIC branch](#logic-branch). Build a tiny interactive terminal app that pushes the state machine through hard-to-reason-about cases.
-- **"What should this look like?"** → [UI branch](#ui-branch). Generate several radically different UI variations on a single route, switchable via a floating bar or URL param.
+- **"Does this logic / state model feel right?"** → [references/logic.md](references/logic.md). Build a single shareable HTML file — free-play buttons plus tabbed guided walkthroughs — that pushes the state machine through cases that are hard to reason about on paper, and that a non-developer can drive.
+- **"What should this look like?"** → [references/ui.md](references/ui.md). Generate several radically different UI variations on a single route, switchable via a URL search param and a floating bottom bar.
 
-If ambiguous and user isn't reachable, default to whichever matches surrounding code (backend module → logic; page/component → UI) and state the assumption.
+The two branches produce very different artifacts — getting this wrong wastes the whole prototype. If the question is genuinely ambiguous and the user isn't reachable, default to whichever branch better matches the surrounding code (a backend module → logic; a page or component → UI) and state the assumption at the top of the prototype.
+
+## Reference Files
+
+| File | When to load |
+|---|---|
+| [references/logic.md](references/logic.md) | Logic/state-model question — build the shareable HTML demo |
+| [references/ui.md](references/ui.md) | Visual question — generate radically different UI variants |
 
 ## Rules (Both Branches)
 
-1. **Throwaway and clearly marked.** Place prototype code near where it'll be used (for context), but name it obviously — `prototype-*`, `_proto_*`, or a `prototypes/` dir. Never mix with production code.
-2. **One command to run.** Whatever the project already uses — `pnpm dev`, `python script.py`, `bun run`. Zero setup friction.
-3. **No persistence by default.** State lives in memory. If the question involves a database, use a scratch file with "PROTOTYPE" in the name.
-4. **Skip the polish.** No tests, no error handling beyond what makes it runnable, no abstractions. Speed of learning > code quality.
-5. **Surface the state.** After every action, print/render the full relevant state so the user sees what changed.
-6. **Delete or absorb when done.** Once the question is answered, either delete the prototype or fold the validated decision into real code. Don't leave it rotting.
+1. **Throwaway from day one, and clearly marked as such.** Locate the prototype code close to where it will actually be used (next to the module or page it's prototyping for) so context is obvious — but name it so a casual reader can see it's a prototype, not production (`prototype-*`, `_proto_*`, or a `prototypes/` dir). For throwaway UI routes, obey whatever routing convention the project already uses; don't invent a new top-level structure.
+2. **Trivial to run.** A UI prototype starts from one command in the project's task runner — `pnpm <name>`, `python <path>`, `bun <path>`, etc. A logic demo is a single HTML file the user double-clicks. Either way, no thinking required to start it.
+3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE — wipe me" name.
+4. **Skip the polish.** No tests, no error handling beyond what makes the prototype _runnable_, no abstractions. The point is to learn something fast.
+5. **Surface the state.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
+6. **Capture it when done.** Fold any validated decision into the real code, then capture the prototype itself as a **primary source**: commit it to a throwaway branch (`prototype/<name>`), out of main, and leave a pointer to that branch where the work continues — the implementation issue if the repo has a tracker, otherwise a commit note. Capture the answer too — the verdict and the question it settled — in the issue, an ADR, or a commit. The main branch keeps only the validated decision.
 
-## Logic Branch
-
-Build a **minimal interactive terminal app** that lets the user push a state machine / data model through scenarios.
-
-### What to Build
-
-```
-┌─────────────────────────────────┐
-│  State: { ... current state }   │
-│                                 │
-│  Actions:                       │
-│    1. Do X                      │
-│    2. Do Y                      │
-│    3. Trigger edge case Z       │
-│    4. Reset                     │
-│    q. Quit                      │
-│                                 │
-│  > _                            │
-└─────────────────────────────────┘
-```
-
-### Guidelines
-
-- Model the **real domain types** — don't simplify away the complexity you're testing
-- Include edge cases as explicit menu options (the whole point is testing them)
-- Print full state after every transition — no hidden mutations
-- Add a "reset" action to quickly restart scenarios
-- Use the project's language (from `CONTEXT.md` if it exists)
-
-### Good Candidates for Logic Prototypes
-
-- State machines (order lifecycle, subscription states, auth flows)
-- Complex validation rules (can user X do Y given Z?)
-- Data model relationships (does this schema handle the edge case?)
-- Algorithm behavior (does the scoring/ranking produce sensible output?)
-- Concurrency scenarios (what happens when A and B fire simultaneously?)
-
-## UI Branch
-
-Generate **3+ radically different designs** for the same screen/component, viewable on a single route with a switcher.
-
-### What to Build
-
-- A single route (e.g. `/prototype` or existing page with `?variant=` param)
-- 3+ variations that take **fundamentally different approaches** (not just color changes)
-- A floating bottom bar or URL params to switch between variants
-- Each variant labeled clearly: "Variant A: Card Grid", "Variant B: Timeline", etc.
-
-### Guidelines
-
-- **Radically different** means different layout, information hierarchy, or interaction model — not tweaks
-- Use the project's existing component library / design system if one exists
-- Each variant should be self-contained (no shared state between variants)
-- Include realistic data (not "Lorem ipsum") so the user can judge information density
-- If the project has a `CONTEXT.md`, use domain terminology in the UI
-
-### Good Candidates for UI Prototypes
-
-- New pages where layout isn't obvious
-- Dashboard designs (what data goes where?)
-- Form flows (wizard vs single page vs progressive disclosure?)
-- Navigation structures (sidebar vs tabs vs breadcrumbs?)
-- Data-heavy views (table vs cards vs timeline vs kanban?)
-
-## When Done
-
-The **answer** is the only deliverable worth keeping from a prototype:
-
-1. State what you learned: "The state machine breaks when X happens before Y — we need a guard."
-2. Capture the decision: commit message, ADR, or comment in the real code.
-3. Delete the prototype files (or let the user do it).
-
-If the prototype produced a code snippet that encodes a decision better than prose (a state machine definition, a type shape, a schema), that snippet can graduate to the real codebase — but rewrite it properly (with tests, error handling, etc).
+Throwaway no longer means deleted: the exploration stays findable on its branch while main keeps only the decision.

@@ -1,11 +1,24 @@
 ---
 name: ubiquitous-language
-description: "Extract DDD-style ubiquitous language glossary from conversation or codebase, flagging ambiguities and proposing canonical terms. Use when user mentions \"domain model\", \"DDD\", or wants to define/harden domain terminology."
+description: "Extract and maintain a DDD-style ubiquitous language glossary from conversation or codebase, flagging ambiguities and proposing canonical terms. Use when user mentions \"domain model\", \"DDD\", wants to define/harden domain terminology, or when another session needs the domain glossary kept current."
 ---
 
 # Ubiquitous Language
 
-Extract and formalize domain terminology from the current conversation into a consistent glossary, saved to a local file.
+Extract and formalize domain terminology from the current conversation into a consistent glossary — and keep it alive as the language sharpens.
+
+## Where the glossary lives
+
+- If the repo already uses **`CONTEXT.md`** (root, or `CONTEXT-MAP.md` + per-context files), that is the glossary — maintain it there.
+- Otherwise write to **`docs/glossary_[project].md`** in the repo's `docs/` folder (create it if missing).
+
+See [references/context-format.md](references/context-format.md) for the CONTEXT.md format, rules, and multi-context structure.
+
+## Reference Files
+
+| File | When to load |
+|---|---|
+| [references/context-format.md](references/context-format.md) | When writing or updating a CONTEXT.md-style glossary |
 
 ## Process
 
@@ -15,7 +28,7 @@ Extract and formalize domain terminology from the current conversation into a co
    - Different words used for the same concept (synonyms)
    - Vague or overloaded terms
 3. **Propose a canonical glossary** with opinionated term choices
-4. **Write to `docs/glossary_[project].md`** in the repo's `docs/` folder (create it if missing) using the format below
+4. **Write the glossary** to the target above (CONTEXT.md if the repo uses it, else `docs/glossary_[project].md`) using the appropriate format
 5. **Output a summary** inline in the conversation
 
 ## Output Format
@@ -66,6 +79,14 @@ Write a `docs/glossary_[project].md` file with this structure:
 - **Only include domain terms.** Skip generic programming concepts (array, function, endpoint) unless they have domain-specific meaning.
 - **Group terms into multiple tables** when natural clusters emerge (e.g. by subdomain, lifecycle, or actor). Each group gets its own heading and table. If all terms belong to a single cohesive domain, one table is fine — don't force groupings.
 - **Write an example dialogue.** A short conversation (3-5 exchanges) between a dev and a domain expert that demonstrates how the terms interact naturally. The dialogue should clarify boundaries between related concepts and show terms being used precisely.
+
+## Maintenance (the ongoing job)
+
+The glossary is not a one-shot artifact. When invoked from other work — or when a session sharpens the language — maintain it inline, as decisions crystallize:
+
+- **Naming something after a concept not in the glossary?** Add the term. Create the file lazily if it doesn't exist.
+- **Sharpening a fuzzy or overloaded term in conversation?** Update its definition right there — don't batch.
+- **Two contexts disagreeing on a term?** Flag it; the glossary picks one canonical meaning per context.
 
 ## Re-running
 

@@ -12,4 +12,6 @@ adapted to this repo's conventions (frontmatter, references/ layout, pi tooling)
 Upstream now scopes via git-log hot spots, emits a self-contained **HTML report**
 (HTML-REPORT.md, before/after visuals, strength badges), hands off into a grilling
 loop, and uses the `codebase-design` vocabulary + ADR-conflict callouts.
-Our copy predates that.
+**Synced 2026-08-10:** hot-spot scoping, HTML report (references/html-report.md),
+and grill-me handoff ported; we keep our inline glossary instead of upstream's
+separate codebase-design skill.

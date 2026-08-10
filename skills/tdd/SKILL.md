@@ -15,6 +15,14 @@ description: "Test-driven development with red-green-refactor loop. Use when use
 
 See [references/tests.md](references/tests.md) for examples and [references/mocking.md](references/mocking.md) for mocking guidelines.
 
+## Seams — where tests go
+
+A **seam** is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, never against internals.
+
+**Test only at pre-agreed seams.** Before writing any test, write down the seams under test and confirm them with the user. No test is written at an unconfirmed seam. You can't test everything — agreeing the seams up front is how testing effort lands on the critical paths and complex logic instead of every edge case.
+
+Ask: "What's the public interface, and which seams should we test?"
+
 ## Anti-Pattern: Horizontal Slices
 
 **DO NOT write all tests first, then all implementation.** This is "horizontal slicing" — treating RED as "write all tests" and GREEN as "write all code."
@@ -48,7 +56,7 @@ When exploring the codebase, use the project's domain glossary so that test name
 Before writing any code:
 
 - [ ] Confirm with user what interface changes are needed
-- [ ] Confirm which behaviors to test (prioritize — you can't test everything)
+- [ ] Confirm the seams under test (prioritize — you can't test everything)
 - [ ] Identify opportunities for deep modules (small interface, deep implementation — see [references/deep-modules.md](references/deep-modules.md))
 - [ ] Design interfaces for testability (see [references/interface-design.md](references/interface-design.md))
 - [ ] List the behaviors to test (not implementation steps)

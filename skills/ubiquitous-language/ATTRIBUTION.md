@@ -12,3 +12,6 @@ adapted to this repo's conventions (frontmatter, references/ layout, pi tooling)
 Upstream grew this into **`domain-modeling`**: live CONTEXT.md maintenance plus
 `CONTEXT-FORMAT.md` and `ADR-FORMAT.md` templates. Our copy is the glossary
 slice only.
+**Synced 2026-08-10:** live maintenance behaviour and CONTEXT.md target ported
+(references/context-format.md). ADR templates stay with documentation-and-adrs
+and grill-me to avoid duplication.
