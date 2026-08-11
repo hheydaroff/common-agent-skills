@@ -1,6 +1,6 @@
 ---
 name: mcp-tools
-description: "Call Docker MCP tools (web search, browser, Atlassian, fetch) via mcporter CLI. Use when you need web search, URL fetching, or Jira/Confluence access without native MCP support."
+description: "Call Docker MCP tools (web search, browser, Atlassian, fetch) via mcporter CLI, and configure OAuth-protected MCP servers in pi. Use when you need web search, URL fetching, or Jira/Confluence access without native MCP support, or when an HTTP MCP server needs OAuth authentication."
 ---
 
 # MCP Tools via mcporter
@@ -106,3 +106,9 @@ Without the daemon, each call cold-starts the Docker container (~2–3s overhead
 mcporter list MCP_DOCKER                           # all tools
 mcporter list MCP_DOCKER.browser_snapshot          # inspect params for one tool
 ```
+
+## References
+
+| Reference | When to load |
+|-----------|--------------|
+| [references/setup-oauth-mcp-server.md](references/setup-oauth-mcp-server.md) | Adding/configuring an OAuth-protected HTTP MCP server in pi: mcp.json fields, /mcp-auth flow, debugging 405/403/invalid-scope, clearing stale OAuth state, DCR vs pre-registered apps |

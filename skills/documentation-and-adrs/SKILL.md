@@ -1,6 +1,6 @@
 ---
 name: documentation-and-adrs
-description: "Record architectural decisions and project documentation. Use when making significant technical decisions, choosing between approaches, changing public APIs, shipping features, or when you need to capture context that future engineers and agents will need. Triggers: 'write an ADR', 'document this decision', 'why did we choose X', 'create docs'."
+description: "Record architectural decisions and project documentation, and generate stakeholder updates. Use when making significant technical decisions, choosing between approaches, changing public APIs, shipping features, or when you need to capture context that future engineers and agents will need. Triggers: 'write an ADR', 'document this decision', 'why did we choose X', 'create docs', 'weekly update', 'status report', 'launch announcement', 'executive summary'."
 ---
 
 # Documentation and ADRs
@@ -289,3 +289,9 @@ After documenting:
 - [ ] Known gotchas are documented inline where they matter
 - [ ] No commented-out code remains
 - [ ] Documentation is committed alongside the code it describes
+
+## References
+
+| Reference | When to load |
+|-----------|--------------|
+| [references/stakeholder-update.md](references/stakeholder-update.md) | Writing stakeholder updates tailored to audience and cadence: weekly/monthly status reports, launch announcements, risk escalations, exec-brief vs engineering-detail vs customer-facing versions |

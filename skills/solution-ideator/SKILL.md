@@ -10,7 +10,7 @@ Two modes under one roof:
 - **Discovery mode** (Opportunity Solution Tree) — Start from a business outcome, map customer opportunities, generate solutions per opportunity, design experiments to validate. Use when the *problem worth solving* is unclear.
 - **Decision mode** — Start from a known problem, generate solution approaches along orthogonal axes, prune against hard constraints, score survivors, and recommend one path. Use when the *problem is clear* but the *approach* is not.
 
-Both modes produce a saved artifact. Discovery mode can hand off to Decision mode when you need to pick *how* to implement the winning solution.
+Both modes produce a saved artifact. Discovery mode can hand off to Decision mode when you need to pick *how* to implement the winning solution. When solutions from either mode feel incremental, feed the frameworks + patterns into **idea-recombination** to find novel hybrids at the intersection.
 
 ---
 
@@ -24,6 +24,7 @@ Both modes produce a saved artifact. Discovery mode can hand off to Decision mod
 | Shapeless technical problem, no approach chosen | Decision |
 | "Should we build X or buy Y?" | Decision |
 | Evaluating an already-chosen solution against alternatives | Decision |
+| Discovery/Decision solutions feel incremental, need novel recombination | idea-recombination |
 
 **Decline conditions** (warn, don't block):
 
@@ -33,6 +34,7 @@ Both modes produce a saved artifact. Discovery mode can hand off to Decision mod
 | Module-level API design question | Interface-design exploration (generate alternative API shapes, compare) |
 | User has a plan and wants it pressure-tested | Structured grilling session |
 | Debugging / "why is this slow?" | Disciplined diagnosis loop |
+| "Combine these ideas" / "what emerges from X + Y" | idea-recombination skill |
 
 > "This looks like [type], not solution-ideation. A different workflow is a better fit (e.g., [brief activity description]). Proceed anyway?"
 
@@ -210,6 +212,7 @@ Full artifact structure in [references/ost-artifact-template.md](references/ost-
 | Experiments designed, ready to validate | Run the experiments — come back with results |
 | Opportunities unclear, need more research | Run discovery interviews focused on the outcome |
 | Single obvious solution survived | Skip to product spec / just build |
+| Solutions feel incremental, want novel hybrids | Run **idea-recombination** on the frameworks + patterns |
 
 Handoff format:
 
@@ -360,6 +363,7 @@ Full artifact structure in [references/artifact-template.md](references/artifact
 | User wants to pressure-test | Run a grilling session on the recommendation |
 | Approach chosen, straightforward | Just build |
 | Need to validate before committing | Design experiments (loop back to Discovery D5) |
+| Survivors feel incremental, rejected branches had interesting pieces | Run **idea-recombination** on survivors + rejected branches |
 
 Handoff format:
 

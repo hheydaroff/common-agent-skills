@@ -1,12 +1,3 @@
----
-name: taste-frontend
-description: "Anti-slop frontend for landing pages, portfolios, and redesigns — infers the design language, picks real design systems, and ships interfaces that do not look templated. Use when building marketing sites, landing pages, or portfolios, redesigning a site, or when avoiding generic AI-looking output is the priority. Triggers: anti-slop, premium frontend, awwwards-style."
-license: MIT
-metadata:
-  version: "2.0.0"
-  category: frontend
-  upstream: "github.com/Leonxlnx/taste-skill (MIT, (c) Leonxlnx) — see ATTRIBUTION.md"
----
 
 # Taste Frontend: Anti-Slop Frontend Skill
 
@@ -17,17 +8,16 @@ metadata:
 
 | File | When to load |
 |------|--------------|
-| [references/design-systems.md](references/design-systems.md) | Picking a real design system, install commands, canonical docs |
-| [references/ai-tells.md](references/ai-tells.md) | Full catalogue of production "AI tells" to avoid |
-| [references/motion-gsap.md](references/motion-gsap.md) | GSAP sticky-stack / horizontal-pan / scroll-reveal skeletons + perf rules |
-| [references/redesign.md](references/redesign.md) | Redesigning an existing site (audit-first protocol + detailed audit) |
-| [references/liquid-glass.md](references/liquid-glass.md) | Honest web approximation of Apple Liquid Glass / glassmorphism |
-| [references/aesthetic-minimalist.md](references/aesthetic-minimalist.md) | Brief is "minimalist / editorial / Notion-Linear" |
-| [references/aesthetic-brutalist.md](references/aesthetic-brutalist.md) | Brief is "brutalist / Swiss / terminal / industrial" |
-| [references/aesthetic-soft-highend.md](references/aesthetic-soft-highend.md) | Brief is "premium / Awwwards / $150k agency / soft luxury" |
-| [references/output-enforcement.md](references/output-enforcement.md) | Model keeps truncating; need full unabridged output |
+| [references/design-systems.md](taste/design-systems.md) | Picking a real design system, install commands, canonical docs |
+| [references/ai-tells.md](taste/ai-tells.md) | Full catalogue of production "AI tells" to avoid |
+| [references/motion-gsap.md](taste/motion-gsap.md) | GSAP sticky-stack / horizontal-pan / scroll-reveal skeletons + perf rules |
+| [references/redesign.md](taste/redesign.md) | Redesigning an existing site (audit-first protocol + detailed audit) |
+| [references/liquid-glass.md](taste/liquid-glass.md) | Honest web approximation of Apple Liquid Glass / glassmorphism |
+| [references/aesthetic-minimalist.md](taste/aesthetic-minimalist.md) | Brief is "minimalist / editorial / Notion-Linear" |
+| [references/aesthetic-brutalist.md](taste/aesthetic-brutalist.md) | Brief is "brutalist / Swiss / terminal / industrial" |
+| [references/aesthetic-soft-highend.md](taste/aesthetic-soft-highend.md) | Brief is "premium / Awwwards / $150k agency / soft luxury" |
+| [references/output-enforcement.md](taste/output-enforcement.md) | Model keeps truncating; need full unabridged output |
 
----
 
 ## 0. BRIEF INFERENCE (Read the Room First)
 
@@ -42,7 +32,6 @@ If the brief is ambiguous, ask **exactly one** clarifying question — never a m
 
 **Anti-Default Discipline:** Do not default to AI-purple gradients, centered hero over dark mesh, three equal feature cards, generic glassmorphism everywhere, infinite micro-animations, or Inter + slate-900. These are the LLM defaults. Reach past them deliberately.
 
----
 
 ## 1. THE THREE DIALS
 
@@ -63,7 +52,6 @@ After the design read, set three dials. Every layout/motion/density decision is 
 | trust-first / public-sector / a11y-critical | 3-4 | 2-3 | 4-5 |
 | redesign — preserve / overhaul | match / +2 | match+1 / +2 | match |
 
----
 
 ## 2. BRIEF → DESIGN SYSTEM (summary)
 
@@ -71,9 +59,8 @@ If the brief reads as an established product family (Microsoft, Google, IBM, Sho
 
 For aesthetics that are NOT a system (glassmorphism, bento, brutalism, editorial, dark-tech, aurora, kinetic type): build with native CSS + Tailwind, label borrowed inspiration honestly.
 
-➡️ Full mapping table, install commands, and canonical docs: **[references/design-systems.md](references/design-systems.md)**.
+➡️ Full mapping table, install commands, and canonical docs: **[references/design-systems.md](taste/design-systems.md)**.
 
----
 
 ## 3. DEFAULT ARCHITECTURE
 
@@ -88,9 +75,8 @@ Unless a real design system is chosen:
 * **Layout:** `max-w-[1400px] mx-auto` or `max-w-7xl`. Hero uses `min-h-[100dvh]`, NEVER `h-screen`. Use CSS Grid, never flex percentage math (`w-[calc(33%-1rem)]`).
 * **Dependency check:** Before importing any 3rd-party lib, check `package.json`. If missing, output the install command first.
 
-For deeper directives (typography, color calibration, layout discipline, hero rules, content density, quotes) the core gates are in the Pre-Flight Check below; the full production-tell catalogue lives in **[references/ai-tells.md](references/ai-tells.md)**.
+For deeper directives (typography, color calibration, layout discipline, hero rules, content density, quotes) the core gates are in the Pre-Flight Check below; the full production-tell catalogue lives in **[references/ai-tells.md](taste/ai-tells.md)**.
 
----
 
 ## 4. ASSET STRATEGY (Pexels fallback)
 
@@ -103,7 +89,6 @@ Landing pages and portfolios are **visual products**. Text-only pages with fake-
 
 **Even minimalist sites need real images** (2-3 minimum: hero + one product/lifestyle + one supporting). **Real logos** for social proof (Simple Icons `https://cdn.simpleicons.org/{slug}/{color}`, devicon, or a generated monogram SVG) — never plain text wordmarks. Logo wall = logos only, no category labels. **Div-based fake screenshots are banned.**
 
----
 
 ## 5. EM-DASH BAN (non-negotiable)
 
@@ -111,7 +96,6 @@ Landing pages and portfolios are **visual products**. Text-only pages with fake-
 
 Replace with: a period, a comma, parentheses, a colon, a line break, columns, or a regular hyphen `-`. Date/number ranges use a hyphen (`2018-2026`, `€40-80k`). The only permitted dash characters are the regular hyphen and a math minus. **A single `—` or `–` anywhere visible = Pre-Flight fail; rewrite it.**
 
----
 
 ## 6. FINAL PRE-FLIGHT CHECK
 
@@ -160,12 +144,10 @@ Run every box before outputting code. If any box fails, the output is not done.
 
 If a single box cannot be honestly ticked, the page is not done. Fix it before delivering.
 
----
 
 ## 7. OUT OF SCOPE
 
 Dashboards / dense product UI / admin panels, data tables, multi-step forms/wizards, code editors, native mobile, realtime collab UIs. If the brief is one of these, say so, point to the right tool, and apply only the marketing/about/landing parts of this skill where they fit.
 
----
 
 *React/Next.js, Tailwind CSS, Motion (Framer Motion), GSAP/GreenSock, Three.js, and all other product names are trademarks of their respective owners. This skill is adapted from the MIT-licensed taste-skill by Leonxlnx — see ATTRIBUTION.md.*

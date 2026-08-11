@@ -1,6 +1,6 @@
 ---
 name: frontend-dev
-description: "Premium frontend: UI design, cinematic animations, copywriting, and visual art. Use when building landing pages, marketing sites, dashboards, writing conversion copy, creating generative art, or implementing scroll animations."
+description: "Premium frontend: UI design, cinematic animations, copywriting, and visual art. Use when building landing pages, marketing sites, dashboards, writing conversion copy, creating generative art, or implementing scroll animations. Also covers anti-slop / taste-driven builds: redesigning existing sites, avoiding generic AI-looking output, picking real design systems (Awwwards-style, premium, brutalist, minimalist)."
 license: MIT
 metadata:
   version: "1.0.0"
@@ -36,7 +36,9 @@ frontend-dev/
 │   ├── motion-recipes.md         # Animation code snippets
 │   ├── performance-checklist.md  # Core Web Vitals, budgets, anti-patterns
 │   ├── accessibility-checklist.md # WCAG 2.1 AA, ARIA, keyboard nav
-│   └── troubleshooting.md        # Common issues
+│   ├── troubleshooting.md        # Common issues
+│   ├── taste.md                  # Anti-slop protocol: design-system picking, AI-tell removal (loads taste/ refs)
+│   └── taste/                    # Taste references: aesthetics, design systems, motion, redesign protocol
 ├── templates/                    # Visual art templates
 │   ├── viewer.html               # p5.js interactive art base
 │   └── generator_template.js     # p5.js code reference

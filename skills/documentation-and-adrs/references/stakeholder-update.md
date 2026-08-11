@@ -1,7 +1,3 @@
----
-name: stakeholder-update
-description: "Generate stakeholder updates tailored to audience and cadence. Use when writing weekly/monthly status reports, announcing launches, escalating risks, or translating progress into exec-brief, engineering-detail, or customer-facing versions. Triggers: 'weekly update', 'status report', 'update stakeholders', 'what should I tell the team', 'launch announcement', 'executive summary'."
----
 
 # Stakeholder Update
 
@@ -44,7 +40,6 @@ Apply the appropriate template below. Then ask:
 - Anything to add or remove?
 - Want versions for other audiences?
 
----
 
 ## Templates by Audience
 
@@ -170,7 +165,6 @@ Board members want: metrics, strategic position, and material risks. **Under 150
 - [If any — otherwise omit this section]
 ```
 
----
 
 ## Status Framework
 
@@ -188,7 +182,6 @@ Board members want: metrics, strategic position, and material risks. **Under 150
 - Move back to Green only when risk is resolved, not paused
 - Always document what changed when status changes
 
----
 
 ## Risk Communication (ROAM)
 
@@ -215,7 +208,6 @@ When reporting risks, classify each one:
 - Presenting risks without mitigations
 - Waiting too long — a risk communicated early is a planning input; communicated late is a fire drill
 
----
 
 ## Multi-Audience Mode
 
@@ -231,7 +223,6 @@ Example: A feature launch might produce:
 - **Engineering**: "SSO merged (PR #847). SAML + OIDC supported. Monitoring dashboard live."
 - **Customer**: "You can now log in with your company credentials. No more separate passwords."
 
----
 
 ## Tips
 

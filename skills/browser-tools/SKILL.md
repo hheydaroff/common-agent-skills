@@ -1,6 +1,6 @@
 ---
 name: browser-tools
-description: "Interactive browser automation via Chrome DevTools Protocol. Use when you need to interact with web pages, test frontends, or when a visible browser is required."
+description: "Interactive browser automation via Chrome DevTools Protocol. Use when you need to interact with web pages, test frontends, log into sites, take screenshots, or when a visible browser is required. For fast read-only page fetching without Chrome, see the Lightpanda reference."
 ---
 
 # Browser Tools
@@ -194,3 +194,9 @@ Always start by understanding the page structure:
 ```
 
 Then target specific elements based on what you find.
+
+## References
+
+| Reference | When to load |
+|-----------|--------------|
+| [references/fast-fetch-lightpanda.md](references/fast-fetch-lightpanda.md) | Read-only page fetching without launching Chrome (~0.7s, no window). Not for multi-step or authenticated flows. |

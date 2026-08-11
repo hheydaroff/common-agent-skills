@@ -1,11 +1,11 @@
 ---
 name: cmux
-description: "Control cmux topology and routing (windows, workspaces, panes, focus, moves, reorder). Use when automation needs deterministic multi-pane placement and navigation."
+description: "Control cmux topology and routing (windows, workspaces, panes, focus, moves, reorder), plus cmux browser automation, markdown viewer panels, settings/customization, and keyboard shortcuts. Use when automation needs deterministic multi-pane placement, cmux browsers, or cmux configuration changes."
 ---
 
 # cmux Core Control
 
-Use this skill to control non-browser cmux topology and routing.
+Use this skill to control cmux topology, routing, and cmux-native surfaces (browser, markdown panels).
 
 ## Core Concepts
 
@@ -78,6 +78,10 @@ cmux settings shortcuts
 | [references/trigger-flash-and-health.md](references/trigger-flash-and-health.md) | Flash cue and surface health checks |
 | [references/workspace.md](references/workspace.md) | Current-caller workspace scoping and non-disruptive automation rules |
 | [references/workspace-commands.md](references/workspace-commands.md) | Full workspace/pane/surface/notification command catalog |
+| [references/browser.md](references/browser.md) | Browser surfaces: open, snapshot refs, click/fill/type, wait, auth state, video recording |
+| [references/customization.md](references/customization.md) | cmux.json actions, custom commands, workspace layouts, plus-button, Command Palette, Dock |
+| [references/markdown.md](references/markdown.md) | Markdown viewer panels with live reload |
+| [references/settings.md](references/settings.md) | View/edit cmux settings by JSON path, validate, rebind shortcuts |
 | [../cmux-browser/SKILL.md](../cmux-browser/SKILL.md) | Browser automation on surface-backed webviews |
 | [../cmux-markdown/SKILL.md](../cmux-markdown/SKILL.md) | Markdown viewer panel with live file watching |
 | [../cmux-settings/SKILL.md](../cmux-settings/SKILL.md) | Safe cmux.json settings edits and validation |

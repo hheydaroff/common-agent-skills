@@ -1,7 +1,3 @@
----
-name: setup-oauth-mcp-server
-description: Configure and authenticate an OAuth-protected MCP server in pi. Covers mcp.json ServerEntry fields, the /mcp-auth flow, debugging 405/403/invalid-scope errors, clearing stale OAuth state, and dynamic client registration (DCR) vs pre-registered apps. Use when adding an HTTP MCP server that needs OAuth, when /mcp-auth fails, or when mcp connect keeps returning 405 or 403.
----
 
 # Setup OAuth MCP Server in Pi
 

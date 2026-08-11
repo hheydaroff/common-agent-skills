@@ -1,7 +1,3 @@
----
-name: cmux-settings
-description: "View and edit cmux settings in ~/.config/cmux/cmux.json. Use when changing cmux preferences (appearance, sidebar, notifications, automation, browser, shortcuts), setting a value by JSON path, validating the file, or rebinding a cmux shortcut. Triggers on '/cmux-settings', 'change cmux setting', 'cmux config', 'cmux.json'."
----
 
 # cmux-settings
 
@@ -15,13 +11,13 @@ Use the bundled helper for every read/write. It strips JSONC comments, writes at
 
 ```bash
 # From a cmux checkout
-skills/cmux-settings/scripts/cmux-settings <subcommand>
+skills/cmux/references/settings/scripts/cmux-settings <subcommand>
 
 # From an installed Codex skill
-~/.codex/skills/cmux-settings/scripts/cmux-settings <subcommand>
+~/.codex/skills/cmux/references/settings/scripts/cmux-settings <subcommand>
 ```
 
-For brevity in the rest of this doc, assume the script is on `$PATH` as `cmux-settings`. To make it so for a session from a checkout: `export PATH="$PWD/skills/cmux-settings/scripts:$PATH"`.
+For brevity in the rest of this doc, assume the script is on `$PATH` as `cmux-settings`. To make it so for a session from a checkout: `export PATH="$PWD/skills/cmux/references/settings/scripts:$PATH"`.
 
 Subcommands:
 
@@ -70,7 +66,7 @@ Subcommands:
 - Automation: `automation.socketControlMode` (`off | cmuxOnly | automation | password | allowAll`), `automation.portBase`, `automation.portRange`.
 - Shortcuts: `shortcuts.bindings.<actionId>` = `"cmd+b"`, `["ctrl+b","c"]`, `null`, or `""` to unbind. See `references/shortcut-actions.md`.
 
-For the full list of settings, defaults, and descriptions, run `cmux-settings list-supported` or read [references/all-keys.md](references/all-keys.md).
+For the full list of settings, defaults, and descriptions, run `cmux-settings list-supported` or read [references/all-keys.md](settings/all-keys.md).
 
 ## Rules
 
@@ -78,6 +74,6 @@ For the full list of settings, defaults, and descriptions, run `cmux-settings li
 - Never tell the user to restart cmux to apply a change. The file watcher reloads on save.
 - Always validate after a bulk edit: `cmux-settings validate`. Unknown keys mean the user pasted a key the app does not consume.
 - Do not blindly overwrite top-level sections (`actions`, `ui`, `commands`, `vault`, `rightSidebar`). They live in the same file and contain non-settings config the user has hand-tuned.
-- Shortcut action ids must match the schema enum. Look them up in [references/shortcut-actions.md](references/shortcut-actions.md) before binding.
+- Shortcut action ids must match the schema enum. Look them up in [references/shortcut-actions.md](settings/shortcut-actions.md) before binding.
 - Color values must be `#RRGGBB`. Opacities are `0..1`.
 - For settings the user expressed in app-level language (e.g. "Settings > Notifications > Dock badge"), translate to the matching JSON path first; the docs page at `web/app/[locale]/docs/configuration/page.tsx` mirrors the schema 1:1.

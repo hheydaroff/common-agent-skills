@@ -1,7 +1,3 @@
----
-name: cmux-browser
-description: "End-user browser automation with cmux. Use when you need to open sites, interact with pages, wait for state changes, and extract data from cmux browser surfaces."
----
 
 # Browser Automation with cmux
 
@@ -95,21 +91,21 @@ If `get url` is empty or `about:blank`, navigate first instead of waiting on loa
 
 | Reference | When to Use |
 |-----------|-------------|
-| [references/commands.md](references/commands.md) | Full browser command mapping and quick syntax |
-| [references/snapshot-refs.md](references/snapshot-refs.md) | Ref lifecycle and stale-ref troubleshooting |
-| [references/authentication.md](references/authentication.md) | Login/OAuth/2FA patterns and state save/load |
-| [references/authentication.md#saving-authentication-state](references/authentication.md#saving-authentication-state) | Save authenticated state right after login |
-| [references/session-management.md](references/session-management.md) | Multi-surface isolation and state persistence patterns |
-| [references/video-recording.md](references/video-recording.md) | Current recording status and practical alternatives |
-| [references/proxy-support.md](references/proxy-support.md) | Proxy behavior in WKWebView and workarounds |
+| [references/commands.md](browser/commands.md) | Full browser command mapping and quick syntax |
+| [references/snapshot-refs.md](browser/snapshot-refs.md) | Ref lifecycle and stale-ref troubleshooting |
+| [references/authentication.md](browser/authentication.md) | Login/OAuth/2FA patterns and state save/load |
+| [references/authentication.md#saving-authentication-state](browser/authentication.md#saving-authentication-state) | Save authenticated state right after login |
+| [references/session-management.md](browser/session-management.md) | Multi-surface isolation and state persistence patterns |
+| [references/video-recording.md](browser/video-recording.md) | Current recording status and practical alternatives |
+| [references/proxy-support.md](browser/proxy-support.md) | Proxy behavior in WKWebView and workarounds |
 
 ## Ready-to-Use Templates
 
 | Template | Description |
 |----------|-------------|
-| [templates/form-automation.sh](templates/form-automation.sh) | Snapshot/ref form fill loop |
-| [templates/authenticated-session.sh](templates/authenticated-session.sh) | Login once, save/load state |
-| [templates/capture-workflow.sh](templates/capture-workflow.sh) | Navigate + capture snapshots/screenshots |
+| [templates/form-automation.sh](browser/form-automation.sh) | Snapshot/ref form fill loop |
+| [templates/authenticated-session.sh](browser/authenticated-session.sh) | Login once, save/load state |
+| [templates/capture-workflow.sh](browser/capture-workflow.sh) | Navigate + capture snapshots/screenshots |
 
 ## Limits (WKWebView)
 

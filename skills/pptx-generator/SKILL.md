@@ -1,6 +1,6 @@
 ---
 name: pptx-generator
-description: "Generate, edit, and read PowerPoint presentations. Create from scratch (cover, TOC, content slides), edit existing PPTX via XML, or extract text. Use when user mentions PPT, PowerPoint, slides, deck, or presentation."
+description: "Generate, edit, and read PowerPoint presentations. Create from scratch (cover, TOC, content slides), edit existing PPTX via XML, extract text, reverse-engineer a template into a reusable theme, or build a smart Europe brand deck. Use when user mentions PPT, PowerPoint, slides, deck, presentation, pptx template/theme extraction, or a smart-brand deck."
 license: MIT
 metadata:
   version: "2.0"
@@ -51,6 +51,8 @@ This skill handles all PowerPoint tasks: reading/analyzing existing presentation
 | [editing.md](references/editing.md) | Template-based editing workflow, XML manipulation, formatting rules, common pitfalls |
 | [pitfalls.md](references/pitfalls.md) | QA process, common mistakes, critical PptxGenJS pitfalls |
 | [pptxgenjs.md](references/pptxgenjs.md) | Complete PptxGenJS API reference |
+| [extract-theme.md](references/extract-theme.md) | Reverse-engineer a .pptx template into a full reusable theme — parse theme XML (colors/fonts/layouts), categorize images, write a style guide + design tokens, register the theme |
+| [smart-deck-build.md](references/smart-deck-build.md) | smart Europe brand harness — build kit ([smart-deck-kit.js](references/smart-deck-kit.js)), lime-accent rule, proven slide patterns, and solved gotchas (see also [smart-corporate-style.md](references/smart-corporate-style.md)) |
 
 ---
 
