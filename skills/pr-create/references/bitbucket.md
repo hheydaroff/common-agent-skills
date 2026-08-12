@@ -35,13 +35,19 @@ Derive from the git remote:
 ```bash
 scripts/bb.sh auth-check <workspace> <repo_slug>
 scripts/bb.sh list <workspace> <repo_slug> [STATE] [LIMIT]    # STATE: MERGED|OPEN|DECLINED (default MERGED)
+scripts/bb.sh view <workspace> <repo_slug> <pr_id>
 scripts/bb.sh create <workspace> <repo_slug> \
   --title "..." --body-file /tmp/pr-body.md \
   --source <branch> --dest <base> \
   [--close-source-branch] [--reviewer <account-uuid>]...
+scripts/bb.sh update <workspace> <repo_slug> <pr_id> [--title T] [--body-file F] [--reviewer UUID]...
+scripts/bb.sh merge <workspace> <repo_slug> <pr_id> [merge_commit|squash|fast_forward]
 ```
 
 - `create` prints `PR #<id>: <url>` on success, error JSON on failure (non-zero exit).
+- If `create` fails with **409**, an open PR already exists for that source→destination — find it with `list ... OPEN`, then `view`/`update` it instead of creating a new one.
+- `update` fetches the current PR, applies only the provided fields, and PUTs back.
+- `merge` without a strategy uses the repo's default; 409 = conflict or checks not passed.
 - Reviewers need **account UUIDs** (not usernames). Look up via
   `GET https://api.bitbucket.org/2.0/workspaces/<ws>/members` if the user insists;
   otherwise skip — reviewers can be added in the UI.

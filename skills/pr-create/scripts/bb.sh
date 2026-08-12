@@ -43,8 +43,11 @@ usage() {
 Usage:
   bb.sh auth-check <workspace> <repo_slug>
   bb.sh list <workspace> <repo_slug> [STATE] [LIMIT]
+  bb.sh view <workspace> <repo_slug> <pr_id>
   bb.sh create <workspace> <repo_slug> --title T --body-file F --source S --dest D
                [--close-source-branch] [--reviewer UUID]...
+  bb.sh update <workspace> <repo_slug> <pr_id> [--title T] [--body-file F] [--reviewer UUID]...
+  bb.sh merge <workspace> <repo_slug> <pr_id> [merge_commit|squash|fast_forward]
 EOF
   exit 2
 }
@@ -100,6 +103,60 @@ case "$cmd" in
     case "$RESP_CODE" in
       200|201) jq -r '"PR #\(.id): \(.links.html.href)"' <<<"$RESP_BODY" ;;
       *) die "PR creation failed (HTTP $RESP_CODE): $RESP_BODY" ;;
+    esac
+    ;;
+
+  view)
+    [ $# -eq 3 ] || usage
+    request GET "/repositories/$1/$2/pullrequests/$3"
+    [ "$RESP_CODE" = "200" ] || die "view failed (HTTP $RESP_CODE): $RESP_BODY"
+    jq -r '"PR #\(.id) [\(.state)] \(.title)\n  \(.source.branch.name) -> \(.destination.branch.name), by \(.author.display_name)\n  \(.links.html.href)\n\n\(.description // "(no description)")"' <<<"$RESP_BODY"
+    ;;
+
+  update)
+    [ $# -ge 3 ] || usage
+    ws="$1"; slug="$2"; prid="$3"; shift 3
+    title=""; bodyfile=""; reviewers=()
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --title) title="$2"; shift 2 ;;
+        --body-file) bodyfile="$2"; shift 2 ;;
+        --reviewer) reviewers+=("$2"); shift 2 ;;
+        *) die "unknown flag: $1" ;;
+      esac
+    done
+    request GET "/repositories/$ws/$slug/pullrequests/$prid"
+    [ "$RESP_CODE" = "200" ] || die "fetch current PR failed (HTTP $RESP_CODE): $RESP_BODY"
+    cur="$RESP_BODY"
+    desc=""; hasdesc=false
+    [ -n "$bodyfile" ] && { [ -f "$bodyfile" ] || die "body file not found: $bodyfile"; desc=$(cat "$bodyfile"); hasdesc=true; }
+    hasrev=false; [ ${#reviewers[@]} -gt 0 ] && hasrev=true
+    json=$(jq --arg title "$title" --arg desc "$desc" --argjson hasdesc "$hasdesc" \
+             --argjson hasrev "$hasrev" \
+             --argjson newrev "$(printf '%s\n' "${reviewers[@]:-}" | jq -R 'select(length>0) | {uuid: .}' | jq -s .)" \
+        '{title, description, source, destination, close_source_branch}
+         + (if has("reason") then {reason} else {} end)
+         + {reviewers: ((.reviewers // []) | map({uuid}))}
+         | if $title != "" then .title = $title else . end
+         | if $hasdesc then .description = $desc else . end
+         | if $hasrev then .reviewers = $newrev else . end' <<<"$cur")
+    request PUT "/repositories/$ws/$slug/pullrequests/$prid" "$json"
+    case "$RESP_CODE" in
+      200) jq -r '"Updated PR #\(.id): \(.links.html.href)"' <<<"$RESP_BODY" ;;
+      *) die "PR update failed (HTTP $RESP_CODE): $RESP_BODY" ;;
+    esac
+    ;;
+
+  merge)
+    [ $# -ge 3 ] || usage
+    ws="$1"; slug="$2"; prid="$3"; strategy="${4:-}"
+    body="{}"
+    [ -n "$strategy" ] && body=$(jq -n --arg s "$strategy" '{merge_strategy: $s}')
+    request POST "/repositories/$ws/$slug/pullrequests/$prid/merge" "$body"
+    case "$RESP_CODE" in
+      200) jq -r '"Merged PR #\(.id): \(.links.html.href)"' <<<"$RESP_BODY" ;;
+      409) die "merge conflict or PR not ready (HTTP 409): $RESP_BODY" ;;
+      *) die "merge failed (HTTP $RESP_CODE): $RESP_BODY" ;;
     esac
     ;;
 

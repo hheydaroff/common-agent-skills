@@ -89,7 +89,15 @@ scripts/bb.sh create <workspace> <repo_slug> \
   --source <branch> --dest <base> [--close-source-branch]
 ```
 
-Report the PR number and URL. If creation fails, show the error and stop — do not retry blindly.
+Report the PR number and URL. If creation fails with 409, a PR for this branch
+already exists — find it (`bb.sh list <ws> <slug> OPEN` / `gh pr list --head <branch>`)
+and ask the user whether to update it instead. Other errors: show and stop — do not retry blindly.
+
+## Follow-ups on an existing PR (Bitbucket)
+
+- Inspect: `scripts/bb.sh view <ws> <slug> <pr_id>`
+- Amend title/body/reviewers: `scripts/bb.sh update <ws> <slug> <pr_id> [--title ...] [--body-file ...]`
+- Merge: `scripts/bb.sh merge <ws> <slug> <pr_id> [squash|merge_commit|fast_forward]` — confirm with the user first.
 
 ## Reference Files
 
