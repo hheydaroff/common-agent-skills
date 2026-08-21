@@ -268,6 +268,12 @@ pi.on("input", async (event, ctx) => {
 });
 ```
 
+Transforms can also replace or strip image attachments:
+
+- `event.images` is `ImageContent[]` — `{ type: "image", data: <base64>, mimeType }`
+- Return `{ action: "transform", text, images: [] }` to strip the images (or return a modified array)
+- Omitting `images` keeps the originals
+
 ### Model Event
 
 ```typescript
@@ -295,6 +301,56 @@ pi.on("user_bash", (event, ctx) => {
   // return { operations } or { result }
 });
 ```
+
+---
+
+## One-Shot LLM Calls (`ctx.modelRegistry`)
+
+Extensions can make their own model calls with auth fully resolved by pi
+(API keys, OAuth, Bedrock credentials all handled). The pattern for helper
+models: summarizers, classifiers, modality bridges.
+
+```typescript
+// Exact lookup, or filter what's available + authenticated
+const model = ctx.modelRegistry.find("anthropic", "claude-haiku-4-5");
+const vision = ctx.modelRegistry.getAvailable()
+  .filter((m) => m.input.includes("image") && ctx.modelRegistry.hasConfiguredAuth(m));
+
+// One-shot completion — returns a finished AssistantMessage
+const result = await ctx.modelRegistry.complete(model!, {
+  messages: [{
+    role: "user",
+    content: [
+      { type: "image", data: base64Data, mimeType: "image/png" }, // optional
+      { type: "text", text: "Describe this." },
+    ],
+  }],
+} as any);
+const text = result.content
+  .filter((b: any) => b.type === "text")
+  .map((b: any) => b.text).join("\n");
+```
+
+The context object is pi-ai's `Context` type; extensions normally just cast
+the literal (`as any`) instead of importing across packages.
+
+**Model capability detection** — every model has `input: ("text" | "image")[]`:
+
+```typescript
+const canSee = ctx.model?.input.includes("image"); // active model vision support
+```
+
+Key methods:
+
+| Method | Purpose |
+|---|---|
+| `getAll()` / `getAvailable()` | all models / available models |
+| `find(provider, modelId)` | exact lookup |
+| `hasConfiguredAuth(model)` | auth check |
+| `complete(model, context, options?)` | one-shot call → `Promise<AssistantMessage>` |
+
+Worked example combining all three patterns (capability gate + input-event
+image transform + side model call): `image-eyes.ts` in the pi-extensions repo.
 
 ---
 
