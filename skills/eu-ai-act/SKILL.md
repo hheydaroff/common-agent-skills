@@ -40,6 +40,7 @@ Always follow this chain when answering any AI-Act question:
 |------|---------|-----------|
 | `references/law-overview.md` | Structure, scope (Art 1–4), definitions, KI-Kompetenz, timeline | Any "what does the AI Act say" question |
 | `references/risk-classification.md` | Full risk map: Art 5 verbote, Art 6 + Anhang I/III, Art 50 transparency | Classifying a use case |
+| `references/annexes.md` | All 13 Anhänge (Annexes): Anhang I product laws, II offences, III the 8 areas, IV–X conformity/registration, XI–XIII GPAI | "What's in Annex I vs III?" or any Anhang question |
 | `references/roles-and-duties.md` | All actors + obligation catalogue (Art 16–27) + Art 25 Quasianbieter cases | "Who is what / who must do what" |
 | `references/governance-and-sanctions.md` | Governance (Art 64–70), incidents (Art 73), rights (Art 85–87), sanctions (Art 99) | Enforcement, penalties, reporting |
 | `references/interfaces.md` | DSGVO, Urheberrecht, Haftung, KI-Ethik (7 principles) | Cross-cutting legal/ethical questions |
