@@ -1,6 +1,7 @@
 ---
 name: eu-ai-act
 description: "Expert system for the EU AI Act (KI-Verordnung 2024/1689) and the AI Officer / KI-Beauftragter role. Knows risk classes, roles & responsibilities, high-risk obligations, sanctions, and timelines. Use to classify an AI use case, determine who is provider/deployer/quasi-provider, assess compliance, draft an AI policy (KI-Richtlinie), run vendor due diligence, respond to shadow AI, or to stay current as an AI Officer. Includes knowledge references, an AI Officer playbook, checklists, and ready-to-use templates."
+# Fill-in templates in templates/ + references/ are original drafts grounded in the EU AI Act / GDPR (not copied from any commercial template library).
 ---
 
 # EU AI Act (KI-Verordnung) — AI Officer Skill
@@ -52,6 +53,7 @@ Always follow this chain when answering any AI-Act question:
 | `templates/ki-richtlinie-template.md` | Full AI policy template (11 mandatory sections) | Drafting/checking the AI policy |
 | `templates/benennungsurkunde-template.md` | Appointment certificate for the KI-Beauftragter | Formally appointing an AI Officer |
 | `templates/incident-report-template.md` | Serious-incident report (Art. 73) + DSFA supplement | Incident reporting |
+| `references/template-library.md` | Routing index of the **original fill-in template kit**: DPIA (Art. 35), FRIA (Art. 27), model card (Art. 11), vendor DD questionnaire + AI contract clauses, LLM security controls (OWASP), agent deployment checklist, shadow-AI, risk register, system inventory, compliance tracker, tool-approval request, acceptable-use policy. Mapped to smart Europe's IBR-intake and MSXi/ClaimsGenie gaps | Need a working deliverable (not just the law): fill a DPIA, run vendor DD, draft AI contract clauses, deploy an agent, build a risk register |
 
 ## Accuracy notes (KI-Omnibus, Aug 2026)
 
