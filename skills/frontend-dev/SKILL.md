@@ -36,6 +36,7 @@ frontend-dev/
 │   ├── motion-recipes.md         # Animation code snippets
 │   ├── performance-checklist.md  # Core Web Vitals, budgets, anti-patterns
 │   ├── accessibility-checklist.md # WCAG 2.1 AA, ARIA, keyboard nav
+│   ├── landing-page-design.md     # Landing pages: intake, structure, conversion copy, strict visual system
 │   ├── troubleshooting.md        # Common issues
 │   ├── taste.md                  # Anti-slop protocol: design-system picking, AI-tell removal (loads taste/ refs)
 │   └── taste/                    # Taste references: aesthetics, design systems, motion, redesign protocol
@@ -149,7 +150,7 @@ project/
 
 ## Workflow
 ### Phase 1: Design Architecture
-1. Analyze the request — determine page type and context
+1. Analyze the request — determine page type and context. **Landing page or marketing site?** Load `references/landing-page-design.md` first — it owns intake, page structure, conversion copy, and the landing visual system.
 2. Set design dials based on page type
 3. Plan layout sections and identify asset needs
 
