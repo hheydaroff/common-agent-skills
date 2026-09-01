@@ -37,6 +37,11 @@ Store thesis files in the user's vault: `finance/thesis-<TICKER>.md`
 1. [Risk] — Probability: Low/Med/High — Monitor: [how to detect]
 2. [Risk] — Probability: Low/Med/High — Monitor: [how to detect]
 
+## Confirmation Criteria (what must happen for this thesis to STRENGTHEN)
+Complement of the kill trigger — name the positive evidence, in advance, that would upgrade conviction:
+1. [Observable event/metric] — if it happens: [conviction upgrade / size add]
+2. [Observable event/metric] — if it happens: [...]
+
 ## Catalysts
 | Date | Event | Expected Impact | Status |
 |------|-------|-----------------|--------|

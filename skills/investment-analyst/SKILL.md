@@ -25,6 +25,8 @@ uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py dividends AAPL                # Dividend history
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py compare AAPL,MSFT,GOOGL       # Side-by-side comparison
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py technicals AAPL 6mo           # RSI, MACD, MAs, Bollinger Bands
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py levels AAPL                   # Pivot S/R zones + Fibonacci retracement of the major swing (default 1y)
+uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py levels AAPL 6mo               # Levels over a custom period
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener mega_tech            # Predefined US screeners
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_mega              # Top European stocks by market cap
 uv run --with yfinance --with pandas --with numpy python3 scripts/market_data.py screener eu_sector_etfs       # STOXX 600 sector ETFs
@@ -108,6 +110,7 @@ uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account    
 | [catalyst-calendar.md](references/catalyst-calendar.md) | Forward event calendar for watchlist (`/invest calendar`) |
 | [estimate-revision.md](references/estimate-revision.md) | Post-earnings estimate update (`/invest update`) |
 | [portfolio-intelligence.md](references/portfolio-intelligence.md) | Tend existing holdings: trajectory, signal propagation, strength adds, catalyst map (`/invest tend`, `/invest portfolio`, any scan) |
+| [prediction-ledger.md](references/prediction-ledger.md) | Log + score every directional call so wrong bets get caught, not repeated (`/invest log`) |
 
 ---
 
@@ -129,6 +132,28 @@ uv run --with alpaca-py --with pandas python3 scripts/alpaca_data.py account    
 14. **Momentum persists** — in secular growth trends, "it's gone up a lot" is NOT a concern. Only flag exhaustion with bearish divergence AND price breaking MA support.
 15. **Tend before hunt** — ALWAYS check existing holdings (trajectory, catalysts, signals) BEFORE scanning for new opportunities. Your portfolio is a live sensor network — use it.
 16. **Propagate signals** — when one holding reports, ask what it means for every OTHER holding and watchlist name. One earnings report is sector intelligence, not just a single-stock event.
+17. **A falling chart is not a broken thesis** — technical weakness and thesis-breakage are two SEPARATE claims, each needing its own evidence. Never conclude "thesis broken / fundamentals deteriorated" from price action alone (price, RSI, MA position are a symptom screen, not a diagnosis).
+18. **Fundamentals before direction** — every directional call (buy/sell/trim/hold verdict) must be preceded by pulling and *quoting* the fundamentals: revenue growth trajectory, margin trend, earnings trajectory, FCF direction, and PEG vs sector. Data first, conclusion second.
+19. **Log the call before you make it** — every directional call goes in the prediction ledger (confidence, timeframe, the metric that proves it wrong, the evidence it rests on) so it can be scored later. An unscored prediction is a guess, not an analysis.
+
+## Decision Gates (non-negotiable — do not skip)
+
+These convert the principles from guidance into hard gates. A recommendation is **incomplete and must be labeled LOW CONFIDENCE — not actionable** if its gate isn't fully filled in the answer.
+
+### SELL / TRIM / "THESIS BROKEN" — the Bear Gate
+Before recommending any exit, trim, or "thesis broken" verdict, produce all five fields, in the response, BEFORE the verdict:
+1. **The written thesis** — restate the entry thesis (pillars + entry price + original kill trigger). If NO written thesis is on file, say so and **downgrade any sell to a "missing thesis — write one first" discussion**, never a naked "sell."
+2. **Fundamental trajectory table** — revenue growth (↑/→/↓), operating margin (↑/→/↓), earnings (↑/→/↓), FCF (↑/→/↓). Pull `price` + `financials` and quote the actual numbers.
+3. **Which kill trigger fired** — quote the specific kill condition from the entry thesis and state whether it actually fired. "The chart looks bad" is NOT a kill trigger.
+4. **Technical-vs-fundamental split** — label explicitly which part of the bear case is TECHNICAL (price/RSI/MA) and which is FUNDAMENTAL (metrics). A sell may be technical ("extended, trim a third") or fundamental ("kill trigger fired") — but never state one while only showing the other.
+5. **PEG vs sector** — per Principle 12. A cheaply-valued name on a falling chart is a HOLD-for-thesis-decision, not a sell.
+
+### BUY — the Conviction Gate
+Before recommending any buy/add, produce:
+1. Thesis in one falsifiable sentence (what must be true, what proves it wrong).
+2. Trajectory table (same as above) + PEG vs sector.
+3. Entry trigger written down, and the 3-of-5 checklist status.
+4. How you will know you were wrong (the kill metric), named BEFORE position size is discussed.
 
 ## Key Mental Models
 

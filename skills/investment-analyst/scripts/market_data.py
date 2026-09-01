@@ -478,6 +478,83 @@ def cmd_technicals(ticker, period="6mo"):
     print(json.dumps(result, indent=2, default=str))
 
 
+def cmd_levels(ticker, period="1y"):
+    """Pivot-based support/resistance zones + Fibonacci retracement levels.
+
+    Mechanical map only — zones are context for targets/stops, not signals.
+    """
+    import numpy as np
+
+    t = yf.Ticker(ticker)
+    hist = t.history(period=period)
+    if hist.empty:
+        print(json.dumps({"error": f"No data for {ticker}"}))
+        return
+
+    high = hist["High"].values
+    low = hist["Low"].values
+    dates = hist.index
+    price = float(hist["Close"].iloc[-1])
+    k = 5  # fractal window: pivot needs k bars on each side
+
+    pivots = []  # (date, price, kind)
+    for i in range(k, len(hist) - k):
+        if high[i] == max(high[i - k:i + k + 1]):
+            pivots.append((dates[i].strftime("%Y-%m-%d"), float(high[i]), "high"))
+        if low[i] == min(low[i - k:i + k + 1]):
+            pivots.append((dates[i].strftime("%Y-%m-%d"), float(low[i]), "low"))
+
+    # Cluster pivot prices within 1.5% into zones
+    zones = []
+    for _, p, _ in sorted(pivots, key=lambda x: x[1]):
+        if zones and abs(p - zones[-1]["center"]) / zones[-1]["center"] <= 0.015:
+            z = zones[-1]
+            z["prices"].append(p)
+            z["touches"] += 1
+        else:
+            zones.append({"center": p, "touches": 1, "prices": [p]})
+    for z in zones:
+        z["level"] = round(float(np.mean(z.pop("prices"))), 2)
+        del z["center"]
+    zones.sort(key=lambda z: z["level"])
+
+    support = [z for z in zones if z["level"] < price]
+    resistance = [z for z in zones if z["level"] > price]
+
+    # Fibonacci: retrace the major swing = pivot low <-> pivot high with the largest range
+    pivot_lows = [(d, p) for d, p, kind in pivots if kind == "low"]
+    pivot_highs = [(d, p) for d, p, kind in pivots if kind == "high"]
+    fib = None
+    if pivot_lows and pivot_highs:
+        best = max(
+            ((ld, lp, hd, hp) for ld, lp in pivot_lows for hd, hp in pivot_highs if lp != hp),
+            key=lambda x: abs(x[3] - x[1]),
+            default=None,
+        )
+        if best:
+            ld, lp, hd, hp = best
+            rng = abs(hp - lp)
+            ratios = [0.236, 0.382, 0.5, 0.618, 0.786]
+            if hd > ld:  # up-leg: high after low
+                fib = {"swing_low": round(lp, 2), "swing_low_date": ld, "swing_high": round(hp, 2), "swing_high_date": hd,
+                       "retracements": {f"{int(r*1000)/10}%": round(hp - rng * r, 2) for r in ratios}}
+            else:  # down-leg: low after high
+                fib = {"swing_high": round(hp, 2), "swing_high_date": hd, "swing_low": round(lp, 2), "swing_low_date": ld,
+                       "retracements": {f"{int(r*1000)/10}%": round(lp + rng * r, 2) for r in ratios}}
+
+    print(json.dumps({
+        "ticker": ticker.upper(),
+        "period": period,
+        "date": hist.index[-1].strftime("%Y-%m-%d"),
+        "current_price": round(price, 2),
+        "note": "Pivot zones and Fibonacci levels are context zones for targets/stops, not entry signals. Validate against regime and fundamentals.",
+        "fibonacci": fib,
+        "support_zones": list(reversed(support[-4:])),
+        "resistance_zones": resistance[:4],
+        "period_range": {"high": round(float(high.max()), 2), "low": round(float(low.min()), 2)},
+    }, indent=2, default=str))
+
+
 def cmd_screener(name):
     """Predefined screeners."""
     screeners = {
@@ -540,6 +617,7 @@ def main():
         "dividends": lambda: cmd_dividends(args[0]) if args else print("Usage: dividends <TICKER>"),
         "compare": lambda: cmd_compare(args[0]) if args else print("Usage: compare <TICKER,TICKER,...>"),
         "technicals": lambda: cmd_technicals(args[0], args[1] if len(args) > 1 else "6mo") if args else print("Usage: technicals <TICKER> [period]"),
+        "levels": lambda: cmd_levels(args[0], args[1] if len(args) > 1 else "1y") if args else print("Usage: levels <TICKER> [period]"),
         "screener": lambda: cmd_screener(args[0]) if args else print("Usage: screener <name>"),
     }
 

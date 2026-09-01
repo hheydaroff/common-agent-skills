@@ -86,6 +86,27 @@ Before interpreting any technical signal, classify the regime:
 
 ---
 
+## Price Level Map (Pivot Zones + Fibonacci)
+
+Run `market_data.py levels <TICKER> [period]` for a mechanical map: pivot-based support/resistance zones (fractal pivots clustered within 1.5%, touch-counted) and Fibonacci retracements of the period's major swing.
+
+**Framing rule: levels are context zones, NOT signals.**
+
+| Use | How |
+|-----|-----|
+| Place T1/T2/T3 exit targets | Anchor at nearby resistance zones, not round numbers guessed from thin air |
+| Place stops / kill levels | Below the nearest multi-touch support zone, not at an arbitrary % |
+| Judge pullback depth | 38.2–50% retrace of the major swing = normal pullback; > 61.8% = structure at risk |
+| Size reactions | A bounce AT a zone still needs regime + volume confirmation before it means anything |
+
+**Rules:**
+1. Zones with more touches matter more than single-pivot levels.
+2. The regime (Step 0) decides how a level behaves — in downtrends support zones get cut, in uptrends they hold. Never quote a level without the regime.
+3. Fibonacci levels have no independent predictive evidence; use them only as widely-watched convergence points where other traders may act.
+4. A level never overrides a kill trigger. Thesis kill conditions are fundamental; levels are geometry.
+
+---
+
 ## Growth-Adjusted Valuation Gate
 
 Before flagging a "high P/E" as a concern, run this check:
@@ -132,3 +153,4 @@ Before flagging a "high P/E" as a concern, run this check:
 - **Certificate Entry:** RSI < 30 + MACD + market filter already regime-aware (good)
 - **Watchlist Check:** "Technical: Improving/Stable/Deteriorating" must be regime-contextualized
 - **Bear Case Research:** High RSI is NOT a bear case unless accompanied by divergence + fundamental deterioration
+- **Exit Strategy / Levels:** Anchor T1/T2/T3 and stops on `levels` pivot zones; see Price Level Map above
