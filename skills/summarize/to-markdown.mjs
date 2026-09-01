@@ -18,7 +18,7 @@
  *   node to-markdown.mjs ./spec.pdf --summary --prompt "Extract API endpoints and auth details."
  */
 
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 import { tmpdir } from 'os';
 import { spawnSync } from 'child_process';
@@ -38,6 +38,17 @@ function isUrl(s) {
   return /^https?:\/\//i.test(s);
 }
 
+function isYouTube(s) {
+  if (!isUrl(s)) return false;
+  try {
+    const u = new URL(s);
+    const h = u.hostname.replace(/^www\.|^m\./, '');
+    return h === 'youtube.com' || h === 'youtu.be' || h === 'music.youtube.com';
+  } catch {
+    return false;
+  }
+}
+
 function ensureDir(path) {
   mkdirSync(path, { recursive: true });
 }
@@ -49,6 +60,8 @@ function safeName(s) {
 function getInputBasename(s) {
   if (isUrl(s)) {
     const u = new URL(s);
+    const v = u.searchParams.get('v');
+    if (isYouTube(s) && v) return safeName(`yt-${v}`);
     const b = basename(u.pathname);
     return safeName(b || 'document');
   }
@@ -149,6 +162,99 @@ function runMarkitdown(arg) {
   return result.stdout;
 }
 
+function runYtDlp(args, { timeoutMs = 180_000 } = {}) {
+  // Use uvx: the locally installed yt-dlp goes stale and breaks on YouTube changes
+  // ("The page needs to be reloaded" / SABR streaming errors).
+  const result = spawnSync('uvx', ['yt-dlp', ...args], {
+    encoding: 'utf-8',
+    maxBuffer: 50 * 1024 * 1024,
+    timeout: timeoutMs
+  });
+  if (result.error) {
+    throw new Error(`Failed to run uvx yt-dlp: ${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    const stderr = (result.stderr || '').trim().split('\n').slice(-3).join('\n');
+    throw new Error(`yt-dlp failed${stderr ? `:\n${stderr}` : ''}`);
+  }
+  return result.stdout;
+}
+
+function vttToText(vtt) {
+  const seen = new Set();
+  const out = [];
+  for (const line of vtt.split(/\r?\n/)) {
+    if (!line.trim() || line.startsWith('WEBVTT') || line.startsWith('Kind:') || line.startsWith('Language:') || line.includes('-->')) continue;
+    const text = line.replace(/<[^>]+>/g, '').trim();
+    if (text && !seen.has(text)) {
+      seen.add(text);
+      out.push(text);
+    }
+  }
+  return out.join(' ');
+}
+
+function convertYouTube(url) {
+  // 1) Metadata (title, channel, description, available subtitle languages)
+  const info = JSON.parse(runYtDlp(['-J', '--skip-download', url]));
+
+  // 2) Pick subtitle language: manual subs > auto '-orig' (actually spoken) > video language > 'en' > first original
+  const manual = Object.keys(info.subtitles || {});
+  const auto = Object.keys(info.automatic_captions || {});
+  let lang = null, isAuto = false;
+  if (manual.length) {
+    lang = manual[0];
+  } else if (auto.length) {
+    lang = auto.find(l => l.endsWith('-orig'))
+      || [info.language, 'en'].find(l => l && auto.includes(l))
+      || auto.find(l => !l.includes('-'))
+      || auto[0];
+    isAuto = true;
+  }
+
+  let transcript = '';
+  if (lang) {
+    const dir = join(tmpdir(), 'pi-summarize-out');
+    ensureDir(dir);
+    const outTpl = join(dir, `yt-${info.id || Date.now().toString(36)}`);
+    const subArgs = ['--skip-download', '--sub-format', 'vtt', '--sub-langs', lang, '-o', outTpl, url];
+    // Retry: YouTube subtitle endpoint intermittently 429s.
+    let lastErr;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        runYtDlp(isAuto ? ['--write-auto-subs', ...subArgs] : ['--write-subs', ...subArgs]);
+        lastErr = null;
+        break;
+      } catch (e) {
+        lastErr = e;
+        if (attempt < 2) spawnSync('sleep', ['5']);
+      }
+    }
+    if (lastErr) throw lastErr;
+    const vttPath = `${outTpl}.${lang}.vtt`;
+    if (existsSync(vttPath)) {
+      transcript = vttToText(readFileSync(vttPath, 'utf-8'));
+    }
+  }
+
+  const runtime = info.duration_string || `${Math.round((info.duration || 0) / 60)} min`;
+  return `# ${info.title}
+
+**Source:** ${url}
+**Channel:** ${info.channel || info.uploader || 'unknown'}
+**Uploaded:** ${info.upload_date || 'unknown'}
+**Runtime:** ${runtime}
+**Subtitle language:** ${lang || 'none available'}${isAuto ? ' (auto-generated)' : ''}
+
+## Description
+
+${(info.description || '').trim() || '(none)'}
+
+## Transcript
+
+${transcript || '(no subtitles available for this video)'}`;
+}
+
 function summarizeWithPi(markdown, { mdPathForNote = null, extraPrompt = null } = {}) {
   const MAX_CHARS = 140_000;
   let truncated = false;
@@ -210,7 +316,7 @@ async function main() {
     throw new Error(`File not found: ${input}`);
   }
 
-  const md = runMarkitdown(input);
+  const md = isYouTube(input) ? convertYouTube(input) : runMarkitdown(input);
 
   // If the user requested an explicit output file, write it there.
   if (outPath) {
