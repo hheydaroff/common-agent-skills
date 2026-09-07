@@ -1,6 +1,6 @@
 ---
 name: pr-create
-description: "Write and raise a pull request on GitHub or Bitbucket Cloud: detects the provider from the git remote, drafts a convention-aware title and body from the diff, gets user approval, then pushes and opens the PR via gh CLI or the Bitbucket REST API. Use when the user says 'create/open/raise a PR', 'pull request', 'submit this for review', 'open a PR against GitHub/Bitbucket'."
+description: "Write and raise a pull request on GitHub or Bitbucket Cloud, and work its review threads: detects the provider from the git remote, drafts a convention-aware title and body from the diff, gets user approval, then pushes and opens the PR via gh CLI or the Bitbucket REST API; on Bitbucket also reads, replies to, resolves, reopens and deletes PR comments. Use when the user says 'create/open/raise a PR', 'pull request', 'submit this for review', 'open a PR against GitHub/Bitbucket', 'reply to the review comments', or 'resolve the PR threads'."
 ---
 
 # PR Create
@@ -98,6 +98,24 @@ and ask the user whether to update it instead. Other errors: show and stop — d
 - Inspect: `scripts/bb.sh view <ws> <slug> <pr_id>`
 - Amend title/body/reviewers: `scripts/bb.sh update <ws> <slug> <pr_id> [--title ...] [--body-file ...]`
 - Merge: `scripts/bb.sh merge <ws> <slug> <pr_id> [squash|merge_commit|fast_forward]` — confirm with the user first.
+
+### Review threads
+
+```bash
+scripts/bb.sh comments <ws> <slug> <pr_id>                       # OPEN/RESOLVED threads with ids
+scripts/bb.sh reply    <ws> <slug> <pr_id> <comment_id> --body "..."   # or --body-file
+scripts/bb.sh resolve  <ws> <slug> <pr_id> <comment_id>
+scripts/bb.sh comment  <ws> <slug> <pr_id> --body "..." [--path F --from N]  # new thread
+```
+
+Addressing review feedback: read the threads, fix the code, push, then reply to each thread
+with what changed (commit/line, not "done") and resolve it. Resolve only threads you actually
+addressed — if a thread is a question you cannot answer, reply and leave it open, and tell the
+user which ones those are. Resolving does not clear a reviewer's "changes requested" state;
+only that reviewer re-approving does, so do not report the review as passed.
+
+(GitHub review threads are a GraphQL mutation, not `gh pr` — out of scope here; the commands
+above are Bitbucket Cloud only.)
 
 ## Reference Files
 

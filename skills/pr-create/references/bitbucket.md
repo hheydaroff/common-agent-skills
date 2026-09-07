@@ -42,7 +42,44 @@ scripts/bb.sh create <workspace> <repo_slug> \
   [--close-source-branch] [--reviewer <account-uuid>]...
 scripts/bb.sh update <workspace> <repo_slug> <pr_id> [--title T] [--body-file F] [--reviewer UUID]...
 scripts/bb.sh merge <workspace> <repo_slug> <pr_id> [merge_commit|squash|fast_forward]
+
+# Review threads
+scripts/bb.sh comments <workspace> <repo_slug> <pr_id>
+scripts/bb.sh comment  <workspace> <repo_slug> <pr_id> (--body T | --body-file F) [--path P] [--from N] [--to N]
+scripts/bb.sh reply    <workspace> <repo_slug> <pr_id> <comment_id> (--body T | --body-file F)
+scripts/bb.sh resolve  <workspace> <repo_slug> <pr_id> <comment_id>
+scripts/bb.sh reopen   <workspace> <repo_slug> <pr_id> <comment_id>
+scripts/bb.sh delete   <workspace> <repo_slug> <pr_id> <comment_id>
 ```
+
+### Review threads
+
+`comments` prints one block per thread: `[id] OPEN|RESOLVED  <file:line|general>  author  date`,
+then the text, then each reply as `+--[id] author date: text`. The `[id]` is what
+`reply`/`resolve`/`reopen`/`delete` take — a reply id works too, both commands walk up
+to the thread root first.
+
+- `comment` starts a thread. With `--path` it is anchored to the PR diff:
+  `--from N` = line in the **source** branch version, `--to N` = line in the **destination**
+  version (added lines → `--from`, removed lines → `--to`). Without `--path` it is a
+  general PR comment.
+- `reply` inherits the thread's position; it takes no `--path`/`--from`/`--to`.
+- `resolve` / `reopen` toggle the thread's resolution (409 if it is already in that state).
+- `delete` blanks a comment. Bitbucket keeps it as a tombstone when it still anchors a
+  live reply; `comments` hides tombstones that anchor nothing.
+- Resolving threads does **not** clear a reviewer's "changes requested" state — only that
+  reviewer re-approving does. Say so instead of implying the review is finished.
+
+### Comment API gotchas (all verified against REST 2.0)
+
+| Do | Not |
+|---|---|
+| Reply = `POST .../pullrequests/{id}/comments` with `{"parent":{"id":<root>}}` | `POST .../comments/{comment_id}` — not a route; returns 403 "This endpoint does not support token-based authentication" |
+| Resolve = `POST .../comments/{id}/resolve` (reopen = `DELETE` same path) | `PUT .../comments/{id}` with `{"resolved":true}` — 400 `extra keys not allowed` |
+| Read resolution from the comment's **`resolution`** object (absent/null = open) | a `resolved` boolean — the API never returns one |
+
+Resolve works on general comments as well as inline ones. Workspace/project access tokens
+can do all of the above.
 
 - `create` prints `PR #<id>: <url>` on success, error JSON on failure (non-zero exit).
 - If `create` fails with **409**, an open PR already exists for that source→destination — find it with `list ... OPEN`, then `view`/`update` it instead of creating a new one.
@@ -60,7 +97,8 @@ scripts/bb.sh merge <workspace> <repo_slug> <pr_id> [merge_commit|squash|fast_fo
 | 401 | Wrong username with app password (must be Bitbucket username, not email); or expired token |
 | 403 | Token/app password missing `pullrequest:write` scope |
 | 404 on create | Source branch not pushed, or wrong workspace/slug |
-| 409 | A PR already exists for that source→destination pair — find it with `list ... OPEN` |
+| 409 | A PR already exists for that source→destination pair — find it with `list ... OPEN`. On `resolve`/`reopen`: the thread is already in that state |
+| 403 "does not support token-based authentication" | Wrong route (e.g. `POST .../comments/{id}` for a reply) — see the gotchas table above |
 | 429 | Rate limited — wait ~1 min and retry once |
 
 Note: `GET /2.0/user` fails with workspace/repo access tokens (tokens have no user
