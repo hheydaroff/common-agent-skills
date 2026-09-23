@@ -16,14 +16,29 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="$REPO_DIR/skills"
 
-# Locate the `yaml` package pi bundles, so we validate exactly like pi does.
-# Searches macOS (Homebrew) and Linux (~/.local/lib) install paths.
+# Locate a real `yaml` parser, so we validate exactly like pi does.
+# Repo-local node_modules first (that's what CI installs), then pi's bundled copy
+# on macOS (Homebrew) and Linux (~/.local/lib).
 # The `|| true` guards against `find` exiting non-zero when some paths don't exist.
 YAML_PKG="$(find \
+  "$REPO_DIR/node_modules" \
   /opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent \
   /home/"$USER"/.local/lib/node_modules/@earendil-works/pi-coding-agent \
   ~/.pi/agent/npm \
   2>/dev/null -type d -path '*node_modules/yaml' | head -1 || true)"
+
+# Fail closed when a real parser is required but missing. Without this the script
+# silently drops to the naive regex fallback below, which by its own admission
+# catches unquoted-colon frontmatter errors "poorly" — i.e. the exact bug class
+# this check exists to catch. A green run that validated nothing is worse than a
+# red one, so refuse instead of degrading.
+if [ -z "$YAML_PKG" ] && [ "${REQUIRE_YAML_PKG:-0}" = "1" ]; then
+  echo "ERROR: REQUIRE_YAML_PKG=1 but no 'yaml' parser was found." >&2
+  echo "       Refusing to fall back to the naive parser — it misses unquoted-colon" >&2
+  echo "       frontmatter errors, which is the whole point of this check." >&2
+  echo "       Fix: npm install --no-save yaml   (creates $REPO_DIR/node_modules/yaml)" >&2
+  exit 1
+fi
 
 node - "$SKILLS_DIR" "$YAML_PKG" <<'NODE'
 const fs = require("fs");

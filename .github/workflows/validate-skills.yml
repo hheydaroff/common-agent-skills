@@ -1,0 +1,35 @@
+name: validate-skills
+
+# Single job, sequential steps, no `needs` and no `if:` — so there is no way for a
+# skipped or silently-omitted job to report green. Fail-closed by construction.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # validate-skills.sh looks for a real YAML parser. pi is not installed here,
+      # so without this the script would fall back to its naive regex parser and
+      # the check would pass while validating almost nothing.
+      - name: Install the real YAML parser
+        run: npm install --no-save --no-audit --no-fund yaml
+
+      # REQUIRE_YAML_PKG=1 makes the script exit 1 rather than degrade if the
+      # parser is somehow missing. Never remove this env var.
+      - name: Validate skill frontmatter and names
+        run: REQUIRE_YAML_PKG=1 bash validate-skills.sh
+
+      - name: Shell syntax check
+        run: |
+          bash -n validate-skills.sh
+          bash -n deploy.sh
+          bash -n setup.sh
