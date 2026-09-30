@@ -1,6 +1,6 @@
 ---
 name: pr-create
-description: "Write and raise a pull request on GitHub or Bitbucket Cloud, and work its review threads: detects the provider from the git remote, drafts a convention-aware title and body from the diff, gets user approval, then pushes and opens the PR via gh CLI or the Bitbucket REST API; on Bitbucket also reads, replies to, resolves, reopens and deletes PR comments. Use when the user says 'create/open/raise a PR', 'pull request', 'submit this for review', 'open a PR against GitHub/Bitbucket', 'reply to the review comments', or 'resolve the PR threads'."
+description: "Write and raise a pull request on GitHub or Bitbucket Cloud, and work its review threads: detects the provider from the git remote, drafts a convention-aware title and body from the diff, gets user approval, then pushes and opens the PR via gh CLI or the Bitbucket REST API; can also rewrite the description of an already-open PR; on Bitbucket also reads, replies to, resolves, reopens and deletes PR comments. Use when the user says 'create/open/raise a PR', 'pull request', 'submit this for review', 'open a PR against GitHub/Bitbucket', 'write/rewrite the PR description', 'reply to the review comments', or 'resolve the PR threads'."
 ---
 
 # PR Create
@@ -62,7 +62,8 @@ Convention checks:
 **Body**
 - Lead with *why*: the problem and the decisions a reviewer can't reconstruct from the diff (rejected alternatives, scope dropped, constraints). The diff already shows *what* — don't restate it.
 - Include how it was tested (commands, CI evidence). Link issues: `Closes #N` / `Fixes #N`.
-- Follow the repo PR template when present. Default to prose; add `##` sections only when length earns them.
+- Follow the repo PR template when present — it is the source of truth for structure.
+- No repo template? For a small single-concern change, prose is right; add `##` sections only when length earns them. For a structural or multi-file change, use [references/pr-body-template.md](references/pr-body-template.md): one-sentence *Why the change*, 1–3 *Special things to note* bullets (`- None.` when empty), and a *Change outline* built from structural views (`diff`, file/component/call trees, pseudocode) rather than a file-by-file changelog.
 - No AI/bot attribution trailers unless the user asks.
 
 ## Step 4 — Confirm with user
@@ -93,6 +94,34 @@ Report the PR number and URL. If creation fails with 409, a PR for this branch
 already exists — find it (`bb.sh list <ws> <slug> OPEN` / `gh pr list --head <branch>`)
 and ask the user whether to update it instead. Other errors: show and stop — do not retry blindly.
 
+## Rewrite the description of an already-open PR
+
+Use when the PR exists and only its body needs work — skip Step 1's branch gates
+and Step 5's push/create. Step 4's approval still applies.
+
+```bash
+git branch --show-current
+```
+
+**GitHub:**
+```bash
+gh pr view --json url,number,title,state,baseRefName,headRefName   # confirm the PR exists
+gh pr diff                                                          # the real source of truth
+gh pr edit <number> --body-file /tmp/pr-body-<branch>.md
+```
+
+**Bitbucket Cloud:**
+```bash
+scripts/bb.sh view   <ws> <slug> <pr_id>
+scripts/bb.sh update <ws> <slug> <pr_id> --body-file /tmp/pr-body-<branch>.md
+```
+
+Gather context the same way as Step 2 (ticket, full diff, enough surrounding code
+to understand behaviour and ownership), draft against the repo template or
+[references/pr-body-template.md](references/pr-body-template.md), **show the user
+the new body and get approval before writing it** — this overwrites whatever a
+human put there. Confirm the update succeeded and report the PR URL.
+
 ## Follow-ups on an existing PR (Bitbucket)
 
 - Inspect: `scripts/bb.sh view <ws> <slug> <pr_id>`
@@ -121,4 +150,5 @@ above are Bitbucket Cloud only.)
 
 | File | When to load |
 |------|--------------|
+| [references/pr-body-template.md](references/pr-body-template.md) | Drafting a body and the repo has no PR template, or rewriting an existing PR's description |
 | [references/bitbucket.md](references/bitbucket.md) | Remote is bitbucket.org — auth setup, script usage, API errors |
