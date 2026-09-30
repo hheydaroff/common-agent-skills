@@ -1,6 +1,6 @@
 ---
 name: visual-explainer
-description: Generate self-contained HTML visual explanations — diagrams, architecture overviews, diff/plan reviews, project recaps, comparison tables, and slide decks. Use when the output is inherently visual (a 4+ row or 3+ column table, a flowchart, an architecture map), when the user says "draw/diagram/visualize this", "make a visual doc", or "slide deck", or when terminal ASCII would be unreadable. Optional smart Europe brand theme.
+description: Explain something visually — first by picking the smallest shape that carries the point (pseudocode, call tree, component tree, file tree, diff block, Mermaid in chat), and only then by generating a self-contained HTML page (diagrams, architecture overviews, diff/plan reviews, project recaps, comparison tables, slide decks). Use when the output is inherently visual, when the user says "show me", "draw/diagram/visualize this", "make a visual doc", or "slide deck", or when terminal ASCII would be unreadable. Optional smart Europe brand theme.
 license: MIT
 metadata:
   author: nicobailon (adapted)
@@ -10,15 +10,37 @@ metadata:
 
 # Visual Explainer
 
-Generate self-contained HTML pages that explain systems, code changes, plans, data, and technical concepts visually. Use this skill for diagram requests, architecture overviews, diff/plan reviews, project recaps, comparison tables, slide decks, and any visual explanation.
+Explain systems, code changes, plans, data, and technical concepts visually. Use this skill for diagram requests, architecture overviews, diff/plan reviews, project recaps, comparison tables, slide decks, and any visual explanation. Prefer the smallest shape that carries the point — often a fenced block in chat — and generate a self-contained HTML page only when the content needs one.
 
 ## Trigger and delivery rules
 
-- Prefer an HTML page over terminal ASCII when the output is inherently visual.
-- If a table would have 4+ rows or 3+ columns, render it as HTML and give only a short chat summary.
+- Answer in chat when a fenced block carries the point. Write an HTML file only when the content needs layout, colour-coded density, zoom/pan, side-by-side comparison, or a shareable artifact. See "Smallest view first" below.
+- Prefer a visual over terminal ASCII art when the output is inherently visual.
+- When you are producing a page and a table would have 4+ rows or 3+ columns, render it as an HTML `<table>` and give only a short chat summary.
 - Write files to `docs/diagrams/` inside the current repo/project (or an explicit path the user gives). Create the directory if it doesn't exist. Use descriptive filenames. When there is no repo (e.g. an ad-hoc request outside any project), fall back to `~/.agent/diagrams/`.
 - Open generated pages in the browser when the harness allows it; otherwise report the file path.
 - The final page must be a complete self-contained HTML document, including embedded CSS and any needed JS.
+
+## Smallest view first
+
+Climb this ladder and stop at the first rung that carries the point. Only the
+bottom rung writes a file.
+
+| Rung | Use for | Where |
+|---|---|---|
+| Pseudocode block | logic, algorithm, event handler | chat |
+| Call tree | runtime control flow | chat |
+| Component tree | UI structure, hooks, state, package boundaries | chat |
+| Shallow file tree | file responsibility, broad refactor | chat |
+| `diff` block | what changes to a shape that already exists | chat |
+| Full code block | mostly-new shape, or a copyable target | chat |
+| Mermaid | interaction, control flow, data flow, topology | chat or page |
+| HTML page | layout, state comparison, matrices, decks, anything too dense for Mermaid | file |
+
+Escalate rather than pre-empt: start cheap, and only reach for the page when the
+chat shapes demonstrably do not fit. Worked examples for every rung, the
+diff-vs-full-block rule, and the placement/restraint rules are in
+`./references/inline-shapes.md`.
 
 ## Reference routing
 
@@ -26,6 +48,7 @@ Read only the references needed for the current output:
 
 | Need | Read |
 |---|---|
+| Explaining in chat: pseudocode, call/component/file trees, diff shapes, restraint rules | `./references/inline-shapes.md` |
 | Text-heavy architecture/cards | `./templates/architecture.html` |
 | Mermaid flowcharts, sequence, ER, state, class, C4, data flow | `./templates/mermaid-flowchart.html`, Mermaid sections in `./references/libraries.md` |
 | Data tables, comparisons, audits | `./templates/data-table.html` |
@@ -37,6 +60,8 @@ Read only the references needed for the current output:
 | smart / smart Europe brand styling | `./references/smart-brand.md` |
 
 ## Choose the representation
+
+Once a page is the right medium, choose its representation:
 
 | Content | Default representation |
 |---|---|
@@ -93,6 +118,7 @@ If `surf` (surf-cli) is available, generated images may be embedded as base64 fo
 
 Before delivery, verify:
 
+- the smallest view was used — if a chat shape (pseudocode, call/component/file tree, `diff`, Mermaid) carries the point, deliver that instead and skip the rest of this checklist;
 - complete HTML document;
 - output written to `docs/diagrams/` in the repo (or the requested path);
 - no console errors when opened;

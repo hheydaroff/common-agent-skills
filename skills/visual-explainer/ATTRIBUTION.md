@@ -3,6 +3,11 @@
 `visual-explainer` is adapted from the MIT-licensed
 [visual-explainer](https://github.com/nicobailon/visual-explainer) by nicobailon.
 
+The smallest-view-first ladder and the inline code-shape sketches
+(`references/inline-shapes.md`, plus the ladder in `SKILL.md`) are adapted from
+the MIT-licensed [`show-me`](https://github.com/humanlayer/skills/tree/main/plugins/show-me)
+skill by [humanlayer](https://humanlayer.dev).
+
 ## Vendored verbatim
 - `references/css-patterns.md`, `references/libraries.md`,
   `references/responsive-nav.md`, `references/slide-patterns.md`
@@ -20,6 +25,9 @@
   that Pi extension is not vendored).
 - Added `references/smart-brand.md` — an optional smart Europe brand theme
   (tokens from `TEMPLATE_smart_PowerPoint_Master_2024.pptx`).
+- Added `references/inline-shapes.md` and the "Smallest view first" ladder in
+  `SKILL.md` — chat-first shapes (pseudocode, call/component/file trees, `diff`)
+  that gate when an HTML file is worth writing at all. From humanlayer/show-me.
 
 ## Not vendored
 - `extension.ts` (Pi native tool) — this repo deploys skills only.
