@@ -558,7 +558,7 @@ This skill ships with cached copies of the n8n node registries. **Read these fil
 
 - **`references/node-registry-official.json`** — Index of all built-in n8n nodes (556+)
 - **`references/node-registry-community.json`** — Index of community-contributed nodes (25+)
-- **`references/node-registry-properties.jsonl`** — Full node properties/parameters (one JSON line per node). **NOT shipped by default** (it is ~5 MB). For node *properties*, prefer the live MCP (`n8n_mcp_search_nodes` → `n8n_mcp_get_node_types`); generate the offline cache only if you need it by running `bash scripts/refresh-node-registry.sh`.
+- **`references/node-registry-properties.jsonl`** — Full node properties/parameters (one JSON line per node). **NOT shipped by default** (it is ~5 MB). For node *properties*, prefer the live MCP (`mcp__n8n_mcp__search_nodes` → `mcp__n8n_mcp__get_node_types`); generate the offline cache only if you need it by running `bash scripts/refresh-node-registry.sh`.
 
 #### Index files — for finding the right node
 
@@ -591,7 +591,7 @@ This skill ships with cached copies of the n8n node registries. **Read these fil
 
 #### Properties file — for configuring a node correctly
 
-**Preferred (live MCP):** once you know the node `name`, call `n8n_mcp_get_node_types` for its TypeScript definitions/parameters — always current, nothing to cache.
+**Preferred (live MCP):** once you know the node `name`, call `mcp__n8n_mcp__get_node_types` for its TypeScript definitions/parameters — always current, nothing to cache.
 
 **Offline fallback:** the properties cache is not shipped. Generate it with `bash scripts/refresh-node-registry.sh`, then **grep the properties file** to get its available parameters:
 
@@ -670,7 +670,7 @@ If the workflow uses **multiple community packages**, list them all in one stick
 3. If found → use `name` and `version`
 4. If NOT found → read `references/node-registry-community.json` → search by displayName/name
 5. If found in community → use the type + add a `sticky()` note with the `packageName`
-6. Grep `references/node-registry-properties.jsonl` (or call `n8n_mcp_get_node_types`) for the node name → get its available parameters
+6. Grep `references/node-registry-properties.jsonl` (or call `mcp__n8n_mcp__get_node_types`) for the node name → get its available parameters
 7. If NOT found in cache → run `bash scripts/refresh-node-registry.sh` to update, then search again
 8. If NOT found anywhere → tell the user the node doesn't exist, do not invent one
 
@@ -709,7 +709,7 @@ These fundamental node **type names** are always available. However, **always lo
 
 ## Common Node Configuration Patterns
 
-These examples show **properly configured** nodes with parameters. To discover all available parameters, call `n8n_mcp_get_node_types` (live MCP) or grep the generated `references/node-registry-properties.jsonl` (run `scripts/refresh-node-registry.sh` first).
+These examples show **properly configured** nodes with parameters. To discover all available parameters, call `mcp__n8n_mcp__get_node_types` (live MCP) or grep the generated `references/node-registry-properties.jsonl` (run `scripts/refresh-node-registry.sh` first).
 
 ### Set / Edit Fields Node
 

@@ -24,20 +24,20 @@ If unsure, ask. The two pillars share nothing but the n8n mental model.
 ## Pillar 1 — Build & manage workflows
 
 **Default path = the connected MCP.** This environment has n8n's official **Workflow-SDK
-MCP** (`n8n_mcp_*` tools): you write `@n8n/workflow-sdk` code, validate it, and create the
+MCP** (`mcp__n8n_mcp__*` tools): you write `@n8n/workflow-sdk` code, validate it, and create the
 workflow from that code. Always start with [mcp-workflow-tools.md](references/mcp-workflow-tools.md)
 for the exact tool flow, then use the SDK references to write the code. With no MCP, use the
 local `@n8n/workflow-sdk` (npm + `tsx`) per [workflow-sdk-overview.md](references/workflow-sdk-overview.md).
 
 **Golden rule: never guess node `type`/`version`.** Look them up — live via
-`n8n_mcp_search_nodes` + `n8n_mcp_get_node_types`, or offline in
+`mcp__n8n_mcp__search_nodes` + `mcp__n8n_mcp__get_node_types`, or offline in
 `references/node-registry-official.json` / `node-registry-community.json`.
 
 ### Workflow reference routing
 
 | File | When to load |
 |------|--------------|
-| [mcp-workflow-tools.md](references/mcp-workflow-tools.md) | **Start here for workflows.** Live `n8n_mcp_*` build/edit/publish/execute/debug flow + tool-name mapping |
+| [mcp-workflow-tools.md](references/mcp-workflow-tools.md) | **Start here for workflows.** Live `mcp__n8n_mcp__*` build/edit/publish/execute/debug flow + tool-name mapping |
 | [workflow-sdk-overview.md](references/workflow-sdk-overview.md) | SDK concepts, node lookup rules, full API quick-reference, local (no-MCP) setup |
 | [workflow-sdk-building.md](references/workflow-sdk-building.md) | Creating a workflow, settings, JSON import/export |
 | [workflow-sdk-nodes-connections.md](references/workflow-sdk-nodes-connections.md) | Node factories, subnodes, connection patterns, credentials, node-registry usage |

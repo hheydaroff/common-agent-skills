@@ -15,7 +15,7 @@ This skill uses progressive disclosure. The SKILL.md covers the full workflow, d
 - `references/workflow-sdk-plugins.md` — Plugin system, type generation, Zod schemas, and extensibility
 - `references/node-registry-official.json` — Cached registry of all 556 official n8n nodes (name, version, description)
 - `references/node-registry-community.json` — Cached registry of community nodes (name, version, packageName)
-- `references/node-registry-properties.jsonl` — Node properties/parameters (one JSON line per node, grep for a specific node). **Not shipped by default** — prefer `n8n_mcp_get_node_types`, or generate with `scripts/refresh-node-registry.sh`.
+- `references/node-registry-properties.jsonl` — Node properties/parameters (one JSON line per node, grep for a specific node). **Not shipped by default** — prefer `mcp__n8n_mcp__get_node_types`, or generate with `scripts/refresh-node-registry.sh`.
 
 Read the appropriate reference file before writing any code.
 
@@ -52,7 +52,7 @@ The SDK is a pure TypeScript/JavaScript library — no build step is required. `
 **DO NOT invent or guess node type identifiers.** n8n has hundreds of nodes, each with a specific `type` string (e.g., `n8n-nodes-base.slack`). Using a wrong or made-up type produces a workflow that fails in n8n.
 
 **Always look up the real node type** before using it. **Prefer the live MCP** when one is
-connected: `n8n_mcp_search_nodes` to find the node, `n8n_mcp_get_node_types` for its exact
+connected: `mcp__n8n_mcp__search_nodes` to find the node, `mcp__n8n_mcp__get_node_types` for its exact
 parameters/version (always current). The offline registry cache below is the fallback when
 no MCP is available. See [mcp-workflow-tools.md](mcp-workflow-tools.md).
 
@@ -63,7 +63,7 @@ This skill ships small index caches for offline node lookup. The large propertie
 
 - **`references/node-registry-official.json`** — Index of all 556 built-in n8n nodes (name, version, description)
 - **`references/node-registry-community.json`** — Index of community-contributed nodes (name, version, packageName)
-- **`references/node-registry-properties.jsonl`** — Full node properties/parameters (one JSON line per node). **NOT shipped**; run the refresh script to generate it, or use `n8n_mcp_get_node_types` instead.
+- **`references/node-registry-properties.jsonl`** — Full node properties/parameters (one JSON line per node). **NOT shipped**; run the refresh script to generate it, or use `mcp__n8n_mcp__get_node_types` instead.
 
 #### Index files (for finding the right node)
 
@@ -158,7 +158,7 @@ const installNote = sticky(
 3. **If not found in official nodes**, read `references/node-registry-community.json` and search there
 4. **If still not found**, run `bash scripts/refresh-node-registry.sh` to update the cache, then search again
 5. **Use the exact `name` and `version`** from the registry in your `node()` / `trigger()` call
-6. **Grep `references/node-registry-properties.jsonl`** (or call `n8n_mcp_get_node_types`) for the node name to get its available parameters and configure it correctly
+6. **Grep `references/node-registry-properties.jsonl`** (or call `mcp__n8n_mcp__get_node_types`) for the node name to get its available parameters and configure it correctly
 7. **If using a community node**, add a `sticky()` note listing the required npm package
 8. **If no matching node exists anywhere**, tell the user — do not invent a type
 

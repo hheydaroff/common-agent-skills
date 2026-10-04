@@ -165,7 +165,7 @@ function runMarkitdown(arg) {
 function runYtDlp(args, { timeoutMs = 180_000 } = {}) {
   // Use uvx: the locally installed yt-dlp goes stale and breaks on YouTube changes
   // ("The page needs to be reloaded" / SABR streaming errors).
-  const result = spawnSync('uvx', ['yt-dlp', ...args], {
+  const result = spawnSync('uvx', ['yt-dlp', '--js-runtimes', 'node', ...args], {
     encoding: 'utf-8',
     maxBuffer: 50 * 1024 * 1024,
     timeout: timeoutMs

@@ -64,11 +64,12 @@ function parseFrontmatter(text) {
   return obj;
 }
 
-const dirs = fs.readdirSync(skillsDir, { withFileTypes: true })
-  .filter((d) => d.isDirectory())
-  .map((d) => d.name);
+const entries = fs.readdirSync(skillsDir, { withFileTypes: true });
+const dirs = entries.filter((d) => d.isDirectory()).map((d) => d.name);
+// Loose files in skills/ are invisible to the per-dir check (a stray skills/SKILL.md once broke deploy).
+const strays = entries.filter((d) => !d.isDirectory() && d.name !== ".DS_Store").map((d) => d.name);
 
-const errors = [];
+const errors = strays.map((f) => `skills/${f}: stray file (only skill directories belong in skills/)`);
 const names = new Map(); // declared name -> [dirs]
 
 for (const dir of dirs) {

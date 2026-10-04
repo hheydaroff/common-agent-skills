@@ -42,9 +42,7 @@ git add -A && git commit -m "add: skill-name" && git push
 
 ## Included Skills
 
-| Skill | Description |
-|---|---|
-| `skill-manager` | Teaches any agent how to add, edit, deploy, and manage skills in this repo |
+Run `ls skills/` (each directory is one skill; its `SKILL.md` frontmatter has the description).
 
 ## Adding Your Own Skills
 

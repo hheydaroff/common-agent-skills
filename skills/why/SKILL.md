@@ -63,7 +63,7 @@ Capture this as **seed context** (file paths, symbols, commits, PR numbers, link
 
 ### Discover
 
-Enumerate connected MCP servers with `mcp({})`. For each server, use `mcp({ server })` / `mcp({ search })` to inspect its tools, then map it to **one** evidence category:
+Enumerate connected MCP servers from a codemode script: group `ALL_TOOLS` by the `mcp__<server>__` prefix, then use `searchTools(query)` / `describeNamespace("mcp__<server>")` to inspect each server's tools, then map it to **one** evidence category:
 
 1. Source control history (always available via git + `gh`)
 2. Issue / ticket tracker
