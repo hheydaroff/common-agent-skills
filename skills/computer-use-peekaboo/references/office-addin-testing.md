@@ -162,3 +162,16 @@ way to get real DOM/console access in the desktop host.
 Keyboard-only users hit a real bug in the web host: focus cannot enter `FlexPane_AddinsPane`
 sequentially. That is platform-controlled, not something the add-in can fix — worth knowing
 before writing a keyboard-driven web test.
+
+## Real-host proof recipe (what a proof lane does)
+
+Used for the Slaide D-02/MAC-4/FINAL-MAC runs; unit tests and mocks are not host evidence.
+
+1. **Preflight**: GUI session unlocked (`ioreg -n Root -d1 | grep CGSSessionScreenIsLocked`; locked → report the rows as pending with the exact clicks, do not guess). List the user's open documents first (`osascript … get name of every presentation` behind a timeout) and only open/close your own.
+2. **Every `osascript`/`peekaboo` call behind a timeout** (macOS has no `timeout`; `perl -e 'alarm shift; exec @ARGV' 40 osascript …`). A bare call hung a lane for 25 minutes.
+3. **Fresh deck per run**, unique file name, kept inside the worktree (outside paths hit approval dialogs nobody can answer). Open with `open -a "Microsoft PowerPoint" <path>`, screenshot (`--mode screen --no-elements --path`, then actually *look*): no "PowerPoint found a problem" dialog, content renders.
+4. **Drive**: click Home → add-in button, click the composer, type the prompt, poll the response; `--foreground` on inputs, re-observe after each action, batch keystrokes without AX read-back for long scripts.
+5. **Judge from data, not pixels alone**: Postgres (`slaide.patches/apply_results/snapshots`), the add-in snapshot's `layoutNames`, AppleScript read-back (slide count, shape text). The Mac AppleScript dictionary cannot read layouts.
+6. **If the briefed sequence does not trigger the bug, force the condition** (e.g. delete the only slide on a layout so the host prunes it) and say so in the report.
+7. **A repair dialog is a FAIL** even if the slide looks fine after repair: record the dialog screenshot, diagnose from the artifact XML (rels, content types, shared parts), fix with a RED test, re-run.
+8. Close only your documents without saving; release the Mac lock on every path.
