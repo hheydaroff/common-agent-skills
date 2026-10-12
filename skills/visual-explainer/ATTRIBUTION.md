@@ -8,6 +8,10 @@ The smallest-view-first ladder and the inline code-shape sketches
 the MIT-licensed [`show-me`](https://github.com/humanlayer/skills/tree/main/plugins/show-me)
 skill by [humanlayer](https://humanlayer.dev).
 
+The isometric "anatomy" approach (`references/isometric-anatomy.md`) is adapted from the
+MIT-licensed [`anatomy`](https://github.com/wheresryan22/anatomy) skill by Ryan, pinned at
+commit `be2fa9b` (v1.1.0).
+
 ## Vendored verbatim
 - `references/css-patterns.md`, `references/libraries.md`,
   `references/responsive-nav.md`, `references/slide-patterns.md`
@@ -28,10 +32,20 @@ skill by [humanlayer](https://humanlayer.dev).
 - Added `references/inline-shapes.md` and the "Smallest view first" ladder in
   `SKILL.md` — chat-first shapes (pseudocode, call/component/file trees, `diff`)
   that gate when an HTML file is worth writing at all. From humanlayer/show-me.
+- Added `references/isometric-anatomy.md` — the anatomy approach distilled (object-is-the-
+  explanation, size gate, workflow, craft rules, card frame, verify-by-reading-PNGs) plus
+  an offline fallback. The kit, deep references and examples are fetched on demand at the
+  pinned commit by the new `scripts/anatomy-kit.sh`, not vendored.
+- Added a "capture PNGs and read every one" bullet to the final checklist, harvested from
+  anatomy's verification loop and applied to all pages, not just anatomy figures.
 
 ## Not vendored
 - `extension.ts` (Pi native tool) — this repo deploys skills only.
 - Per-harness `configs/` and marketplace `.claude-plugin/` manifests.
+- From anatomy: `kit/` (~700 KB of projection/solid/audit code), the eight `examples/`,
+  the beta 3D "figures that turn" mode, and `scripts/publish.mjs` (community gallery).
+  All reachable in the on-demand cache; nothing is published on the user's behalf.
 
 ## Upstream license
 MIT © nicobailon. See the upstream repository for the full license text.
+anatomy: MIT © 2026 Ryan. See the upstream repository for the full license text.

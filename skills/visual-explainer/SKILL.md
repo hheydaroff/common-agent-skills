@@ -42,6 +42,10 @@ chat shapes demonstrably do not fit. Worked examples for every rung, the
 diff-vs-full-block rule, and the placement/restraint rules are in
 `./references/inline-shapes.md`.
 
+A crafted isometric figure — the concept built as a real machine or instrument — is a
+page-rung variant with its own size gate, kit and verification loop; see
+`./references/isometric-anatomy.md`.
+
 ## Reference routing
 
 Read only the references needed for the current output:
@@ -58,6 +62,7 @@ Read only the references needed for the current output:
 | Prose-heavy pages | "Prose Page Elements" in `css-patterns.md`, typography sections in `libraries.md` |
 | Ready-made task recipes (diff review, plan review, recap, fact-check, slides) | `./references/workflows.md` |
 | smart / smart Europe brand styling | `./references/smart-brand.md` |
+| Crafted isometric figure: concept explained as a real machine/instrument | `./references/isometric-anatomy.md` (kit via `./scripts/anatomy-kit.sh`) |
 
 ## Choose the representation
 
@@ -70,6 +75,7 @@ Once a page is the right medium, choose its representation:
 | Text-heavy architecture, module internals, implementation plans | CSS grid cards, optionally with a Mermaid overview |
 | 15+ element architecture | Hybrid: small Mermaid overview + CSS detail cards |
 | Comparison/audit/status matrix | Semantic HTML `<table>` |
+| Concept as a crafted physical machine (hero illustration, interactive explainer, "isometric") | Isometric anatomy figure, `./references/isometric-anatomy.md` |
 | Timeline/roadmap | CSS timeline |
 | Dashboard/metrics | CSS grid + charts/KPIs |
 | Slide deck | `100dvh` slides using slide template patterns |
@@ -122,10 +128,12 @@ Before delivery, verify:
 - complete HTML document;
 - output written to `docs/diagrams/` in the repo (or the requested path);
 - no console errors when opened;
+- you looked at the rendered page yourself: capture PNGs (desktop + 390 px, plus hover and a couple of motion moments) and read every one — a check you didn't look at didn't run;
 - no horizontal overflow at normal desktop width;
 - fonts load with fallbacks;
 - tables preserve rows/columns and wrap long text;
 - Mermaid diagrams use `diagram-shell` with zoom/pan/expand;
 - slides fit one viewport, include carousel dots, and preserve source coverage;
 - visual hierarchy makes the main idea obvious in the first viewport;
-- styling would still be recognizable if compared against a generic dark/violet template.
+- styling would still be recognizable if compared against a generic dark/violet template;
+- anatomy figures said their size and estimate out loud before building, and their audit and line-end checks are at zero.
