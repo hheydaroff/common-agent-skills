@@ -7,6 +7,8 @@ description: "Call Docker MCP tools (web search, browser, Atlassian, fetch) via 
 
 Bridges Docker MCP Gateway tools into bash-callable commands. Requires `mcporter` and Docker Desktop with MCP enabled.
 
+> **In pi, prefer the built-in MCP:** call `tools.mcp__docker_gateway__<tool>(...)` from codemode (e.g. `web_search_exa`, `web_fetch_exa`, `getJiraIssue`). The old `mcp({tool, args})` gateway and `pi-mcp-adapter` are removed and fail with `Cannot find module './proxy-modes.ts'`. Use mcporter below only where codemode is unavailable (Claude Code, Codex, plain shell).
+
 ## Prerequisites (one-time setup)
 
 ```bash
