@@ -8,7 +8,7 @@ You are investigating the historical context and motivation behind a piece of co
 
 Other investigators search different sources in parallel. Don't try to cover everything. Focus on your assigned source and go deep.
 
-You run inside pi. Reach any MCP server through the `mcp` gateway tool (`mcp({ server })` to list tools, `mcp({ describe })` for a schema, `mcp({ tool, args })` to call). Run git / `gh` with the `bash` tool. Read code with the `read`/`ffgrep`/`fffind` tools. Do not write files, commit, or mutate external state — you only gather evidence.
+You run inside pi. Reach any MCP server from a `codemode` script: `searchTools(query)` / `describeTool(name)` to find and inspect tools, then `await tools.mcp__<server>__<tool>({...})` to call one. Run git / `gh` with the `bash` tool. Read code with the `read`/`ffgrep`/`fffind` tools. Do not write files, commit, or mutate external state — you only gather evidence.
 
 ## Operating Posture
 

@@ -11,7 +11,7 @@ Investigate the motivation and intent behind code. Why was it built this way? Wh
 
 ## How this skill works
 
-Historical context spreads across seven evidence categories: source control history, issue/ticket tracking, long-form documents, real-time team chat, infrastructure observability, error/exception tracking, and product analytics warehouses. You cannot predict from the question alone which one holds the answer, so the skill enumerates available MCPs at run time (via the pi `mcp` gateway), maps each to a category, queries all available ones in parallel through subagents, then synthesizes with explicit confidence calibration. Null results from searched categories are first-class evidence; report them alongside positive findings. **The default is coverage, not minimalism.**
+Historical context spreads across seven evidence categories: source control history, issue/ticket tracking, long-form documents, real-time team chat, infrastructure observability, error/exception tracking, and product analytics warehouses. You cannot predict from the question alone which one holds the answer, so the skill enumerates available MCPs at run time (via codemode `ALL_TOOLS` / `searchTools`), maps each to a category, queries all available ones in parallel through subagents, then synthesizes with explicit confidence calibration. Null results from searched categories are first-class evidence; report them alongside positive findings. **The default is coverage, not minimalism.**
 
 ## Operating Posture
 
@@ -94,7 +94,7 @@ Only skip with an **explicit written justification** for the "Sources Consulted"
 
 ## Step 4 — Synthesize
 
-Spawn one synthesizer subagent (single `subagent` call, a stronger/thinking model). It must be able to read code (`read`/`ffgrep`/`bash`) and spot-verify citations through the `mcp` gateway, but must not write or mutate state. Give it:
+Spawn one synthesizer subagent (single `subagent` call, a stronger/thinking model). It must be able to read code (`read`/`ffgrep`/`bash`) and spot-verify citations through the built-in MCP tools (codemode), but must not write or mutate state. Give it:
 1. All investigator findings (including nulls and skipped categories with reasons)
 2. The code anchor from Step 2
 3. The user's original question

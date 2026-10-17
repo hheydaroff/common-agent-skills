@@ -4,16 +4,15 @@ The `why` skill spawns one investigator per available evidence category, each re
 
 ## Calling MCPs in pi
 
-These playbooks were written against named MCP servers (Linear, Notion, Slack, Datadog, Sentry, Databricks). In pi you do **not** call those servers directly — every MCP server is reached through the **`mcp` gateway tool**:
+These playbooks were written against named MCP servers (Linear, Notion, Slack, Datadog, Sentry, Databricks). In pi, MCP servers are built in and their tools are real tools named `mcp__<server>__<tool>`, called from a `codemode` script:
 
-- `mcp({})` — list connected servers and tool counts.
-- `mcp({ server: "<name>" })` — list a server's tools.
-- `mcp({ search: "<query>" })` — search tools across all servers by name/description.
-- `mcp({ describe: "<tool>" })` — show a tool's parameters.
-- `mcp({ tool: "<tool>", args: '{"k":"v"}' })` — call a tool (args is a JSON string).
-- Auth-protected servers use pi's `/mcp-auth` flow.
+- `ALL_TOOLS` — every tool; group by the `mcp__<server>__` prefix to list connected servers.
+- `await searchTools("<query>", { limit })` — find tools by name/description.
+- `await describeNamespace("mcp__<server>")` / `await describeTool("<name>")` — list a server's tools / show a tool's parameters.
+- `await tools.mcp__<server>__<tool>({ ... })` — call a tool (args is a plain object).
+- Auth-protected servers: `/mcp login <server>` (see the `mcp-tools` skill).
 
-So wherever a playbook says "use the Linear MCP `get_issue`", in pi that is `mcp({ tool: "get_issue", args: '{...}' })` (optionally with `server:` to disambiguate). Source control (git / `gh`) is the exception — run it with the `bash` tool, not the gateway.
+So wherever a playbook says "use the Linear MCP `get_issue`", in pi that is `await tools.mcp__linear__get_issue({ ... })`. Source control (git / `gh`) is the exception — run it with the `bash` tool.
 
 | Category | Playbook | Example MCP it documents |
 |---|---|---|

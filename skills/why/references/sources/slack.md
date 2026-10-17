@@ -13,7 +13,7 @@ Slack is frequently where the *real* decisions got made, especially for smaller 
 
 ## How to search it
 
-Slack MCP tools vary. In pi, call them through the `mcp` gateway tool — `mcp({ server: "<slack-server>" })` to list tools, `mcp({ describe: "<tool>" })` for its schema, then `mcp({ tool, args })` to run it. Inspect the tool schema first. Auth may need pi's `/mcp-auth` flow. If authentication fails, stop and report the gap.
+Slack MCP tools vary. In pi, call them from `codemode` — `describeNamespace("mcp__<slack-server>")` to list tools, `describeTool("mcp__<slack-server>__<tool>")` for the schema, then `await tools.mcp__<slack-server>__<tool>({...})`. Inspect the schema first. Auth may need `/mcp login <server>`. If authentication fails, stop and report the gap.
 
 1. **Author-bounded search.** Messages from the PR author around the PR merge date. Limits scope dramatically and often hits gold.
 2. **Keyword search for the feature name and key symbols.** Include misspellings and casual phrasings.

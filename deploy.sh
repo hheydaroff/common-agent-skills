@@ -82,6 +82,17 @@ else
   dim "~/.codex/skills/ not found — skipped"
 fi
 
+# ── Name-clash check ──────────────────────────────────────────────────────────
+# Skills in ~/.pi/agent/skills/ are invisible to validate-skills.sh. A same-named
+# skill there shadows or duplicates the repo copy and silently drifts. Warn only.
+PI_ONLY="$HOME/.pi/agent/skills"
+if [ -d "$PI_ONLY" ]; then
+  for d in "$SKILLS_DIR"/*/; do
+    n="$(basename "$d")"
+    [ -d "$PI_ONLY/$n" ] && echo "WARNING: '$n' exists in both skills/ and ~/.pi/agent/skills/ — remove one copy" >&2
+  done
+fi
+
 echo ""
 dim "Pi reads ~/.agents/skills/ natively — no extra config needed."
 echo ""

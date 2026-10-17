@@ -113,4 +113,4 @@ mcporter list MCP_DOCKER.browser_snapshot          # inspect params for one tool
 
 | Reference | When to load |
 |-----------|--------------|
-| [references/setup-oauth-mcp-server.md](references/setup-oauth-mcp-server.md) | Adding/configuring an OAuth-protected HTTP MCP server in pi: mcp.json fields, /mcp-auth flow, debugging 405/403/invalid-scope, clearing stale OAuth state, DCR vs pre-registered apps |
+| [references/setup-oauth-mcp-server.md](references/setup-oauth-mcp-server.md) | Adding/configuring an OAuth-protected HTTP MCP server in pi: built-in MCP mcp.json `oauth` options, `/mcp login` flow, debugging 403/invalid-scope/stale sign-in, DCR vs pre-registered apps |
