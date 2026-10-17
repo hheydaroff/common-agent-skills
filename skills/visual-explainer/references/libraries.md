@@ -432,6 +432,121 @@ Quick-reference for choosing the right Mermaid syntax:
 | System architecture at multiple zoom levels | C4 diagram | `graph TD` + `subgraph` (not native `C4Context`) |
 | State transitions, lifecycles | State diagram | `stateDiagram-v2` |
 | Hierarchical breakdowns, brainstorms | Mind map | `mindmap` |
+| Orthogonal/elk layout for a dense flowchart | Flowchart + ELK | `flowchart-elk TD` |
+| Lanes by owner or team | Swimlane | `swimlane-beta LR` |
+| Roadmap phases by date | Timeline | `timeline` |
+| Project schedule, dependencies, milestones | Gantt | `gantt` |
+| User experience across stages, with scores | User journey | `journey` |
+| 2×2 positioning, triage, prioritisation | Quadrant | `quadrantChart` |
+| Flow volume between stages (cost, traffic, energy) | Sankey | `sankey-beta` |
+| Proportional parts of a whole, nested | Treemap | `treemap` |
+| Set overlap | Venn | `venn-beta` |
+| Multi-axis comparison, capability profile | Radar | `radar-beta` |
+| Bars/lines from literal data, no Chart.js needed | XY chart | `xychart-beta` |
+| Share/proportion bars | Pie | `pie` |
+| Kanban board state | Kanban | `kanban` |
+| Cause-and-effect / fishbone | Ishikawa | `ishikawa-beta` |
+| Branch/merge history | Git graph | `gitGraph` |
+| Free-form boxes with explicit columns | Block | `block-beta` |
+| Requirements and their verification | Requirement | `requirementDiagram` |
+| Value chain by evolution stage | Wardley map | `wardley-beta` |
+| Service grouping with icons and edges | Architecture | `architecture-beta` |
+| Bit/byte layout of a packet or record | Packet | `packet-beta` |
+| Nested tree with expandable nodes | Tree view | `treeView-beta` |
+| Complexity-domain routing of work | Cynefin | `cynefin-beta` |
+| Grammar / state-machine railroads | Railroad | `railroad-beta`, `railroad-ebnf-beta` |
+| Event-sourced flow of commands and events | Event modeling | `eventmodeling` |
+
+### Keyword exactness — verified against the pinned build
+
+`mermaid@11` (our CDN pin) resolves to **11.17.2**, which registers far more diagram types than
+the 7 this file used to list. Every keyword above was verified by parsing a real sample against 11.17.2, so these are not guesses:
+
+- **`radar-beta` only.** The detector is `/^\s*radar-beta/` — a block starting with `radar`
+  fails with "No diagram type detected". Same for `venn-beta`, `wardley-beta`,
+  `swimlane-beta`, `treeView-beta`, `cynefin-beta`, and the `railroad-*-beta` family.
+- **Suffix optional** (both forms parse): `sankey` / `sankey-beta`, `xychart` / `xychart-beta`,
+  `block` / `block-beta`, `packet` / `packet-beta`, `architecture` / `architecture-beta`,
+  `ishikawa` / `ishikawa-beta`, `requirement` / `requirementDiagram`,
+  `stateDiagram` / `stateDiagram-v2`, `classDiagram` / `classDiagram-v2`.
+- **`flowchart-elk`** is a distinct diagram type, not a config flag — it is how you get the ELK
+  layout that `SKILL.md`'s Mermaid invariants ask for on complex diagrams.
+- **`C4Context` does parse** in 11.17.2 (as do `C4Container`, `C4Component`, `C4Dynamic`,
+  `C4Deployment`). The table still routes C4 to `graph TD` + `subgraph` for the theming reason
+  above, not because C4 is unavailable.
+- Beta types can change syntax between minor versions. Re-verify with `node scripts/check-mermaid.mjs <file>` (wraps `mermaid.parse()` against Mermaid 11 and lints `\n` in labels / bare `radar`) before
+  relying on one in a template, and keep a CSS/table fallback for anything a reader must not
+  lose.
+
+Verified samples for the less obvious ones:
+
+```mermaid
+swimlane-beta LR
+  subgraph Customer
+    Browse[Browse catalogue]
+    Pay[Pay]
+  end
+  subgraph Warehouse
+    Pick[Pick items]
+    Ship[Ship order]
+  end
+  Browse --> Pay
+  Pay --> Pick
+```
+
+```mermaid
+venn-beta
+  title What makes a good feature
+  set Desirable
+  set Feasible
+  set Viable
+  union Desirable,Feasible["Buildable"]
+  union Feasible,Viable["Sustainable"]
+  union Desirable,Feasible,Viable["Ship it"]
+```
+
+```mermaid
+wardley-beta
+title Tea Shop Value Chain
+anchor Business [0.95, 0.63]
+component Cup of Tea [0.79, 0.61]
+component Kettle [0.43, 0.35]
+Business -> Cup of Tea
+Cup of Tea -> Kettle
+```
+
+```mermaid
+architecture-beta
+    group api(cloud)[API]
+    service db(database)[Database] in api
+    service server(server)[Server] in api
+    db:L -- R:server
+```
+
+```mermaid
+cynefin-beta
+title Where does this work belong?
+complex
+"Emergent practice"
+complicated
+"Expert analysis"
+clear
+"Known procedure"
+```
+
+```mermaid
+eventmodeling
+tf 01 ui CartUI
+tf 02 cmd AddItem
+tf 03 evt ItemAdded
+```
+
+```mermaid
+radar-beta
+  axis cost, speed, risk, quality
+  curve v1{3, 5, 2, 4}
+  curve v2{4, 3, 4, 3}
+```
 
 ### Dark Mode Handling
 

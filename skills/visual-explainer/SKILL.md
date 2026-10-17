@@ -5,7 +5,7 @@ license: MIT
 metadata:
   author: nicobailon (adapted)
   upstream: https://github.com/nicobailon/visual-explainer
-  version: "0.8.1"
+  version: "0.9.0"
 ---
 
 # Visual Explainer
@@ -54,13 +54,14 @@ Read only the references needed for the current output:
 |---|---|
 | Explaining in chat: pseudocode, call/component/file trees, diff shapes, restraint rules | `./references/inline-shapes.md` |
 | Text-heavy architecture/cards | `./templates/architecture.html` |
-| Mermaid flowcharts, sequence, ER, state, class, C4, data flow | `./templates/mermaid-flowchart.html`, Mermaid sections in `./references/libraries.md` |
+| Mermaid flowcharts, sequence, ER, state, class, C4, data flow — plus the full verified type vocabulary and exact keywords | `./templates/mermaid-flowchart.html`, Mermaid sections in `./references/libraries.md` |
 | Data tables, comparisons, audits | `./templates/data-table.html` |
 | Slide decks | `./templates/slide-deck.html`, `./references/slide-patterns.md` |
 | CSS layout, overflow, depth, collapsibles, SVG connectors, generated images | `./references/css-patterns.md` |
 | Pages with 4+ major sections | `./references/responsive-nav.md` |
 | Prose-heavy pages | "Prose Page Elements" in `css-patterns.md`, typography sections in `libraries.md` |
 | Ready-made task recipes (diff review, plan review, recap, fact-check, slides) | `./references/workflows.md` |
+| Behaviour, state, enforcement, or risk is load-bearing — or the figure risks being plausible-but-wrong: patterns, complexity budgets, remove test, static-frame rule | `./references/diagram-grammars.md` |
 | smart / smart Europe brand styling | `./references/smart-brand.md` |
 | Crafted isometric figure: concept explained as a real machine/instrument | `./references/isometric-anatomy.md` (kit via `./scripts/anatomy-kit.sh`) |
 
@@ -72,6 +73,8 @@ Once a page is the right medium, choose its representation:
 |---|---|
 | Flowchart, pipeline, state machine, decision tree | Mermaid |
 | Sequence, ER/schema, class, C4, topology-focused architecture | Mermaid |
+| Queue/bottleneck, policy traces, trust boundaries, control catalog, defence layers, lifecycle phases | Pattern-first — `./references/diagram-grammars.md`, then Mermaid or `<table>` |
+| Flow volumes, 2×2 positioning, nested proportions, schedules, UX journeys, cause-and-effect | Native Mermaid: `sankey-beta`, `quadrantChart`, `treemap`, `gantt`, `journey`, `ishikawa-beta` |
 | Text-heavy architecture, module internals, implementation plans | CSS grid cards, optionally with a Mermaid overview |
 | 15+ element architecture | Hybrid: small Mermaid overview + CSS detail cards |
 | Comparison/audit/status matrix | Semantic HTML `<table>` |
@@ -79,6 +82,19 @@ Once a page is the right medium, choose its representation:
 | Timeline/roadmap | CSS timeline |
 | Dashboard/metrics | CSS grid + charts/KPIs |
 | Slide deck | `100dvh` slides using slide template patterns |
+
+### Pattern before representation
+
+When **behaviour, state, enforcement, or risk** is what the reader must understand, pick the
+semantic pattern before the tool. `./references/diagram-grammars.md` routes nine patterns
+(fan-in queue, stage/slot framework, input→artifact, paired policy traces, secure paved road,
+control catalog, compensating layers, traceable decomposition, lifecycle phases) to a
+representation, and gives each one required elements, a hard complexity budget, semantic
+anti-patterns, and a static-frame requirement.
+
+That file also holds the universal caps (9 nodes, 12 arrows, 2 focal accents), the per-shape
+caps, the **exceed → split into overview + detail** rule, and the remove test. Budgets are
+ceilings: hitting one means splitting the figure, never shrinking type or dropping labels.
 
 ## Mermaid invariants
 
@@ -91,6 +107,7 @@ Once a page is the right medium, choose its representation:
 - Use `<br/>` in quoted flowchart labels. Do not use escaped `\n` labels.
 - Never define page-level `.node`; Mermaid uses it internally. Use namespaced page classes such as `.ve-card`.
 - For 15+ elements, do not cram everything into one Mermaid diagram. Use the hybrid overview + cards pattern.
+- Use exact registered keywords: `radar-beta`, `venn-beta`, `wardley-beta`, `swimlane-beta` — bare `radar`, `venn`, `wardley`, `swimlane` fail type detection. `flowchart-elk` is its own diagram type, not a config flag. Full verified list in `./references/libraries.md`.
 
 ## Layout and style invariants
 
@@ -128,6 +145,7 @@ Before delivery, verify:
 - complete HTML document;
 - output written to `docs/diagrams/` in the repo (or the requested path);
 - no console errors when opened;
+- every Mermaid block passed `node ./scripts/check-mermaid.mjs <file>` (parses against pinned Mermaid 11, flags `\n` in labels and bare `radar`; parse OK is not proof the sample means what you intend or that it renders well — still read the PNG);
 - you looked at the rendered page yourself: capture PNGs (desktop + 390 px, plus hover and a couple of motion moments) and read every one — a check you didn't look at didn't run;
 - no horizontal overflow at normal desktop width;
 - fonts load with fallbacks;
@@ -135,5 +153,7 @@ Before delivery, verify:
 - Mermaid diagrams use `diagram-shell` with zoom/pan/expand;
 - slides fit one viewport, include carousel dots, and preserve source coverage;
 - visual hierarchy makes the main idea obvious in the first viewport;
+- the static-frame rule holds: every label, state, and outcome is legible in one still frame — no hover, click, or animation step required (`./references/diagram-grammars.md` §5);
+- when behaviour/state/enforcement was load-bearing: one pattern chosen, its budget respected or the figure split, and the remove test run;
 - styling would still be recognizable if compared against a generic dark/violet template;
 - anatomy figures said their size and estimate out loud before building, and their audit and line-end checks are at zero.
