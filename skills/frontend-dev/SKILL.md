@@ -1,6 +1,6 @@
 ---
 name: frontend-dev
-description: "Premium frontend: UI design, cinematic animations, copywriting, and visual art. Use when building landing pages, marketing sites, dashboards, writing conversion copy, creating generative art, or implementing scroll animations. Also covers anti-slop / taste-driven builds: redesigning existing sites, avoiding generic AI-looking output, picking real design systems (Awwwards-style, premium, brutalist, minimalist)."
+description: "Premium frontend: UI design, cinematic animations, copywriting, and visual art. Use when building landing pages, marketing sites, dashboards, writing conversion copy, creating generative art, or implementing scroll animations. Also covers animating a static design, screenshot or Figma frame into a looping motion showcase plus MP4/GIF, and anti-slop / taste-driven builds: redesigning existing sites, avoiding generic AI-looking output, picking real design systems (Awwwards-style, premium, brutalist, minimalist)."
 license: MIT
 metadata:
   version: "1.0.0"
@@ -38,6 +38,7 @@ frontend-dev/
 │   ├── performance-checklist.md  # Core Web Vitals, budgets, anti-patterns
 │   ├── accessibility-checklist.md # WCAG 2.1 AA, ARIA, keyboard nav
 │   ├── landing-page-design.md     # Landing pages: intake, structure, conversion copy, strict visual system
+│   ├── motion-showcase.md        # Animate a static design: load-in choreography, story loops, deterministic capture, MP4/GIF export
 │   ├── design-principles.md      # Gestalt, hierarchy, composition, balance + self-check checklist
 │   ├── color-theory.md           # Color science, harmony schemes, palettes, dark-mode mapping
 │   ├── typography-fundamentals.md # Type anatomy, pairing, fluid scales, font performance
@@ -158,11 +159,12 @@ project/
 1. Analyze the request — determine page type and context. **Landing page or marketing site?** Load `references/landing-page-design.md` first — it owns intake, page structure, conversion copy, and the landing visual system.
 2. When a layout, color, or type decision needs grounding (or output "feels off"), load `references/design-principles.md` — plus `color-theory.md` / `typography-fundamentals.md` / `masters-applied.md` as needed.
 3. Set design dials based on page type
-4. Plan layout sections and identify asset needs
+4. Plan layout sections and identify asset needs. Need a moving hero/showcase, or a replacement for the manually supplied `demo-preview.mp4`? Load `references/motion-showcase.md` — it owns load-in choreography, story loops, and MP4/GIF export.
 
 ### Phase 2: Motion Architecture
 1. Select animation tools per section (see Tool Selection Matrix)
 2. Plan motion sequences following performance guardrails
+3. Animating a static design, screenshot, Figma frame, or bento/feature card with a visual? Load `references/motion-showcase.md` — it owns fidelity, `IntersectionObserver` intros, story loops, and capture/export. Product-UI interaction motion (hovers, menus, toasts) stays in §2 of this file, not there.
 
 ### Phase 3: Assets (Manual)
 Assets are provided manually by the user. Do NOT generate assets automatically.
@@ -309,6 +311,8 @@ See `references/motion-recipes.md` for full code. Summary:
 | Horizontal Scroll | GSAP | Vertical-to-horizontal hijack |
 | Particle Background | R3F | Decorative WebGL particles |
 | Layout Morph | Framer | Card-to-modal expansion |
+
+**Not in this table:** animating a *designed artifact* — a Figma frame, screenshot, dashboard, or a bento card's visual. Load-in choreography, story loops and MP4/GIF export live in `references/motion-showcase.md`.
 
 ## 2.4 Performance Rules
 **GPU-only properties (ONLY animate these):** `transform`, `opacity`, `filter`, `clip-path`
