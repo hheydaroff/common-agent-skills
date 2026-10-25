@@ -119,6 +119,10 @@ Mutating input usually needs `--foreground` (it moves the user's focus — don't
 an unattended loop). Background delivery works for `click --on` and for `type` only when the
 target window holds AX focus.
 
+## Screenshots: use the helper
+
+`bash ~/.agents/skills/computer-use-peekaboo/scripts/shot.sh <out.png> [max-px]` captures the whole screen (`--mode screen`, the only mode that works on macOS 27), retries 3 times, checks the file is non-empty, downsizes, and prints `path WxH`. It exits 1 with the reason if no image was written. Only `read` the path after it exits 0. Never write `peekaboo see … >/dev/null 2>&1; echo ok`: that printed "ok" for captures that never wrote a file, and the later `read` failed with ENOENT (15 times in one session). Bound the call with `SHOT_WRAP="sh tools/lanes/tmo 30"` where that wrapper exists. Close the add-in pane first if you need the whole slide.
+
 ## Reference files
 
 | File | When to load |

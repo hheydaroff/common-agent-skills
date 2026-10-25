@@ -34,6 +34,7 @@ try {
 } catch {}
 
 if (useProfile) {
+	console.log("⚠ --profile: copying ALL Chrome logins/cookies into a debuggable instance on :9222 (any local process can drive them).");
 	console.log("Syncing profile...");
 	execSync(
 		`rsync -a --delete \

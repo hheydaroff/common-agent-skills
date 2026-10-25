@@ -21,10 +21,12 @@ if (!p) {
 	process.exit(1);
 }
 
+const showValues = process.argv.includes("--show-values");
 const cookies = await p.cookies();
 
 for (const cookie of cookies) {
-	console.log(`${cookie.name}: ${cookie.value}`);
+	// Values are session secrets and would land in the agent transcript: redact unless asked.
+	console.log(`${cookie.name}: ${showValues ? cookie.value : `<redacted, ${cookie.value.length} chars>`}`);
 	console.log(`  domain: ${cookie.domain}`);
 	console.log(`  path: ${cookie.path}`);
 	console.log(`  httpOnly: ${cookie.httpOnly}`);

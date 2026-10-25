@@ -106,9 +106,9 @@ install_dotnet() {
                 info "Adding Microsoft package repository..."
                 sudo apt-get update -qq
                 sudo apt-get install -y -qq wget apt-transport-https
-                wget -q "https://dot.net/v1/dotnet-install.sh" -O /tmp/dotnet-install.sh
-                chmod +x /tmp/dotnet-install.sh
-                /tmp/dotnet-install.sh --channel 8.0 --install-dir "$HOME/.dotnet"
+                DOTNET_TMP=$(mktemp -d)
+                wget -q "https://dot.net/v1/dotnet-install.sh" -O "$DOTNET_TMP/dotnet-install.sh"
+                bash "$DOTNET_TMP/dotnet-install.sh" --channel 8.0 --install-dir "$HOME/.dotnet"
                 export PATH="$HOME/.dotnet:$PATH"
                 echo 'export PATH="$HOME/.dotnet:$PATH"' >> "$HOME/.bashrc"
             fi
@@ -133,10 +133,10 @@ install_dotnet() {
             fi
             # Fallback: use Microsoft install script
             info "Using Microsoft install script..."
-            wget -q "https://dot.net/v1/dotnet-install.sh" -O /tmp/dotnet-install.sh || \
-                curl -sSL "https://dot.net/v1/dotnet-install.sh" -o /tmp/dotnet-install.sh
-            chmod +x /tmp/dotnet-install.sh
-            /tmp/dotnet-install.sh --channel 8.0 --install-dir "$HOME/.dotnet"
+            DOTNET_TMP=$(mktemp -d)
+            wget -q "https://dot.net/v1/dotnet-install.sh" -O "$DOTNET_TMP/dotnet-install.sh" || \
+                curl -sSL "https://dot.net/v1/dotnet-install.sh" -o "$DOTNET_TMP/dotnet-install.sh"
+            bash "$DOTNET_TMP/dotnet-install.sh" --channel 8.0 --install-dir "$HOME/.dotnet"
             export PATH="$HOME/.dotnet:$PATH"
             echo 'export PATH="$HOME/.dotnet:$PATH"' >> "$HOME/.bashrc"
             ;;

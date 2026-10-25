@@ -37,8 +37,8 @@ if ! command -v dotnet &>/dev/null; then
         macos)   echo "    brew install --cask dotnet-sdk" ;;
         linux|wsl)
             echo "    # Option 1: Microsoft install script"
-            echo "    wget https://dot.net/v1/dotnet-install.sh -O /tmp/dotnet-install.sh"
-            echo "    chmod +x /tmp/dotnet-install.sh && /tmp/dotnet-install.sh --channel 8.0"
+            echo "    d=\$(mktemp -d) && wget https://dot.net/v1/dotnet-install.sh -O \"\$d/dotnet-install.sh\""
+            echo "    bash \"\$d/dotnet-install.sh\" --channel 8.0"
             echo "    # Option 2 (Ubuntu/Debian): sudo apt-get install -y dotnet-sdk-8.0"
             ;;
         windows-shell) echo "    winget install Microsoft.DotNet.SDK.8" ;;
