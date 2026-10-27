@@ -20,6 +20,12 @@ Deploy targets (written to by deploy.sh, never edited directly):
 - `~/.claude/skills/` — Claude Code
 - `~/.codex/skills/` — Codex
 
+## Reference Files
+
+| File | When to load |
+|------|--------------|
+| [lean-authoring.md](references/lean-authoring.md) | Deciding where a fact belongs, trimming a bloated skill, or a skill has drifted from the tool it teaches |
+
 ## Adding a New Skill
 
 1. Create a directory in the skills folder:
@@ -62,6 +68,28 @@ skill-name/
 - SKILL.md exceeds ~150 lines → move detail into `references/`
 - Content has distinct domains (e.g. fundamentals vs advanced)
 - Scripts save tokens vs generating the same code repeatedly
+
+Length is a symptom, not the test: split when most runs of the skill do **not** need the
+content. A reference most tasks read belongs back in `SKILL.md` (see `## Keep It Lean`).
+
+## Keep It Lean
+
+Put each fact on the lowest level that still reaches the agent before it needs it:
+`description` (every session) → `SKILL.md` (when the skill is used) → `references/` (only
+when that case comes up) → the tool's own `--help`, and its replies and errors. A skill
+that teaches a tool keeps the judgment calls and copies no reference into the skill.
+
+Before changing a skill, stop at the first step that handles the change:
+
+1. **Fix it below the skill** — a check, a test, a clearer error in the tool. Prose is for judgment calls.
+2. **Check the model needs it** — if a fresh session gets it right without the line, add nothing.
+3. **Edit, don't append** — change the line that already covers the idea; one meaning, one place.
+4. **Pick its level** — the ladder above.
+5. **Write the rule, not the story** — the incident goes in the commit message.
+
+Commit budget: put `SKILL.md`'s size before → after in the commit body and offset growth
+with a cut. Two copies of one idea, or nothing left to cut, means a full pass — details in
+[lean-authoring.md](references/lean-authoring.md).
 
 ### Artifact Output Convention
 
@@ -151,12 +179,15 @@ name is declared twice.
 - [ ] SKILL.md under 150 lines (split if larger)
 - [ ] No time-sensitive info that will go stale
 - [ ] Consistent terminology throughout
-- [ ] Concrete examples or workflows included
+- [ ] Concrete examples where they encode a judgment call (not examples of the obvious)
+- [ ] Every line changes what the agent does; no meaning appears twice
 - [ ] References at most one level deep (no reference chains)
 - [ ] Scripts are deterministic (validation, formatting — not AI-generated each time)
 - [ ] Tested: does the skill actually trigger when expected?
 
 ## Editing an Existing Skill
+
+Run the five-step ladder in `## Keep It Lean` before touching a line.
 
 1. Edit the file:
    ```
