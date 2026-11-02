@@ -74,8 +74,11 @@ Usage:
   bb.sh list <workspace> <repo_slug> [STATE] [LIMIT]
   bb.sh view <workspace> <repo_slug> <pr_id>
   bb.sh create <workspace> <repo_slug> --title T --body-file F --source S --dest D
-               [--close-source-branch] [--reviewer UUID]...
+               [--draft | --ready] [--close-source-branch] [--reviewer UUID]...
+               # draft is the DEFAULT; --ready creates a normal (review-requested) PR
   bb.sh update <workspace> <repo_slug> <pr_id> [--title T] [--body-file F] [--reviewer UUID]...
+  bb.sh draft <workspace> <repo_slug> <pr_id>      # mark an open PR as draft
+  bb.sh ready <workspace> <repo_slug> <pr_id>      # publish a draft PR for review
   bb.sh merge <workspace> <repo_slug> <pr_id> [merge_commit|squash|fast_forward]
   bb.sh comments <workspace> <repo_slug> <pr_id>
   bb.sh comment <workspace> <repo_slug> <pr_id> (--body T | --body-file F)
@@ -108,13 +111,13 @@ case "$cmd" in
     ws="$1"; slug="$2"; state="${3:-MERGED}"; limit="${4:-5}"
     request GET "/repositories/$ws/$slug/pullrequests?state=$state&pagelen=$limit"
     [ "$RESP_CODE" = "200" ] || die "list failed (HTTP $RESP_CODE): $RESP_BODY"
-    jq -r '.values[] | "#\(.id) \(.title)\n  by \(.author.display_name) | dest \(.destination.branch.name)\n\((.description // "") | .[0:300])\n"' <<<"$RESP_BODY"
+    jq -r '.values[] | "#\(.id)\(if .draft then " [DRAFT]" else "" end) \(.title)\n  by \(.author.display_name) | dest \(.destination.branch.name)\n\((.description // "") | .[0:300])\n"' <<<"$RESP_BODY"
     ;;
 
   create)
     [ $# -ge 2 ] || usage
     ws="$1"; slug="$2"; shift 2
-    title=""; bodyfile=""; source=""; dest=""; close=false; reviewers=()
+    title=""; bodyfile=""; source=""; dest=""; close=false; reviewers=(); draft=true
     while [ $# -gt 0 ]; do
       case "$1" in
         --title) title="$2"; shift 2 ;;
@@ -123,6 +126,8 @@ case "$cmd" in
         --dest) dest="$2"; shift 2 ;;
         --close-source-branch) close=true; shift ;;
         --reviewer) reviewers+=("$2"); shift 2 ;;
+        --draft) draft=true; shift ;;
+        --ready) draft=false; shift ;;
         *) die "unknown flag: $1" ;;
       esac
     done
@@ -131,13 +136,13 @@ case "$cmd" in
     json=$(jq -n --arg title "$title" \
                  --rawfile desc "$bodyfile" \
                  --arg src "$source" --arg dst "$dest" \
-                 --argjson close "$close" \
+                 --argjson close "$close" --argjson draft "$draft" \
                  --argjson reviewers "$(printf '%s\n' "${reviewers[@]:-}" | jq -R 'select(length>0) | {uuid: .}' | jq -s .)" \
-           '{title:$title, description:$desc, close_source_branch:$close,
+           '{title:$title, description:$desc, close_source_branch:$close, draft:$draft,
              source:{branch:{name:$src}}, destination:{branch:{name:$dst}}, reviewers:$reviewers}')
     request POST "/repositories/$ws/$slug/pullrequests" "$json"
     case "$RESP_CODE" in
-      200|201) jq -r '"PR #\(.id): \(.links.html.href)"' <<<"$RESP_BODY" ;;
+      200|201) jq -r '"PR #\(.id) (\(if .draft then "DRAFT" else "ready for review" end)): \(.links.html.href)"' <<<"$RESP_BODY" ;;
       *) die "PR creation failed (HTTP $RESP_CODE): $RESP_BODY" ;;
     esac
     ;;
@@ -146,7 +151,21 @@ case "$cmd" in
     [ $# -eq 3 ] || usage
     request GET "/repositories/$1/$2/pullrequests/$3"
     [ "$RESP_CODE" = "200" ] || die "view failed (HTTP $RESP_CODE): $RESP_BODY"
-    jq -r '"PR #\(.id) [\(.state)] \(.title)\n  \(.source.branch.name) -> \(.destination.branch.name), by \(.author.display_name)\n  \(.links.html.href)\n\n\(.description // "(no description)")"' <<<"$RESP_BODY"
+    jq -r '"PR #\(.id) [\(.state)]\(if .draft then " [DRAFT]" else "" end) \(.title)\n  \(.source.branch.name) -> \(.destination.branch.name), by \(.author.display_name)\n  \(.links.html.href)\n\n\(.description // "(no description)")"' <<<"$RESP_BODY"
+    ;;
+
+  draft|ready)
+    # PUT keeps a field the body omits, so only `draft` (plus the identity of the PR) is sent.
+    [ $# -eq 3 ] || usage
+    ws="$1"; slug="$2"; prid="$3"
+    want=false; [ "$cmd" = "draft" ] && want=true
+    request PUT "/repositories/$ws/$slug/pullrequests/$prid" "$(jq -n --argjson d "$want" '{draft:$d}')"
+    case "$RESP_CODE" in
+      200) jq -r --argjson want "$want" '
+             "PR #\(.id) is now \(if .draft then "a DRAFT" else "ready for review" end): \(.links.html.href)"
+             + (if .draft != $want then "\nWARNING: server kept draft=\(.draft) — check the PR in the UI" else "" end)' <<<"$RESP_BODY" ;;
+      *) die "$cmd failed (HTTP $RESP_CODE): $RESP_BODY" ;;
+    esac
     ;;
 
   update)

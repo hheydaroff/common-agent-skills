@@ -1,6 +1,6 @@
 ---
 name: pr-create
-description: "Write and raise a pull request on GitHub or Bitbucket Cloud, and work its review threads: detects the provider from the git remote, drafts a convention-aware title and body from the diff, gets user approval, then pushes and opens the PR via gh CLI or the Bitbucket REST API; can also rewrite the description of an already-open PR; on Bitbucket also reads, replies to, resolves, reopens and deletes PR comments. Use when the user says 'create/open/raise a PR', 'pull request', 'submit this for review', 'open a PR against GitHub/Bitbucket', 'write/rewrite the PR description', 'reply to the review comments', or 'resolve the PR threads'."
+description: "Write and raise a pull request on GitHub or Bitbucket Cloud, and work its review threads: detects the provider from the git remote, drafts a convention-aware title and body from the diff, gets user approval, then pushes and opens the PR via gh CLI or the Bitbucket REST API — as a DRAFT by default (only a PR the user explicitly calls final is created ready-for-review); can also publish a draft (gh pr ready / bb.sh ready), rewrite the description of an already-open PR, and on Bitbucket read, reply, resolve, reopen and delete PR comments. Use when the user says 'create/open/raise a PR', 'pull request', 'submit this for review', 'open a PR against GitHub/Bitbucket', 'mark it ready', 'write/rewrite the PR description', 'reply to the review comments', or 'resolve the PR threads'."
 ---
 
 # PR Create
@@ -9,6 +9,23 @@ Write a good PR and open it on GitHub or Bitbucket Cloud.
 
 **Remote side effects**: this pushes a branch and creates a PR. Always show the
 drafted title + body and get explicit user confirmation before pushing or creating.
+
+## Draft by default
+
+Every PR this skill creates is a **draft** unless the user asks for a final one.
+
+| User says | Create as |
+|---|---|
+| nothing about readiness, "open a PR", "raise it" | **draft** |
+| "final PR", "not a draft", "ready for review", "it's done, submit it" | normal PR |
+| "draft", "WIP", "don't request review yet" | draft (explicit) |
+
+Do not silently upgrade to a normal PR because the work looks finished — the
+readiness call is the user's. When confirming (Step 4), state which one you will
+create, e.g. "creating as a draft; say 'final' if you want it ready for review".
+
+Converting later is one command (see *Publish a draft PR* below), so a wrong guess
+toward draft costs nothing; a wrongly-announced ready PR emails reviewers.
 
 ## Step 0 — Detect provider & prerequisites
 
@@ -68,7 +85,9 @@ Convention checks:
 
 ## Step 4 — Confirm with user
 
-Show the full title + body. Ask for approval (or edits) and whether it should be a draft. Only proceed after explicit yes.
+Show the full title + body. Ask for approval (or edits). State that it will be created
+as a **draft** unless the user says it is final — ask only if their instruction was
+ambiguous about readiness. Only proceed after explicit yes.
 
 ## Step 5 — Push & create
 
@@ -80,19 +99,41 @@ Write the body to a temp file first (branch name in the filename to avoid collis
 
 **GitHub:**
 ```bash
-gh pr create --title "..." --body-file /tmp/pr-body-<branch>.md [--draft] [--base <base>]
+# default: draft
+gh pr create --title "..." --body-file /tmp/pr-body-<branch>.md --draft [--base <base>]
+# only when the user asked for a final PR: drop --draft
 ```
 
 **Bitbucket Cloud** (see [references/bitbucket.md](references/bitbucket.md)):
 ```bash
+# default: draft (bb.sh create is draft unless --ready is passed)
 scripts/bb.sh create <workspace> <repo_slug> \
   --title "..." --body-file /tmp/pr-body-<branch>.md \
-  --source <branch> --dest <base> [--close-source-branch]
+  --source <branch> --dest <base> [--ready] [--close-source-branch]
 ```
 
-Report the PR number and URL. If creation fails with 409, a PR for this branch
+Confirm the created state from the tool output (`PR #N (DRAFT)` on Bitbucket) rather
+than assuming it — then report the PR number, URL and draft state. If creation fails with 409, a PR for this branch
 already exists — find it (`bb.sh list <ws> <slug> OPEN` / `gh pr list --head <branch>`)
 and ask the user whether to update it instead. Other errors: show and stop — do not retry blindly.
+
+## Publish a draft PR (and the reverse)
+
+Use when the user says "it's ready", "mark it ready", "publish it", or conversely
+"make it a draft again". No body work and no push — state change only.
+
+```bash
+# GitHub
+gh pr ready <number>            # draft -> ready for review
+gh pr ready --undo <number>     # ready -> draft
+
+# Bitbucket Cloud
+scripts/bb.sh ready <ws> <slug> <pr_id>
+scripts/bb.sh draft <ws> <slug> <pr_id>
+```
+
+Report the resulting state from the command output. On Bitbucket, `view`/`list` show a
+`[DRAFT]` marker, so verify there if the toggle output surprises you.
 
 ## Rewrite the description of an already-open PR
 
@@ -126,6 +167,7 @@ human put there. Confirm the update succeeded and report the PR URL.
 
 - Inspect: `scripts/bb.sh view <ws> <slug> <pr_id>`
 - Amend title/body/reviewers: `scripts/bb.sh update <ws> <slug> <pr_id> [--title ...] [--body-file ...]`
+- Draft state: `scripts/bb.sh draft|ready <ws> <slug> <pr_id>`
 - Merge: `scripts/bb.sh merge <ws> <slug> <pr_id> [squash|merge_commit|fast_forward]` — confirm with the user first.
 
 ### Review threads

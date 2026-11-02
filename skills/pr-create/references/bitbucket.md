@@ -39,8 +39,11 @@ scripts/bb.sh view <workspace> <repo_slug> <pr_id>
 scripts/bb.sh create <workspace> <repo_slug> \
   --title "..." --body-file /tmp/pr-body.md \
   --source <branch> --dest <base> \
-  [--close-source-branch] [--reviewer <account-uuid>]...
+  [--draft | --ready] [--close-source-branch] [--reviewer <account-uuid>]...
+# draft is the DEFAULT; pass --ready only for a final (review-requested) PR
 scripts/bb.sh update <workspace> <repo_slug> <pr_id> [--title T] [--body-file F] [--reviewer UUID]...
+scripts/bb.sh draft  <workspace> <repo_slug> <pr_id>   # mark open PR as draft
+scripts/bb.sh ready  <workspace> <repo_slug> <pr_id>   # publish a draft for review
 scripts/bb.sh merge <workspace> <repo_slug> <pr_id> [merge_commit|squash|fast_forward]
 
 # Review threads
@@ -81,21 +84,38 @@ to the thread root first.
 Resolve works on general comments as well as inline ones. Workspace/project access tokens
 can do all of the above.
 
-- `create` prints `PR #<id>: <url>` on success, error JSON on failure (non-zero exit).
+- `create` prints `PR #<id> (DRAFT|ready for review): <url>` on success, error JSON on failure (non-zero exit). It sends `draft: true` unless `--ready` is given.
 - If `create` fails with **409**, an open PR already exists for that source→destination — find it with `list ... OPEN`, then `view`/`update` it instead of creating a new one.
 - `update` fetches the current PR, applies only the provided fields, and PUTs back.
+- `draft`/`ready` send only `{"draft": <bool>}`; a `PUT` omitting a field leaves that field unchanged (verified: omitting `draft` does not clear it), so `update` never disturbs draft state. `view`/`list` print a `[DRAFT]` marker.
 - `merge` without a strategy uses the repo's default; 409 = conflict or checks not passed.
 - Reviewers need **account UUIDs** (not usernames). Look up via
   `GET https://api.bitbucket.org/2.0/workspaces/<ws>/members` if the user insists;
   otherwise skip — reviewers can be added in the UI.
 - `--close-source-branch` sets Bitbucket's "Close source branch after merge" flag.
 
+### Draft pull requests (verified against REST 2.0)
+
+| Do | Not |
+|---|---|
+| Create with `"draft": true` in the POST body | a separate `/draft` create route — there is none |
+| Toggle with `PUT .../pullrequests/{id}` and `{"draft": true}` / `{"draft": false}` | `PATCH` — Bitbucket takes `PUT` here |
+| Read state from the PR object's **`draft`** boolean | inferring readiness from `state` (a draft is still `state: OPEN`) |
+
+A `PUT` that omits `draft` preserves the stored value, so `update` (title/body/reviewers)
+never silently publishes a draft. Unticking "Draft" in the UI is the same PUT.
+
+Deleting a probe/test PR is **not** possible with a `pullrequest:write` token —
+`DELETE .../pullrequests/{id}` returns 403. Use `POST .../pullrequests/{id}/decline`
+instead (200), which leaves a DECLINED PR in the list; the UI delete button needs the
+"admin" permission on the repo.
+
 ## API error triage
 
 | Symptom | Cause / fix |
 |---|---|
 | 401 | Wrong username with app password (must be Bitbucket username, not email); or expired token |
-| 403 | Token/app password missing `pullrequest:write` scope |
+| 403 | Token/app password missing `pullrequest:write` scope — or you tried `DELETE .../pullrequests/{id}` (repo-admin only; use `/decline` + UI delete) |
 | 404 on create | Source branch not pushed, or wrong workspace/slug |
 | 409 | A PR already exists for that source→destination pair — find it with `list ... OPEN`. On `resolve`/`reopen`: the thread is already in that state |
 | 403 "does not support token-based authentication" | Wrong route (e.g. `POST .../comments/{id}` for a reply) — see the gotchas table above |
